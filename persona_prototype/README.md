@@ -62,6 +62,47 @@ now include successful, empty, denied, invalid and unavailable-backend outcomes.
 
 ## Tests
 
+### Cost-limited OpenAI gpt-4o-mini validation
+
+The published runtime already supplies `PERSONA_BASE_URL=https://api.openai.com/v1`
+and `PERSONA_MODEL=gpt-4o-mini`. The key is read only from `PERSONA_API_KEY` at
+runtime; it is never copied into code or a report. Allow `api.openai.com` in the
+running environment's outbound network settings before executing:
+
+```bash
+python -m persona_prototype.mini_validation --output /tmp/gpt-4o-mini-validation.json
+```
+
+This dedicated runner requires the exact OpenAI endpoint/model, checks the local
+cloud network-policy snapshot and fails closed on missing settings, blocked access
+or unknown policy. Restart/update the environment if its startup policy snapshot
+does not yet reflect a network-settings change. The earlier general `validation`
+runner remains available, but does not provide these hard remote-call limits.
+
+Each user receives a fresh session using the original fixtures. A localhost
+gateway forwards only Chat Completions, buffers the response, and translates it
+to Hermes' expected streaming format when necessary. It forces `gpt-4o-mini`,
+caps output at 512 tokens, and admits at most 4 upstream attempts per user (12
+total). Requests above 64,000 serialized bytes are rejected before forwarding.
+HTTPX does not automatically retry; the first upstream error latches the gateway
+closed and stops subsequent users. Fresh Hermes profile configuration selects
+one API attempt and no post-exhaustion auto recovery; loop iterations are 4 with
+a 60-second run budget. The gateway still blocks extra remote requests if Hermes
+tries a grace/auxiliary call. Existing profile configuration is never overwritten.
+
+Reports include actual upstream attempts (including failures), per-call reported
+usage, totals and estimated USD cost. Missing response usage produces a null cost,
+not a fabricated zero. Pricing uses provisional $0.15 input / $0.60 output per
+million tokens, charging cached input at full rate; confirm current OpenAI pricing
+before interpreting the estimate as a bill. No paid compatibility probe runs
+separately: a successful model-generated tool call in the main run is evidence of
+compatibility. Offline fixtures do not establish live model availability.
+
+Current run: endpoint/model variables match, key variable is present (validity
+untested), but `api.openai.com` is absent from the enforced network policy. No
+external request was attempted: 0 calls, 0 tokens, $0. Alice/Bob/Carol live
+personalization and live Tool Calling remain untested.
+
 After activation:
 
 ```bash

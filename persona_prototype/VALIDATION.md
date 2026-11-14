@@ -2,7 +2,14 @@
 
 ## Current outcome
 
-Live personalization is **not validated**. The running machine has none of
+Live personalization is **not validated**. In the newly published runtime,
+the key variable is present and endpoint/model are configured as OpenAI / gpt-4o-mini,
+but `api.openai.com` is not in the enforced network allowlist. The dedicated
+`mini_validation` runner returned `blocked` before sending any request: 0 calls,
+0 tokens, $0. See README for the budgeted rerun command. Credential validity and
+actual Tool Calling compatibility are still untested.
+
+Earlier validation before publication: the running machine had none of
 `PERSONA_BASE_URL`, `PERSONA_MODEL`, `PERSONA_API_KEY`; standard OpenAI and Anthropic
 key variables were also absent. Values were never printed. The real-mode runner
 was executed and returned `blocked_configuration` with an empty user-results list;

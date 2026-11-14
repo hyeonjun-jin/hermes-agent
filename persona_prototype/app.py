@@ -27,10 +27,12 @@ def seed(store):
 
 
 class ChatApplication:
-    def __init__(self, root: Path, *, base_url: str, api_key: str, model: str, authorizer=None):
+    def __init__(self, root: Path, *, base_url: str, api_key: str, model: str, authorizer=None,
+                 validation_limits=False):
         self.root = root.resolve()
         self.store = MemoryStore(self.root / "memory.sqlite", authorizer or OwnerOnly())
         self.base_url, self.api_key, self.model = base_url, api_key, model
+        self.validation_limits = validation_limits
 
     def chat(self, principal: Principal, user_id: str, question: str) -> dict:
         self.store.authorizer.require(principal, user_id, "memory:read")
@@ -38,6 +40,11 @@ class ChatApplication:
             raise ValueError("Unknown profile")
         home = self.root / "homes" / user_id
         home.mkdir(parents=True, exist_ok=True)
+        if self.validation_limits:
+            config = home / "config.yaml"
+            if config.exists():
+                raise ValueError("Budgeted validation requires a fresh profile home")
+            config.write_text("agent:\n  api_max_retries: 1\n  auto_recovery_cycles: 0\n", encoding="utf-8")
         token = set_hermes_home_override(home)
         manager = MemoryManager()
         provider = PersonaMemoryProvider(self.store, principal)
@@ -50,7 +57,9 @@ class ChatApplication:
                             provider="openai", api_mode="chat_completions", memory_manager=manager,
                             session_id=session_id, user_id=user_id, enabled_toolsets=["memory"],
                             skip_context_files=True, skip_background_review=True, quiet_mode=True,
-                            max_iterations=6, max_tokens=1024, save_trajectories=False,
+                            max_iterations=4 if self.validation_limits else 6,
+                            max_tokens=512 if self.validation_limits else 1024,
+                            run_budget_seconds=60 if self.validation_limits else None, save_trajectories=False,
                             ephemeral_system_prompt="Use only supplied prototype tools. Never call the builtin memory tool.")
             result = agent.run_conversation(question)
         finally:
