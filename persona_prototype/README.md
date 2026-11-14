@@ -2,6 +2,8 @@
 
 For the repaired automatic-memory flow, tag provenance, output-format auditing
 and latest live controlled experiment, see [PERSONALIZATION_FIXES.md](PERSONALIZATION_FIXES.md).
+For native Hermes Research/Analysis/Verification delegation, boundaries, budgets
+and actual live results, see [MULTI_AGENT.md](MULTI_AGENT.md).
 
 This standalone prototype uses the existing `AIAgent.run_conversation` loop and
 the public `MemoryManager` injection parameter. `PersonaMemoryProvider` implements
@@ -155,9 +157,10 @@ remains separate.
 
 ## Extension contracts (not implemented features)
 
-`domain.py` defines `EnterpriseData`, `Authorizer`, `Specialist` (research,
-analysis, verification) and `PreferenceAlignment`. They are contracts only.
-No subagents, alignment worker, feedback UI, FastAPI server, web UI, vector index,
+`domain.py` defines `EnterpriseData`, `Authorizer`, `Specialist` and
+`PreferenceAlignment`. Native specialist implementation is in `multi_agent.py`;
+the standalone `Specialist` protocol is not an alternate inference engine.
+No alignment worker, feedback UI, FastAPI server, web UI, vector index,
 enterprise API, production identity provider, encryption/retention policy or
 end-to-end multi-agent budget enforcement is implemented. `ChatApplication.chat`
 is a synchronous service boundary for a future API; it is not an HTTP backend.

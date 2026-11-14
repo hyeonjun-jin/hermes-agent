@@ -43,7 +43,7 @@ def respond(messages):
 
 
 @contextmanager
-def mock_endpoint(responder=respond):
+def mock_endpoint(responder=respond, request_observer=None):
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
             pass
@@ -54,6 +54,8 @@ def mock_endpoint(responder=respond):
                 # Hermes can probe auxiliary endpoints; this fixture only serves Chat Completions.
                 self.send_error(400, "Mock endpoint supports Chat Completions only")
                 return
+            if request_observer:
+                request_observer(request)
             message, finish = responder(request["messages"])
             base = {"id": "chatcmpl-prototype", "created": 1, "model": "persona-mock"}
             if request.get("stream"):
