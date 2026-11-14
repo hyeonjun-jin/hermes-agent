@@ -25,7 +25,10 @@ For real GPT-4o mini, use **explicit** `--mode real`, port 8001 and a separate
 `--state /workspace/persona-web-real-state`. Supply `PERSONA_BASE_URL` as
 `https://api.openai.com/v1`, `PERSONA_MODEL` as `gpt-4o-mini`, and
 `PERSONA_API_KEY` through secure runtime environment settings. Allow `api.openai.com`
-in network settings. Real mode refuses missing settings or blocked networking;
+in network settings. On Codex the existing policy check is retained; recognized
+GitHub Codespaces without a Codex installation uses platform-enforced HTTPS egress.
+See [CODESPACES.md](CODESPACES.md) for Secrets and private port-forwarding commands.
+Real mode refuses missing settings or a denied/invalid Codex policy;
 there is no automatic Mock fallback. Keys never go in UI requests or reports.
 
 The backend binds only 127.0.0.1, uses one process, and serializes embedded Hermes

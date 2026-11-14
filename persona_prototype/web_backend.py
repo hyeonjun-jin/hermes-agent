@@ -56,6 +56,28 @@ class Feedback(BaseModel):
     comment: str = Field(default="", max_length=2000)
 
 
+def check_real_network(environ, policy_path=None):
+    """Codex policy takes precedence; Codespaces uses its own enforced egress/proxy."""
+    path = policy_path or Path("/etc/codex/network-policy.json")
+    try:
+        contents = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        # A Codex installation with a missing policy must still fail closed.
+        if (path.parent.exists() or environ.get("CODESPACES") != "true"
+                or not environ.get("CODESPACE_NAME", "").strip()):
+            raise RuntimeError("Codex network policy unavailable; expected a recognized Codespaces runtime") from None
+        return "github-codespaces"
+    except OSError:
+        raise RuntimeError("Codex network policy unreadable") from None
+    try:
+        allowed = network_allows(json.loads(contents))
+    except (ValueError, TypeError, AttributeError, KeyError):
+        raise RuntimeError("Codex network policy invalid") from None
+    if not allowed:
+        raise RuntimeError("Codex network policy does not allow OpenAI")
+    return "codex"
+
+
 def create_app(root: Path, *, mode="mock", dev_mode=False):
     @asynccontextmanager
     async def lifespan(app):
@@ -70,11 +92,12 @@ def create_app(root: Path, *, mode="mock", dev_mode=False):
             elif mode == "real":
                 import httpx
                 url, key, model = real_settings(os.environ)
-                policy = json.loads(await asyncio.to_thread(
-                    Path("/etc/codex/network-policy.json").read_text, encoding="utf-8"))
-                if url.rstrip("/") != ENDPOINT or model != MODEL or not network_allows(policy):
-                    raise RuntimeError("OpenAI gpt-4o-mini settings or network policy unavailable")
-                client = stack.enter_context(httpx.Client(timeout=20, headers={"Authorization": "Bearer " + key}))
+                if url.rstrip("/") != ENDPOINT or model != MODEL:
+                    raise RuntimeError("Real mode requires the OpenAI endpoint and gpt-4o-mini")
+                await asyncio.to_thread(check_real_network, os.environ)
+                client = stack.enter_context(httpx.Client(
+                    timeout=20, headers={"Authorization": "Bearer " + key},
+                    verify=True, trust_env=True, follow_redirects=False))
                 def send(body):
                     response = client.post(ENDPOINT + "/chat/completions", json=body)
                     return response.status_code, response.json() if response.status_code == 200 else {}
