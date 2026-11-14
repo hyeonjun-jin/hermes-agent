@@ -15,6 +15,7 @@ def respond(messages):
     start = max(i for i, m in enumerate(messages) if m["role"] == "user")
     turns = messages[start:]
     query = str(messages[start]["content"])
+    query = re.sub(r"<memory-context>.*?</memory-context>", "", query, flags=re.DOTALL).strip()
     results = [json.loads(m["content"]) for m in turns if m["role"] == "tool"]
     if not results:
         calls = [("persona_recall", {"query": query})]

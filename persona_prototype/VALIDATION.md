@@ -1,5 +1,9 @@
 # Validation status and review notes
 
+Latest repair and successful live memory-control results are documented in
+[PERSONALIZATION_FIXES.md](PERSONALIZATION_FIXES.md). The configuration-blocked
+outcomes below describe earlier runs, not the current experiment.
+
 ## Current outcome
 
 Live personalization is **not validated**. In the newly published runtime,

@@ -30,6 +30,7 @@ def observations(result):
     return {"selected_tools": [c["tool"] for c in calls],
             "search_arguments": [c["args"] for c in calls if c["tool"] == "mock_rag"],
             "recalled_memory": [c.get("result", []) for c in calls if c["tool"] == "persona_recall"],
+            "prefetched_memory": [e for e in result.get("recall_events", []) if e["mode"] == "prefetch"],
             "environment_retrieved": any(c["tool"] == "mock_environment" and c["status"] == "ok" for c in calls),
             "tool_errors": [c for c in calls if c["status"] not in {"ok", "empty"}],
             "note": "Environment retrieval alone does not establish use in the final answer; inspect answer and evidence."}

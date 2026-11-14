@@ -83,7 +83,7 @@ def test_bad_calls_pass_through_hermes_and_return_evidence(tmp_path):
         results = [m for m in messages if m["role"] == "tool"]
         if not results:
             calls = [("mock_environment", {"project": "beacon"}),
-                     ("mock_rag", {"query": "zzzz-no-match", "tag": "not-a-tag"})]
+                     ("mock_rag", {"query": "zzzz-no-match", "tag": "risk"})]
             return {"role": "assistant", "content": None, "tool_calls": [
                 {"id": f"bad-{i}", "type": "function", "function": {
                     "name": name, "arguments": json.dumps(args)}} for i, (name, args) in enumerate(calls)]}, "tool_calls"

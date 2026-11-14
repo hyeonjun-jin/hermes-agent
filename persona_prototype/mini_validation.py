@@ -112,7 +112,7 @@ def gateway(budget):
         thread.join()
 
 
-def run(environ, policy, root):
+def run(environ, policy, root, *, memory_control=False):
     report = {"model": MODEL, "endpoint": ENDPOINT, "created_at": datetime.now(UTC).isoformat(),
               "status": "blocked", "users": [], "pricing": RATES,
               "tool_calling_compatibility": "not_tested", "personalization": "not_tested",
@@ -136,30 +136,46 @@ def run(environ, policy, root):
     from .data import PROFILES
     from .domain import Principal
     all_calls = []
-    for user in PROFILES:
+    user_counts = dict.fromkeys(PROFILES, 0)
+    cases = [(u, "baseline") for u in PROFILES]
+    if memory_control:
+        cases.append(("alice", "memory_risk"))
+    for user, condition in cases:
         with httpx.Client(timeout=20, headers={"Authorization": "Bearer " + key}) as client:
             def send(body):
                 response = client.post(ENDPOINT + "/chat/completions", json=body)
                 return response.status_code, response.json() if response.status_code == 200 else {}
-            budget = Budget(send)
+            remaining = min(4 - user_counts[user], 12 - len(all_calls))
+            if remaining <= 0:
+                report["users"].append({"user": user, "condition": condition, "error_type": "BudgetExhausted"})
+                break
+            budget = Budget(send, limit=remaining)
             with gateway(budget) as local_url:
-                app = ChatApplication(root, base_url=local_url, api_key="local-gateway", model=MODEL,
+                app = ChatApplication(root / condition, base_url=local_url, api_key="local-gateway", model=MODEL,
                                       validation_limits=True)
                 seed(app.store)
+                if condition == "memory_risk":
+                    # Controlled fixture intervention: only Alice's five confirmed episode responses change.
+                    with app.store.connect() as db:
+                        db.execute("UPDATE episodes SET response=? WHERE user_id=? AND confirmed=1",
+                                   ("focus=risk 확인된 선호", user))
                 try:
                     result = app.chat(Principal(user, SCOPES), user, QUESTION)
-                    row = {"user": user, **result, "observations": observations(result)}
+                    row = {"user": user, "condition": condition, **result, "observations": observations(result)}
                 except Exception as exc:
-                    row = {"user": user, "error_type": type(exc).__name__}
+                    row = {"user": user, "condition": condition, "error_type": type(exc).__name__}
         row.update(calls=budget.calls, usage=budget.totals())
         report["users"].append(row)
         all_calls.extend(budget.calls)
+        user_counts[user] += len(budget.calls)
         if budget.failed or row.get("error_type") or row.get("loop_error"):
             break
     aggregate = Budget(None)
     aggregate.calls = all_calls
     report["totals"] = aggregate.totals()
-    complete = len(report["users"]) == 3 and not budget.failed and not any(
+    report["calls_by_user"] = user_counts
+    report["question"] = QUESTION
+    complete = len(report["users"]) == len(cases) and not budget.failed and not any(
         r.get("loop_error") or r.get("error_type") for r in report["users"])
     report["status"] = "executed" if complete else "execution_failed"
     report["personalization"] = "requires_review_of_evidence"
@@ -171,13 +187,14 @@ def run(environ, policy, root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--memory-control", action="store_true", help="Also compare Alice with only episodic focus changed")
     args = parser.parse_args()
     try:
         policy = json.loads(Path("/etc/codex/network-policy.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         policy = {}  # Unknown policy fails closed.
     with tempfile.TemporaryDirectory(prefix="mini-validation-") as root:
-        report = run(os.environ, policy, Path(root))
+        report = run(os.environ, policy, Path(root), memory_control=args.memory_control)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(report["status"] + "; report: " + str(args.output))

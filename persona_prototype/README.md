@@ -1,5 +1,8 @@
 # Hermes + Persona prototype
 
+For the repaired automatic-memory flow, tag provenance, output-format auditing
+and latest live controlled experiment, see [PERSONALIZATION_FIXES.md](PERSONALIZATION_FIXES.md).
+
 This standalone prototype uses the existing `AIAgent.run_conversation` loop and
 the public `MemoryManager` injection parameter. `PersonaMemoryProvider` implements
 the actual Hermes `MemoryProvider` ABC. The initialized manager supplies its static

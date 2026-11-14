@@ -1,12 +1,12 @@
 """Scoped SQLite memory; lexical search baseline, not embedding retrieval."""
 import json
-import re
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 from datetime import UTC, datetime
 
 from .domain import Authorizer, Principal
+from .personalization import terms
 
 
 class MemoryStore:
@@ -51,17 +51,19 @@ class MemoryStore:
                        (user_id, session_id, query, response, int(confirmed),
                         datetime.now(UTC).isoformat()))
 
-    def search(self, actor: Principal, user_id: str, query: str, k: int = 4) -> list[dict]:
+    def search(self, actor: Principal, user_id: str, query: str, k: int = 4, *, confirmed_only=False) -> list[dict]:
         self.authorizer.require(actor, user_id, "memory:read")
         if not 1 <= k <= 10:
             raise ValueError("k must be between 1 and 10")
-        terms = set(re.findall(r"\w+", query.lower()))
+        query_terms = terms(query)
         with self.connect() as db:
             rows = db.execute("SELECT id,session_id,query,response,confirmed,created_at FROM episodes "
                               "WHERE user_id=? ORDER BY id DESC", (user_id,)).fetchall()
         ranked = []
         for row in rows:
-            score = len(terms & set(re.findall(r"\w+", (row[2] + " " + row[3]).lower())))
+            if confirmed_only and not row[4]:
+                continue
+            score = len(query_terms & terms(row[2] + " " + row[3]))
             if score:
                 ranked.append((score, row))
         ranked.sort(key=lambda item: (item[0], item[1][0]), reverse=True)

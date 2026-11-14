@@ -10,6 +10,7 @@ from .data import PROFILES, PREFERENCES
 from .domain import Principal, OwnerOnly
 from .provider import PersonaMemoryProvider
 from .store import MemoryStore
+from .personalization import format_answer
 
 SCOPES = frozenset({"memory:read", "memory:write", "documents:read", "environment:read"})
 
@@ -69,8 +70,10 @@ class ChatApplication:
                 manager.shutdown_all()
             finally:
                 reset_hermes_home_override(token)
+        answer, formatting = format_answer(result["final_response"], provider.persona["format"])
         return {"session_id": session_id, "persona": provider.persona,
-                "answer": result["final_response"], "tool_calls": provider.trace,
+                "raw_answer": result["final_response"], "answer": answer, "format_validation": formatting,
+                "recall_events": provider.recall_trace, "tool_calls": provider.trace,
                 "loop_error": bool(result.get("error")),
                 "model_tool_calls": [tc for m in result.get("messages", [])
                                      if m.get("role") == "assistant" for tc in (m.get("tool_calls") or [])]}
