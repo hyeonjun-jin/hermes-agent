@@ -36,7 +36,8 @@ class ChatApplication:
         self.validation_limits = validation_limits
         self.multi_agent = multi_agent
 
-    def chat(self, principal: Principal, user_id: str, question: str) -> dict:
+    def chat(self, principal: Principal, user_id: str, question: str, *, session_id=None,
+             conversation_history=None, persona_snapshot=None, known_source_ids=()) -> dict:
         self.store.authorizer.require(principal, user_id, "memory:read")
         if user_id not in PROFILES:
             raise ValueError("Unknown profile")
@@ -44,14 +45,16 @@ class ChatApplication:
         home.mkdir(parents=True, exist_ok=True)
         if self.validation_limits or self.multi_agent:
             config = home / "config.yaml"
-            if config.exists():
-                raise ValueError("Budgeted validation requires a fresh profile home")
             settings = "agent:\n  api_max_retries: 1\n  auto_recovery_cycles: 0\n"
             if self.multi_agent:
                 settings += ("delegation:\n  max_iterations: 2\n  max_spawn_depth: 1\n"
                              "  oneshot_max_children: 3\n  max_concurrent_children: 1\n"
                              "  child_timeout_seconds: 45\n  inherit_mcp_toolsets: false\n")
-            config.write_text(settings, encoding="utf-8")
+            if config.exists():
+                if config.read_text(encoding="utf-8") != settings:
+                    raise ValueError("Existing profile configuration differs; refusing to overwrite")
+            else:
+                config.write_text(settings, encoding="utf-8")
         token = set_hermes_home_override(home)
         manager = MemoryManager()
         provider_class = PersonaMemoryProvider
@@ -59,8 +62,10 @@ class ChatApplication:
             from .multi_agent import MultiAgentProvider
             provider_class = MultiAgentProvider
         provider = provider_class(self.store, principal)
+        provider.session_mode = session_id is not None
         provider.question = question
-        session_id = "persona-" + uuid.uuid4().hex
+        provider.known_source_ids = set(known_source_ids)
+        session_id = session_id or "persona-" + uuid.uuid4().hex
         agent = None
         role_handles = []
         owner_token = None
@@ -70,6 +75,8 @@ class ChatApplication:
                 role_handles = register_role_tools(provider)
             manager.add_provider(provider)
             manager.initialize_all(session_id=session_id, hermes_home=str(home), agent_context="primary")
+            if persona_snapshot is not None:
+                provider.persona = dict(persona_snapshot)
             agent = AIAgent(base_url=self.base_url, api_key=self.api_key, model=self.model,
                             provider="openai", api_mode="chat_completions", memory_manager=manager,
                             session_id=session_id, user_id=user_id,
@@ -88,7 +95,7 @@ class ChatApplication:
                 agent.tools = [t for t in agent.tools if t["function"]["name"] in allowed]
                 agent.valid_tool_names = {t["function"]["name"] for t in agent.tools}
                 owner_token = _OWNER_SCOPE.set(provider)
-            result = agent.run_conversation(question)
+            result = agent.run_conversation(question, conversation_history=conversation_history)
         finally:
             try:
                 if agent is not None:
@@ -109,6 +116,7 @@ class ChatApplication:
         return {"session_id": session_id, "persona": provider.persona,
                 "raw_answer": result["final_response"], "answer": answer, "format_validation": formatting,
                 "recall_events": provider.recall_trace, "tool_calls": provider.trace,
+                "history": result.get("messages", []),
                 "delegations": getattr(provider, "delegations", []),
                 "role_tool_calls": getattr(provider, "role_traces", []), "completion": completion,
                 "loop_error": bool(result.get("error") or result.get("failed") or result.get("partial")),

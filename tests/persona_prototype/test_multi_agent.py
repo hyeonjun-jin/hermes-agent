@@ -145,7 +145,9 @@ def test_main_can_choose_workflow_once_with_real_native_children(tmp_path):
         expected = {ROLE_TOOLS[match[1]]} if match else {"delegate_specialist"}
         assert {t["function"]["name"] for t in request["tools"]} == expected
         has_results = any(m["role"] == "tool" for m in request["messages"])
-        assert request["tool_choice"] == ("none" if has_results else "required")
+        expected_choice = "none" if has_results else ("required" if match else {
+            "type": "function", "function": {"name": "delegate_specialist"}})
+        assert request["tool_choice"] == expected_choice
 
 
 def test_truncated_native_summary_is_not_success():

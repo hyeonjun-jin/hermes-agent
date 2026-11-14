@@ -65,7 +65,7 @@ After the activation instructions in README and secure environment-variable setu
 
 ```bash
 scripts/run_tests.sh -j 2 tests/persona_prototype/ -q
-python -m persona_prototype.multi_validation --output /tmp/multi-agent-validation.json
+python -m persona_prototype.multi_validation --output $TMPDIR/multi-agent-validation.json
 ```
 
 The runner validates OpenAI / gpt-4o-mini configuration and network grants before

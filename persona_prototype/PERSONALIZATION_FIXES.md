@@ -44,7 +44,7 @@ The live command (using existing endpoint/model/key environment bindings) is:
 
 ```bash
 python -m persona_prototype.mini_validation --memory-control \
-  --output /tmp/gpt-4o-mini-personalization-fixed.json
+  --output $TMPDIR/gpt-4o-mini-personalization-fixed.json
 ```
 
 The original three baseline conditions run once. An independent fresh fixture

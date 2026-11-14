@@ -32,7 +32,7 @@ HTTPS; embedded credentials and URL query secrets are rejected. Start a shell wi
 the updated bindings, activate the environment as described in README, then run:
 
 ```bash
-python -m persona_prototype.validation --output /tmp/persona-live-validation.json
+python -m persona_prototype.validation --output $TMPDIR/persona-live-validation.json
 ```
 
 Exit codes: `2` missing/invalid settings (no model call), `1` execution failure,

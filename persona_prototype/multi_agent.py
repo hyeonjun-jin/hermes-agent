@@ -11,9 +11,9 @@ from .personalization import TAGS
 ROLE_TOOLS = {"research": "persona_research_search", "analysis": "persona_analysis_environment",
               "verification": "persona_verify_document"}
 ROLE_GOALS = {
-    "research": "Collect relevant RAG evidence using your search tool. Return document IDs, findings and missing document information; do not invent citations. Environment analysis belongs to Analysis, not your RAG search. Missing a fact in documents does not imply the Environment lacks that fact.",
-    "analysis": "Use your environment tool and analyze the supplied research against the supplied profile/project constraints. Cite document IDs; state uncertainties.",
-    "verification": "Check EVERY supplied document ID with your verification tool. Compare research and analysis with original evidence and user requirements. Keep document evidence and Environment evidence distinct: do not report the supplied stage or constraint as missing. Report supported claims, gaps, uncertainty and whether requirements are met; never treat a child summary as proof.",
+    "research": "한국어로 문서 근거만 수집하세요. 검색 도구를 사용하고 문서 ID와 확인된 내용을 보고하세요. 검색 결과가 없으면 '해당 검색에서 미발견'이라고 표현하세요. Environment는 다른 역할의 별도 근거이므로 문서 미기재를 환경 정보 부재로 해석하지 마세요.",
+    "analysis": "한국어로 분석하세요. Environment 도구로 실제 프로젝트 상태와 제약을 확인하고, 문서 근거와 나누어 업무 적합성을 검토하세요. 확인된 Environment 값을 미확인이라고 쓰지 마세요. 구체 일정 등 근거가 없는 항목은 미확인으로 표시하세요.",
+    "verification": "한국어로 교차 검증하세요. 검증 도구로 전체 원문을 다시 확인하세요. 문서 근거와 별도 Environment 관측값을 구분하고 분석과 대조하세요. '확인된 문서 사실', '확인된 Environment', '미확인 사항'으로 나누어 사용자 요구 충족 여부와 불확실성을 보고하세요. 문서에 없다는 것과 실제 정보가 없다는 것은 다릅니다. 제공된 단계와 제약을 없다고 결론내리지 마세요.",
 }
 
 
@@ -68,11 +68,18 @@ def register_role_tools(owner):
         # Supported plugin middleware: expose a stable, explicit role surface instead of
         # deferring its single authorized tool behind Hermes' generic tool_search bridge.
         effective = {**request, "tools": [{"type": "function", "function": s} for s in selected]}
-        has_results = any(m.get("role") == "tool" for m in request.get("messages", []))
+        messages = request.get("messages", [])
+        boundary = max((i for i, m in enumerate(messages) if m.get("role") == "user"), default=-1)
+        has_results = any(m.get("role") == "tool" for m in messages[boundary + 1:])
         full = all(w in owner.question for w in ("조사", "분석", "검증"))
         if scope or full:
             # One evidence round followed by one summary, without changing the tool schemas.
-            effective["tool_choice"] = "none" if has_results else "required"
+            if has_results:
+                effective["tool_choice"] = "none"
+            elif scope:
+                effective["tool_choice"] = "required"
+            else:
+                effective["tool_choice"] = {"type": "function", "function": {"name": "delegate_specialist"}}
         return {"request": effective}
     handles.append(ctx.register_middleware("llm_request", restrict_request))
     return handles
@@ -100,20 +107,21 @@ class MultiAgentProvider(PersonaMemoryProvider):
             "Completion requires all requested roles to succeed, checked evidence, citations and gaps disclosed. "
             "Use the final response format specified in PERSONA_JSON: bullets requires '- ' on each nonempty line, "
             "table requires a Markdown header and separator, explanation permits prose/steps. "
-            "Respond in PERSONA_JSON.language (ko means Korean). "
+            "Respond in PERSONA_JSON.language (ko means Korean). 최종 답변은 한국어로 작성하세요. "
             "Distinguish missing document information from known Environment values. "
             "Include document IDs in final factual claims and disclose uncertainties; do not claim unperformed checks.")
 
     def get_tool_schemas(self):
         full = all(w in getattr(self, "question", "") for w in ("조사", "분석", "검증"))
         base = super().get_tool_schemas()
-        if full:
+        persistent = getattr(self, "session_mode", False)
+        if full and not persistent:
             # A full requested workflow exposes only delegation and optional extra recall to Main.
             # Selected once before the conversation; never mutate the cached tool surface mid-turn.
             base = []  # Relevant episodic memory is already prefetched for this workflow.
         return base + [schema(
             "delegate_specialist", "For a full research-analysis-verification request choose workflow once. Native Hermes delegates all three roles sequentially and returns their findings. Individual roles are also supported in order.",
-            {"role": {"type": "string", "enum": ["workflow"] if full else ["workflow", *ROLE_TOOLS]}}, ["role"])]
+            {"role": {"type": "string", "enum": ["workflow"] if full or persistent else ["workflow", *ROLE_TOOLS]}}, ["role"])]
 
     def handle_tool_call(self, tool_name, args, **kwargs):
         if tool_name != "delegate_specialist":
@@ -129,7 +137,8 @@ class MultiAgentProvider(PersonaMemoryProvider):
                 stages.append(result)
                 if not successful(self.results.get(role, {})):
                     break
-            return json.dumps({"stages": stages}, ensure_ascii=False)
+            return json.dumps({"stages": stages, "source_evidence": self.evidence(),
+                               "source_rule": "Treat observed Environment values as known even if absent from documents. A failed search is not global absence."}, ensure_ascii=False)
         return self.delegate(args["role"])
 
     def role_tool(self, role, args):
@@ -213,7 +222,8 @@ class MultiAgentProvider(PersonaMemoryProvider):
         environment_read = any(e["role"] == "analysis" and e.get("status") == "ok" for e in self.role_traces)
         direct_documents = {d["id"] for e in self.trace if e["tool"] == "mock_rag" and e.get("status") == "ok"
                             for d in e["result"]}
-        unknown = set(re.findall(r"\bdoc-\d+\b", answer)) - (set(self.documents) | direct_documents)
+        unknown = set(re.findall(r"\bdoc-\d+\b", answer)) - (
+            set(self.documents) | direct_documents | set(getattr(self, "known_source_ids", ())))
         requested = all(w in getattr(self, "question", "") for w in ("조사", "분석", "검증"))
         complete = (not delegated and not requested) or (roles_ok and checked and environment_read and not unknown)
         if delegated or requested:
@@ -226,3 +236,16 @@ class MultiAgentProvider(PersonaMemoryProvider):
                         "quality_review_required": delegated,
                         "checked_document_ids": sorted(self.checked), "unsupported_document_ids": sorted(unknown),
                         "note": "Role success and document coverage are mechanical checks, not proof all claims are correct."}
+
+    def evidence(self):
+        environments = [e["result"] for e in self.role_traces if e["role"] == "analysis" and e.get("status") == "ok"]
+        environments += [e["result"] for e in self.trace if e["tool"] == "mock_environment" and e.get("status") == "ok"]
+        documents = dict(self.documents)
+        for event in self.trace:
+            if event["tool"] == "mock_rag" and event.get("status") == "ok":
+                documents.update({d["id"]: d for d in event["result"]})
+        searched = any(e["role"] == "research" and e.get("status") in {"ok", "empty"} for e in self.role_traces)
+        searched = searched or any(e["tool"] == "mock_rag" and e.get("status") in {"ok", "empty"} for e in self.trace)
+        return {"documents": {"state": "observed" if documents else "not_found_in_search" if searched else "not_checked",
+                              "items": list(documents.values()), "scope": "Only these authorized queries; not global absence"},
+                "environment": {"state": "observed" if environments else "not_checked", "items": environments}}

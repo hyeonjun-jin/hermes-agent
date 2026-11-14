@@ -1,5 +1,10 @@
 # Hermes + Persona prototype
 
+The FastAPI + Streamlit conversational prototype, persistent sessions, development
+user selection and cost-limited real model instructions are in [WEB_CHAT.md](WEB_CHAT.md).
+For Cloud access limitations, local PC/VS Code setup and hands-on Mock checks,
+see [USER_TESTING.md](USER_TESTING.md).
+
 For the repaired automatic-memory flow, tag provenance, output-format auditing
 and latest live controlled experiment, see [PERSONALIZATION_FIXES.md](PERSONALIZATION_FIXES.md).
 For native Hermes Research/Analysis/Verification delegation, boundaries, budgets
@@ -28,7 +33,7 @@ python -m persona_prototype.app --mode mock
 
 The CLI runs the same question for all three users and prints each persona,
 answer, and tool arguments/results. Use `--user bob`, `--question '프로젝트 계획'`,
-or `--root /tmp/my-persona-demo` to select an identity/question/independent store.
+or `--root $TMPDIR/my-persona-demo` to select an identity/question/independent store.
 The CLI's selected identity is a trusted fixture, **not authentication**. The app
 boundary accepts a `Principal`; a future server must build it from authenticated
 credentials, never from an untrusted request body.
@@ -56,7 +61,7 @@ printed. There are no new Python dependencies.
 For a fresh-state three-user comparison with machine-readable evidence, run:
 
 ```bash
-python -m persona_prototype.validation --output /tmp/persona-live-validation.json
+python -m persona_prototype.validation --output $TMPDIR/persona-live-validation.json
 ```
 
 Missing settings produce exit code 2 and a blocked report without making model
@@ -75,7 +80,7 @@ runtime; it is never copied into code or a report. Allow `api.openai.com` in the
 running environment's outbound network settings before executing:
 
 ```bash
-python -m persona_prototype.mini_validation --output /tmp/gpt-4o-mini-validation.json
+python -m persona_prototype.mini_validation --output $TMPDIR/gpt-4o-mini-validation.json
 ```
 
 This dedicated runner requires the exact OpenAI endpoint/model, checks the local
@@ -120,7 +125,7 @@ Run all prototype tests, including the live-runner's offline exception tests:
 scripts/run_tests.sh -j 2 tests/persona_prototype/ -q
 ```
 
-The repository runner writes `/var/tmp/hermes-pytest-1000`. In the cloud command
+The repository runner writes `/var$TMPDIR/hermes-pytest-1000`. In the cloud command
 sandbox, an approved escalated test invocation may be required for this path.
 Optional Chromium's blocked download does not affect these tests.
 
