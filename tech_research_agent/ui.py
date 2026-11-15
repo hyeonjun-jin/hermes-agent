@@ -8,18 +8,38 @@ from persona_prototype.ui_output import render_answer
 st.set_page_config(page_title='개인화 기술조사',layout='wide')
 st.title('개인화 기술조사 Agent')
 st.caption('합성 업무 환경 기준일: 2026-10-01. 실제 현재 업무 정보가 아닙니다.')
-st.warning('개발 전용 사용자 선택입니다. 실제 SSO 인증이 아닙니다. 모든 자료는 SYNTHETIC이며 모델은 Mock입니다.')
+st.warning('개발 전용 사용자 선택입니다. 실제 SSO 인증이 아닙니다. 모든 자료는 SYNTHETIC입니다.')
 
 
 @st.cache_resource
 def application():
-    return ResearchApplication(Path.cwd()/'.technical-research-state')
+    app=ResearchApplication(Path.cwd()/'.technical-research-state')
+    try:
+        settings=st.secrets['technical_research_real']
+    except (KeyError,FileNotFoundError):
+        settings={}
+    if settings:
+        from tech_research_agent.real import RealAdapter
+        app.real_adapter=RealAdapter(settings['usage_path'],enabled=settings.get('enabled',False),
+                                     exclusive_ledger_owner=settings.get('exclusive_ledger_owner',False))
+    return app
 
 
 app=application()
 user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:PROFILES[u]['department']+' / '+PROFILES[u]['job'])
 topic=st.sidebar.selectbox('현재 프로젝트',['H','B'],format_func=lambda t:'수소환원제철' if t=='H' else '이차전지 양극재')
 mode=st.sidebar.selectbox('현재 환경',['quick','deep','restricted'])
+execution_mode=st.sidebar.radio('모델 실행 모드',['mock','real'],index=0)
+real_ready=True
+if execution_mode=='real':
+    st.warning('Real은 GPT-4o mini의 실제 비용이 발생할 수 있습니다. PUBLIC 합성 요청만 허용합니다.')
+    st.caption('현재 허용 요청: 수소환원제철을 비교 조사해주세요. / NCM LFP 양극재를 비교 조사해주세요.')
+    consent=st.sidebar.checkbox('PUBLIC 합성 데이터 전송과 비용 발생 가능성을 확인했습니다')
+    real_ready=bool(consent and app.real_adapter and app.real_adapter.enabled)
+    if not app.real_adapter:
+        st.info('서버에 기존 usage.json의 소유권과 Real 활성화 설정이 필요합니다. 새 예산은 생성하지 않습니다.')
+else:
+    st.info('Mock 실행: 스크립트형 응답이며 실제 모델의 개인화 판단 검증이 아닙니다.')
 profile,env,_=runtime(user,topic,mode)
 with st.sidebar.expander('현재 Persona와 승인 선호',expanded=True):
     st.json({**profile,'approved_preferences':app.store.semantic(principal(user),user)})
@@ -27,15 +47,15 @@ with st.sidebar.expander('현재 Environment'):
     st.json(env)
 if 'research_threads' not in st.session_state:
     st.session_state.research_threads={}
-key=user+':'+topic+':'+mode
+key=user+':'+topic+':'+mode+':'+execution_mode
 turns=st.session_state.research_threads.setdefault(key,[])
-question=st.chat_input('기술조사 요청')
+question=st.chat_input('기술조사 요청',disabled=not real_ready)
 if question:
-    with st.spinner('Research → Analysis → Verification (Mock)'):
+    with st.spinner('Research → Analysis → Verification ('+execution_mode+')'):
         try:
-            result=app.ask(principal(user),user,question,topic=topic,mode=mode)
+            result=app.ask(principal(user),user,question,topic=topic,mode=mode,execution_mode=execution_mode)
             turns.append({'question':question,'result':result})
-        except (ValueError,PermissionError) as exc:
+        except (ValueError,PermissionError,RuntimeError) as exc:
             st.error(str(exc))
 for i,turn in enumerate(turns):
     with st.chat_message('user'):
@@ -46,17 +66,20 @@ for i,turn in enumerate(turns):
         if not result['complete']:
             st.warning('조사가 완료되지 않았습니다.')
         with st.expander('정보원·검색 조건·실행 결과'):
+            st.caption('입력 근거는 모델에 제공된 컨텍스트입니다. 모델의 선택 이유나 사후 설명을 인과관계의 증명으로 해석하지 않습니다.')
             st.json(result['trace'])
+            st.json({'model_calls':result.get('model_calls'), 'real_audit':result.get('real_audit')})
         with st.expander('Research·Analysis·Verification'):
             st.caption('보고서는 세 역할 결과를 묶은 것입니다. 원응답 패널에는 마지막 역할의 응답을 표시합니다.')
             st.json(result['stages'])
         with st.expander('원문 근거·출처·기억'):
-            st.json({'evidence':result['evidence'],'history_used':result.get('history_used',[])})
+            st.json({'evidence':result['evidence'],'history_used':result.get('history_used',[]),'applied_inputs':result.get('input_snapshot',{})})
         with st.form('feedback-'+key+'-'+str(i)):
             feedback=st.text_input('사용자 피드백')
+            public_preference=st.checkbox('이 선호는 PUBLIC 합성 테스트용임을 확인',key='public-'+key+'-'+str(i))
             preference=st.selectbox('명시적으로 승인할 조사 선호',['science','strategy','finance','papers_only'])
             if st.form_submit_button('피드백 저장 및 선호 승인'):
                 actor=principal(user)
                 app.store.append(actor,user,'feedback',turn['question'],feedback)
-                app.approve(actor,preference)
+                app.approve(actor,preference,public_synthetic=public_preference)
                 st.success('현재 사용자의 선호만 승인했습니다. 현재 요청·Environment·권한보다 우선하지 않습니다.')

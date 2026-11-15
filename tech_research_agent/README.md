@@ -92,3 +92,10 @@ Mock 기능/보안/Streamlit 회귀만 수행한다. Gold/Scorer는 Agent 실행
 SSO·실 문서 ACL·실 정보원 connector·실제 모델·분산 원장·권한 취소 시 저장 이력 삭제 정책,
 장기 대화 압축과 사용자 선호 버전/롤백 UI는 후속 작업이다. 기존 API 사용량 원장과 상한은
 바꾸지 않았다. 이번 앱은 작업당 별도 로컬 Mock 호출 12회/도구 12회로 제한한다.
+
+## 선택적 Real 경로
+
+[REAL_MODE.md](REAL_MODE.md)에 GPT-4o mini용 gateway, 전체 payload 반출 정책,
+기존 원장·역할 한도, UI 설정과 Stub 검증 범위를 기록했다. 기본 Mock 동작은 유지한다.
+이 문서의 앞선 '실 API 옵션 없음'은 첫 Mock 버전의 기록이며, 현재는 명시적인 서버 설정으로만
+Real 경로를 활성화할 수 있다. 실제 모델/API 실험은 이번에도 수행하지 않았다.

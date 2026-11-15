@@ -24,3 +24,11 @@ def _initializer(root):
     def initialize(self,_):
         original(self,root)
     return initialize
+
+
+def test_real_ui_warns_and_remains_disabled_without_server_approval(tmp_path,monkeypatch):
+    monkeypatch.setattr(ResearchApplication,'__init__',_initializer(tmp_path))
+    app=AppTest.from_file(str(Path(__file__).resolve().parents[2]/'tech_research_agent/ui.py')).run()
+    app.sidebar.radio[0].set_value('real').run()
+    assert not app.exception and app.chat_input[0].disabled
+    assert any('실제 비용' in w.value for w in app.warning)
