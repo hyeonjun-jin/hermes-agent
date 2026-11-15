@@ -1,6 +1,5 @@
 """Project facts are sourced from Profile and authorized Environment, not preference recall."""
 import json
-import difflib
 
 import pytest
 from fastapi.testclient import TestClient
@@ -13,6 +12,7 @@ from persona_prototype.provider import MockEnterpriseData
 from persona_prototype.web_backend import create_app
 from persona_prototype.web_mock import web_respond
 from persona_prototype.web_sessions import ChatSessions
+from tests.persona_prototype.surface_assertions import assert_stable_surface
 
 QUESTION = "제 프로젝트 이름과 현재 진행 단계를 알려주세요"
 
@@ -60,11 +60,7 @@ def test_snapshot_reuse_and_fresh_lookup_keep_stable_prompt_and_tools(tmp_path, 
         current = sessions.ask(*args, QUESTION)
         assert "pilot" in current["answer"] and "prototype" not in current["answer"]
         assert len(current["tool_calls"]) == 1
-    systems = [[m["content"] for m in r["messages"] if m["role"] == "system"] for r in requests]
-    for system in systems:
-        assert system == systems[0], "\n".join(difflib.unified_diff(
-            "\n".join(systems[0]).splitlines(), "\n".join(system).splitlines()))
-    assert all(r["tools"] == requests[0]["tools"] for r in requests)
+    assert_stable_surface(requests, tmp_path / "request-surfaces.json")
     assert requests[0]["tool_choice"]["function"]["name"] == "mock_environment"
 
 

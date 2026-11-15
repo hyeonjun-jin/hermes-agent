@@ -14,6 +14,7 @@ from .personalization import format_answer
 from .fact_grounding import ground_project_facts
 from .evidence import collect_evidence, evidence_review, ground_evidence
 from .output_format import format_matches
+from .runtime_config import ensure_runtime_config
 
 SCOPES = frozenset({"memory:read", "memory:write", "documents:read", "environment:read",
                     "persona:read", "persona:propose", "persona:approve", "persona:rollback"})
@@ -48,18 +49,7 @@ class ChatApplication:
             raise ValueError("Unknown profile")
         home = self.root / "homes" / user_id
         home.mkdir(parents=True, exist_ok=True)
-        if self.validation_limits or self.multi_agent:
-            config = home / "config.yaml"
-            settings = "agent:\n  api_max_retries: 1\n  auto_recovery_cycles: 0\n"
-            if self.multi_agent:
-                settings += ("delegation:\n  max_iterations: 2\n  max_spawn_depth: 1\n"
-                             "  oneshot_max_children: 3\n  max_concurrent_children: 1\n"
-                             "  child_timeout_seconds: 45\n  inherit_mcp_toolsets: false\n")
-            if config.exists():
-                if config.read_text(encoding="utf-8") != settings:
-                    raise ValueError("Existing profile configuration differs; refusing to overwrite")
-            else:
-                config.write_text(settings, encoding="utf-8")
+        ensure_runtime_config(home, limited=self.validation_limits or self.multi_agent, multi_agent=self.multi_agent)
         token = set_hermes_home_override(home)
         manager = MemoryManager()
         provider_class = PersonaMemoryProvider
