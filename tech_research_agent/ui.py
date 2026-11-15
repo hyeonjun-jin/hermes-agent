@@ -65,6 +65,8 @@ for i,turn in enumerate(turns):
         render_answer({**result,'raw_answer':result['stages'][-1]['raw_answer'] if result['stages'] else result['answer']})
         if not result['complete']:
             st.warning('조사가 완료되지 않았습니다.')
+            st.json(result.get('progress',{}))
+            st.caption('중단된 역할의 원응답에는 실행기 오류 안내가 포함될 수 있습니다. 한도 확인 전 재시도·모델 전환으로 우회하지 않습니다.')
         with st.expander('정보원·검색 조건·실행 결과'):
             st.caption('입력 근거는 모델에 제공된 컨텍스트입니다. 모델의 선택 이유나 사후 설명을 인과관계의 증명으로 해석하지 않습니다.')
             st.json(result['trace'])

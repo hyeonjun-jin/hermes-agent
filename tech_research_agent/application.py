@@ -14,6 +14,7 @@ from .config import runtime, PROFILES
 from .provider import ResearchProvider
 from .mock import respond
 from .audit import review
+from .progress import progress
 
 SCOPES=frozenset({'memory:read','memory:write'})
 
@@ -61,7 +62,7 @@ class ResearchApplication:
         def observe(request):
             if len(requests)>=12:
                 raise RuntimeError('Local Mock model-call budget exhausted')
-            requests.append({'model':request['model'],'tool_names':[t['function']['name'] for t in request.get('tools',[])]})
+            requests.append({'role':role,'model':request['model'],'tool_names':[t['function']['name'] for t in request.get('tools',[])]})
         with bind_profile_scope(home,hydrate_secrets=False):
             from run_agent import AIAgent
             with self._endpoint(execution_mode,adapter.corpus,observe) as endpoint:
@@ -113,17 +114,25 @@ class ResearchApplication:
                 'human_review_required':True,'synthetic':True,
                 'analysis_audit':review(stages[1]['raw_answer'],evidence) if len(stages)>1 else {},
                 'verification_audit':review(stages[-1]['raw_answer'],evidence) if stages else {}}
-        complete=len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
-        answer='## 기술조사 보고서 (SYNTHETIC / '+execution_mode+')\n조사 목적: '+environment['purpose']+'\n기준일: '+environment['as_of']+' / 마감: '+environment['deadline']+' / 보고 대상: '+environment['audience']+'\n'+ '\n'.join('### '+s['role']+'\n'+s['raw_answer'] for s in stages)
+        verification_read=any(e['plan']['id'].startswith('verification-') and e['plan']['api'].startswith('read_') and e['executed'] and e['result']['status']=='ok' for e in adapter.trace)
+        checks['verification_read']=verification_read
+        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
+        answer='## 기술조사 보고서 (SYNTHETIC / '+execution_mode+')\n조사 목적: '+environment['purpose']+'\n기준일: '+environment['as_of']+' / 마감: '+environment['deadline']+' / 보고 대상: '+environment['audience']+'\n'+ '\n'.join('### '+s['role']+'\n'+(s['raw_answer'] if not s['error'] else '이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.') for s in stages)
         if not complete:
             answer+='\n조사 미완료: 근거·실행 상태를 확인해 주세요.'
             if execution_mode=='real' and any(a.get('budget_blocked') for a in self.real_adapter.audit):
-                answer+='\n기존 API/역할 호출 한도로 중단했습니다. 예산을 초기화하지 않았으며, 완주에는 별도 예산 승인이 필요합니다.'
+                reason=next((a.get('block_reason') or '' for a in reversed(self.real_adapter.audit) if a.get('budget_blocked')),'')
+                boundary='비용 예약 상한' if 'cost' in reason.lower() else '기존 API/역할 호출 한도'
+                answer+='\n'+boundary+'로 중단했습니다. 예산을 초기화하지 않았으며, 완주에는 별도 예산 승인이 필요합니다.'
+        progress_audit=self.real_adapter.audit if execution_mode=='real' else [{'role':r['role'],'status':200,'reserved_attempt':True} for r in requests]
+        execution_progress=progress(stages,adapter.trace,progress_audit)
+        if not complete:
+            answer+='\n현재 단계: '+str(execution_progress['stopped_role'] or 'verification')+' / 역할별 사용 호출: '+str(execution_progress['calls_by_role'])+'\n남은 작업: '+', '.join(execution_progress['remaining_work'])
         stored_answer=('[PUBLIC_SYNTHETIC_RESEARCH] ' if execution_mode=='real' and not any(a.get('status')=='egress_denied' for a in self.real_adapter.audit) else '')+answer
         self.store.append(actor,user_id,'technical-research','[project='+environment['project_id']+'] '+question,stored_answer)
         return {'mode':execution_mode,'real_audit':self.real_adapter.summary() if execution_mode=='real' else None,'persona':{**profile,'approved_preferences':approved},'environment':environment,
                 'history_used':history,'input_snapshot':{'profile':profile,'environment':environment,'approved_preferences':approved,'history':history},'stages':stages,'trace':adapter.trace,'evidence':evidence,'answer':answer,
-                'complete':complete,'checks':checks,'model_calls':self.real_adapter.summary()['this_run_attempts'] if execution_mode=='real' else len(requests),'tool_cost':adapter.context.spent}
+                'progress':execution_progress,'complete':complete,'checks':checks,'model_calls':self.real_adapter.summary()['this_run_attempts'] if execution_mode=='real' else len(requests),'tool_cost':adapter.context.spent}
 
     @contextmanager
     def _endpoint(self, mode, corpus, observe):

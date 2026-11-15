@@ -91,6 +91,7 @@ def test_real_hermes_uses_stub_choice_not_mock_rules(tmp_path):
     assert result['trace'],real.audit
     assert result['mode']=='real' and result['trace'][0]['plan']['app']=='opendart'
     assert len(requests)==4 and all(b['model']=='gpt-4o-mini' for b in requests)
+    assert not result['complete'] and not result['checks']['verification_read']
     assert result['trace'][0]['input_provenance']['causal_proof'] is False
     assert len(requests[0]['tools'])==11
     assert not any('proj-' in json.dumps(b) for b in requests)

@@ -1,0 +1,2730 @@
+[
+  {
+    "scenario": "direct-financial",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 2,
+      "analysis": 1,
+      "verification": 2
+    },
+    "request_roles": [
+      "research",
+      "research",
+      "analysis",
+      "verification",
+      "verification"
+    ],
+    "complete": true,
+    "progress": {
+      "completed_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "stopped_role": null,
+      "pending_roles": [],
+      "calls_by_role": {
+        "research": 2,
+        "analysis": 1,
+        "verification": 2
+      },
+      "search_results_received": false,
+      "original_read": true,
+      "verification_read": true,
+      "remaining_work": [],
+      "stop_reason": null
+    },
+    "trace": [
+      {
+        "index": 0,
+        "plan": {
+          "id": "research-tool-0",
+          "app": "opendart",
+          "api": "read_financials",
+          "rp": {
+            "corp_code": "00000001",
+            "bsns_year": "2025",
+            "reprt_code": "11011",
+            "fs_div": "CFS"
+          },
+          "op": {},
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "corp_code": "00000001",
+            "bsns_year": "2025",
+            "reprt_code": "11011",
+            "fs_div": "CFS"
+          },
+          "op": {}
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-F01",
+              "title": "SYNTHETIC H F01",
+              "origin_app": "opendart",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-07-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-F01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "합성 연결 연간 영업이익은 40 가상 크레딧이다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "합성 투자현금흐름은 -80 가상 크레딧이다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "회계기간은 2025년이고 CFS이다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "사업별 손익은 없다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null,
+          "rows": [
+            {
+              "account_id": "operating_profit",
+              "value": "40",
+              "unit": "가상 크레딧",
+              "span_id": "s1"
+            },
+            {
+              "account_id": "cash_flow_investing",
+              "value": "-80",
+              "unit": "가상 크레딧",
+              "span_id": "s2"
+            }
+          ]
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 1,
+        "plan": {
+          "id": "verification-tool-1",
+          "app": "opendart",
+          "api": "read_financials",
+          "rp": {
+            "corp_code": "00000001",
+            "bsns_year": "2025",
+            "reprt_code": "11011",
+            "fs_div": "CFS"
+          },
+          "op": {},
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "corp_code": "00000001",
+            "bsns_year": "2025",
+            "reprt_code": "11011",
+            "fs_div": "CFS"
+          },
+          "op": {}
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-F01",
+              "title": "SYNTHETIC H F01",
+              "origin_app": "opendart",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-07-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-F01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "합성 연결 연간 영업이익은 40 가상 크레딧이다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "합성 투자현금흐름은 -80 가상 크레딧이다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "회계기간은 2025년이고 CFS이다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "사업별 손익은 없다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null,
+          "rows": [
+            {
+              "account_id": "operating_profit",
+              "value": "40",
+              "unit": "가상 크레딧",
+              "span_id": "s1"
+            },
+            {
+              "account_id": "cash_flow_investing",
+              "value": "-80",
+              "unit": "가상 크레딧",
+              "span_id": "s2"
+            }
+          ]
+        },
+        "input_provenance": {
+          "context_sha256": "ab5df323a01865d40f255d5d14201a89a431b8a45d157a4f0ac1189e087082bd",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "verification",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      }
+    ],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "SYNTHETIC [H-F01] 기술별 수익성은 미확인입니다.",
+        "error": false
+      },
+      {
+        "role": "analysis",
+        "raw_answer": "SYNTHETIC [H-F01] 기술별 수익성은 미확인입니다.",
+        "error": false
+      },
+      {
+        "role": "verification",
+        "raw_answer": "SYNTHETIC [H-F01] 기술별 수익성은 미확인입니다.",
+        "error": false
+      }
+    ],
+    "raw_tool_calls": [
+      [
+        {
+          "id": "research-1-0",
+          "type": "function",
+          "function": {
+            "name": "opendart__read_financials",
+            "arguments": "{\"rp\": {\"corp_code\": \"00000001\", \"bsns_year\": \"2025\", \"reprt_code\": \"11011\", \"fs_div\": \"CFS\"}, \"op\": {}}"
+          }
+        }
+      ],
+      [],
+      [],
+      [
+        {
+          "id": "verification-1-0",
+          "type": "function",
+          "function": {
+            "name": "opendart__read_financials",
+            "arguments": "{\"rp\": {\"corp_code\": \"00000001\", \"bsns_year\": \"2025\", \"reprt_code\": \"11011\", \"fs_div\": \"CFS\"}, \"op\": {}}"
+          }
+        }
+      ],
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\nSYNTHETIC [H-F01] 기술별 수익성은 미확인입니다.\n### analysis\nSYNTHETIC [H-F01] 기술별 수익성은 미확인입니다.\n### verification\nSYNTHETIC [H-F01] 기술별 수익성은 미확인입니다."
+  },
+  {
+    "scenario": "search-read",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 3,
+      "analysis": 1,
+      "verification": 2
+    },
+    "request_roles": [
+      "research",
+      "research",
+      "research",
+      "analysis",
+      "verification",
+      "verification"
+    ],
+    "complete": true,
+    "progress": {
+      "completed_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "stopped_role": null,
+      "pending_roles": [],
+      "calls_by_role": {
+        "research": 3,
+        "analysis": 1,
+        "verification": 2
+      },
+      "search_results_received": true,
+      "original_read": true,
+      "verification_read": true,
+      "remaining_work": [],
+      "stop_reason": null
+    },
+    "trace": [
+      {
+        "index": 0,
+        "plan": {
+          "id": "research-tool-0",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 1,
+        "plan": {
+          "id": "research-tool-1",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 2,
+        "plan": {
+          "id": "verification-tool-2",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "b5fa77b6dba2dcdc0bebd9f4fe60c70173687c689f39b13d2265b86a694fbb72",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "verification",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      }
+    ],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "analysis",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "verification",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      }
+    ],
+    "raw_tool_calls": [
+      [
+        {
+          "id": "research-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"hydrogen\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-2-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      [],
+      [],
+      [
+        {
+          "id": "verification-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### analysis\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### verification\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다."
+  },
+  {
+    "scenario": "one-search-retry",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 4,
+      "analysis": 1,
+      "verification": 2
+    },
+    "request_roles": [
+      "research",
+      "research",
+      "research",
+      "research",
+      "analysis",
+      "verification",
+      "verification"
+    ],
+    "complete": true,
+    "progress": {
+      "completed_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "stopped_role": null,
+      "pending_roles": [],
+      "calls_by_role": {
+        "research": 4,
+        "analysis": 1,
+        "verification": 2
+      },
+      "search_results_received": true,
+      "original_read": true,
+      "verification_read": true,
+      "remaining_work": [],
+      "stop_reason": null
+    },
+    "trace": [
+      {
+        "index": 0,
+        "plan": {
+          "id": "research-tool-0",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "no-matching-token"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "no-matching-token"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "empty",
+          "items": [],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 1,
+        "plan": {
+          "id": "research-tool-1",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 2,
+        "plan": {
+          "id": "research-tool-2",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 3,
+        "plan": {
+          "id": "verification-tool-3",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "b5fa77b6dba2dcdc0bebd9f4fe60c70173687c689f39b13d2265b86a694fbb72",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "verification",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      }
+    ],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "analysis",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "verification",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      }
+    ],
+    "raw_tool_calls": [
+      [
+        {
+          "id": "research-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"no-matching-token\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-2-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"hydrogen\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-3-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      [],
+      [],
+      [
+        {
+          "id": "verification-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### analysis\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### verification\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다."
+  },
+  {
+    "scenario": "bounded-expanded",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 5,
+      "analysis": 1,
+      "verification": 3
+    },
+    "request_roles": [
+      "research",
+      "research",
+      "research",
+      "research",
+      "research",
+      "analysis",
+      "verification",
+      "verification",
+      "verification"
+    ],
+    "complete": true,
+    "progress": {
+      "completed_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "stopped_role": null,
+      "pending_roles": [],
+      "calls_by_role": {
+        "research": 5,
+        "analysis": 1,
+        "verification": 3
+      },
+      "search_results_received": true,
+      "original_read": true,
+      "verification_read": true,
+      "remaining_work": [],
+      "stop_reason": null
+    },
+    "trace": [
+      {
+        "index": 0,
+        "plan": {
+          "id": "research-tool-0",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "no-matching-token"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "no-matching-token"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "empty",
+          "items": [],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 1,
+        "plan": {
+          "id": "research-tool-1",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "no-matching-token"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "no-matching-token"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "empty",
+          "items": [],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 2,
+        "plan": {
+          "id": "research-tool-2",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 3,
+        "plan": {
+          "id": "research-tool-3",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 4,
+        "plan": {
+          "id": "verification-tool-4",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "b5fa77b6dba2dcdc0bebd9f4fe60c70173687c689f39b13d2265b86a694fbb72",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "verification",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 5,
+        "plan": {
+          "id": "verification-tool-5",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "b5fa77b6dba2dcdc0bebd9f4fe60c70173687c689f39b13d2265b86a694fbb72",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "verification",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      }
+    ],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "analysis",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "verification",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      }
+    ],
+    "raw_tool_calls": [
+      [
+        {
+          "id": "research-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"no-matching-token\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-2-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"no-matching-token\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-3-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"hydrogen\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-4-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      [],
+      [],
+      [
+        {
+          "id": "verification-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "verification-2-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### analysis\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### verification\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다."
+  },
+  {
+    "scenario": "legacy-block",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 2,
+      "analysis": 0,
+      "verification": 0
+    },
+    "request_roles": [
+      "research",
+      "research"
+    ],
+    "complete": false,
+    "progress": {
+      "completed_roles": [],
+      "stopped_role": "research",
+      "pending_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "calls_by_role": {
+        "research": 2,
+        "analysis": 0,
+        "verification": 0
+      },
+      "search_results_received": true,
+      "original_read": true,
+      "verification_read": false,
+      "remaining_work": [
+        "Research 최종 응답",
+        "Analysis 근거 해석·비교",
+        "Verification 원문 재조회·최종 확인"
+      ],
+      "stop_reason": "Agent call cap reached"
+    },
+    "trace": [
+      {
+        "index": 0,
+        "plan": {
+          "id": "research-tool-0",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      },
+      {
+        "index": 1,
+        "plan": {
+          "id": "research-tool-1",
+          "app": "openalex",
+          "api": "read_work",
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "work_id": "H-A01"
+          },
+          "op": {
+            "include_abstract": true
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      }
+    ],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "openai is rate-limiting requests right now — it looks temporarily unavailable. Wait a minute and send /retry, or switch models with /model. To avoid this in future, add a backup provider with `hermes fallback add`.\n\nProvider said: HTTP 429: Agent call cap reached",
+        "error": true
+      }
+    ],
+    "raw_tool_calls": [
+      [
+        {
+          "id": "research-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"hydrogen\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [
+        {
+          "id": "research-2-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__read_work",
+            "arguments": "{\"rp\": {\"work_id\": \"H-A01\"}, \"op\": {\"include_abstract\": true}}"
+          }
+        }
+      ],
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\n이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.\n조사 미완료: 근거·실행 상태를 확인해 주세요.\n기존 API/역할 호출 한도로 중단했습니다. 예산을 초기화하지 않았으며, 완주에는 별도 예산 승인이 필요합니다.\n현재 단계: research / 역할별 사용 호출: {'research': 2, 'analysis': 0, 'verification': 0}\n남은 작업: Research 최종 응답, Analysis 근거 해석·비교, Verification 원문 재조회·최종 확인"
+  },
+  {
+    "scenario": "missing-evidence",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 2,
+      "analysis": 1,
+      "verification": 1
+    },
+    "request_roles": [
+      "research",
+      "research",
+      "analysis",
+      "verification"
+    ],
+    "complete": false,
+    "progress": {
+      "completed_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "stopped_role": null,
+      "pending_roles": [],
+      "calls_by_role": {
+        "research": 2,
+        "analysis": 1,
+        "verification": 1
+      },
+      "search_results_received": true,
+      "original_read": false,
+      "verification_read": false,
+      "remaining_work": [
+        "문서 원문 Read",
+        "Verification 원문 재조회·최종 확인"
+      ],
+      "stop_reason": null
+    },
+    "trace": [
+      {
+        "index": 0,
+        "plan": {
+          "id": "research-tool-0",
+          "app": "openalex",
+          "api": "search_works",
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          },
+          "after": []
+        },
+        "executed": true,
+        "execution_args": {
+          "rp": {
+            "query": "hydrogen"
+          },
+          "op": {
+            "limit": 3
+          }
+        },
+        "reason": null,
+        "result": {
+          "status": "ok",
+          "items": [
+            {
+              "source_id": "H-A01",
+              "title": "SYNTHETIC H A01",
+              "origin_app": "openalex",
+              "retrieved_at": "2026-10-01T09:00:00+09:00",
+              "published_at": "2026-02-01",
+              "classification": "PUBLIC",
+              "locator": "fixture://bench-v0/H-A01",
+              "synthetic": true,
+              "spans": [
+                {
+                  "id": "s1",
+                  "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s2",
+                  "text": "원리·성능 비교는 조건에 의존한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s3",
+                  "text": "실험 조건과 재현성을 확인한다.",
+                  "kind": "claim"
+                },
+                {
+                  "id": "s4",
+                  "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+                  "kind": "uncertainty"
+                }
+              ]
+            }
+          ],
+          "cost": {
+            "mock_units": 1
+          },
+          "warnings": [],
+          "next_cursor": null
+        },
+        "input_provenance": {
+          "context_sha256": "6992b33786ef98b947d45bf17c818ce0b03c65f3c1e5f8ddd39d2df30f49cdc0",
+          "available_fields": [
+            "profile",
+            "environment",
+            "approved_preferences",
+            "history",
+            "question",
+            "entity_catalog"
+          ],
+          "supplied_context": {
+            "role": "research",
+            "profile": {
+              "department": "연구소",
+              "job": "박사 연구원",
+              "expertise": "공정·소재",
+              "interests": [
+                "수소환원제철",
+                "이차전지 양극재"
+              ],
+              "criteria": "원리·실험 조건·재현성·청구항",
+              "focus": "science"
+            },
+            "environment": {
+              "topic": "H",
+              "purpose": "기술 비교와 다음 의사결정 근거 확보",
+              "deadline": "2026-10-01T12:00:00+09:00",
+              "classification": "PUBLIC",
+              "audience": "프로젝트 책임자",
+              "as_of": "2026-10-01",
+              "cutoff": "2026-09-30",
+              "depth": "quick",
+              "allowed_sources": [
+                "kipris_plus",
+                "openalex",
+                "opendart",
+                "posco_ir"
+              ],
+              "public_project": "H"
+            },
+            "approved_preferences": {},
+            "history": [],
+            "question": "수소환원제철을 비교 조사해주세요.",
+            "entity_catalog": [
+              {
+                "corp_code": "00000001",
+                "public_topic": "H",
+                "synthetic": true,
+                "classification": "PUBLIC"
+              }
+            ]
+          },
+          "memory_record_ids": [],
+          "causal_proof": false
+        }
+      }
+    ],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "analysis",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      },
+      {
+        "role": "verification",
+        "raw_answer": "SYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.",
+        "error": false
+      }
+    ],
+    "raw_tool_calls": [
+      [
+        {
+          "id": "research-1-0",
+          "type": "function",
+          "function": {
+            "name": "openalex__search_works",
+            "arguments": "{\"rp\": {\"query\": \"hydrogen\"}, \"op\": {\"limit\": 3}}"
+          }
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### analysis\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n### verification\nSYNTHETIC [H-A01] 실험실 결과는 상업 성능을 보장하지 않는다.\n조사 미완료: 근거·실행 상태를 확인해 주세요.\n현재 단계: verification / 역할별 사용 호출: {'research': 2, 'analysis': 1, 'verification': 1}\n남은 작업: 문서 원문 Read, Verification 원문 재조회·최종 확인"
+  },
+  {
+    "scenario": "cost-block",
+    "transport": "stub-only",
+    "paid_budget_activated": false,
+    "calls_by_role": {
+      "research": 0,
+      "analysis": 0,
+      "verification": 0
+    },
+    "request_roles": [],
+    "complete": false,
+    "progress": {
+      "completed_roles": [],
+      "stopped_role": "research",
+      "pending_roles": [
+        "research",
+        "analysis",
+        "verification"
+      ],
+      "calls_by_role": {
+        "research": 0,
+        "analysis": 0,
+        "verification": 0
+      },
+      "search_results_received": false,
+      "original_read": false,
+      "verification_read": false,
+      "remaining_work": [
+        "검색 정보원 선택 및 검색 결과 확보",
+        "문서 원문 Read",
+        "Research 최종 응답",
+        "Analysis 근거 해석·비교",
+        "Verification 원문 재조회·최종 확인"
+      ],
+      "stop_reason": "Stub cost ceiling reached"
+    },
+    "trace": [],
+    "raw_stages": [
+      {
+        "role": "research",
+        "raw_answer": "openai is rate-limiting requests right now — it looks temporarily unavailable. Wait a minute and send /retry, or switch models with /model. To avoid this in future, add a backup provider with `hermes fallback add`.\n\nProvider said: HTTP 429: Stub cost ceiling reached",
+        "error": true
+      }
+    ],
+    "raw_tool_calls": [
+      []
+    ],
+    "report": "## 기술조사 보고서 (SYNTHETIC / real)\n조사 목적: 기술 비교와 다음 의사결정 근거 확보\n기준일: 2026-10-01 / 마감: 2026-10-01T12:00:00+09:00 / 보고 대상: 프로젝트 책임자\n### research\n이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.\n조사 미완료: 근거·실행 상태를 확인해 주세요.\n비용 예약 상한로 중단했습니다. 예산을 초기화하지 않았으며, 완주에는 별도 예산 승인이 필요합니다.\n현재 단계: research / 역할별 사용 호출: {'research': 0, 'analysis': 0, 'verification': 0}\n남은 작업: 검색 정보원 선택 및 검색 결과 확보, 문서 원문 Read, Research 최종 응답, Analysis 근거 해석·비교, Verification 원문 재조회·최종 확인"
+  }
+]

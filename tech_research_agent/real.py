@@ -6,7 +6,7 @@ import os
 import uuid
 from pathlib import Path
 from contextlib import contextmanager
-import fcntl
+from persona_prototype.usage_lock import claim_usage_lock
 
 from persona_prototype.web_backend import PersistentBudget, check_real_network
 from persona_prototype.mini_validation import ENDPOINT, MODEL, RATES, gateway
@@ -132,12 +132,7 @@ class RealAdapter:
     @contextmanager
     def endpoint(self, corpus):
         self.preflight()
-        # Legacy backend does not share this advisory lock: operator must stop it first.
-        with self.path.with_suffix('.research.lock').open('a') as lock:
-            try:
-                fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            except BlockingIOError:
-                raise RealBlocked('Usage ledger already owned') from None
+        with claim_usage_lock(self.path):
             self.preflight()
             policy=PayloadPolicy(corpus)
             adapter=self
@@ -164,6 +159,8 @@ class RealAdapter:
                     status,payload=adapter.budget.forward(prepared)
                     adapter.audit.append({'role':adapter.role,'status':status,'payload_sha256':digest,
                                           'budget_blocked':status==429 and len(adapter.budget.calls)==before,
+                                          'reserved_attempt':len(adapter.budget.calls)>before,
+                                          'block_reason':payload.get('error',{}).get('message') if status==429 and len(adapter.budget.calls)==before else None,
                                           'provenance':'context supplied; model explanations are not causal proof',
                                           'tool_result_ids':[m.get('tool_call_id') for m in prepared['messages'] if m['role']=='tool'],
                                           'raw_tool_calls':copy.deepcopy(payload.get('choices',[{}])[0].get('message',{}).get('tool_calls',[]))})
@@ -175,7 +172,7 @@ class RealAdapter:
                         raise RealBlocked('Invalid upstream response shape')
                     policy.check({'messages':[{'role':'assistant','content':json.dumps(payload,ensure_ascii=False)}]})
                 return status,payload
-            self.budget=ReservedBudget(safe_send,self.path)
+            self.budget=self._make_budget(safe_send)
             self.budget.case='technical-'+uuid.uuid4().hex
             self.start_attempts=len(self.budget.calls)
             self.audit=[]
@@ -184,11 +181,11 @@ class RealAdapter:
             for call in self.budget.calls:
                 actor=call.get('actor','')
                 self.budget.by_actor[actor]=self.budget.by_actor.get(actor,0)+1
-            try:
-                with gateway(Guard()) as url:
-                    yield url
-            finally:
-                fcntl.flock(lock,fcntl.LOCK_UN)
+            with gateway(Guard()) as url:
+                yield url
+
+    def _make_budget(self, send):
+        return ReservedBudget(send,self.path)
 
     def summary(self):
         return {'model':MODEL,'transport_mode':'stub' if self.transport is not None else 'openai','pricing':RATES,'audit':self.audit,

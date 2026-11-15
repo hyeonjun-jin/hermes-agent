@@ -103,6 +103,7 @@ def create_app(root: Path, *, mode="mock", dev_mode=False):
                 url = stack.enter_context(mock_endpoint(web_respond))
                 key, model = "offline", "persona-mock"
             elif mode == "real":
+                from .usage_lock import claim_usage_lock
                 import httpx
                 url, key, model = real_settings(os.environ)
                 if url.rstrip("/") != ENDPOINT or model != MODEL:
@@ -114,6 +115,7 @@ def create_app(root: Path, *, mode="mock", dev_mode=False):
                 def send(body):
                     response = client.post(ENDPOINT + "/chat/completions", json=body)
                     return response.status_code, response.json() if response.status_code == 200 else {}
+                stack.enter_context(claim_usage_lock(root / "usage.json"))
                 budget = PersistentBudget(send, root / "usage.json")
                 url = stack.enter_context(gateway(budget))
                 key = "local-gateway"
