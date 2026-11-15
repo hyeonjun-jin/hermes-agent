@@ -1,0 +1,65 @@
+{
+  "id": "H-S-E2",
+  "synthetic": true,
+  "profile": {
+    "id": "P-S",
+    "user_id": "bench-strategy",
+    "role": "전략실 임원",
+    "expertise": "사업 포트폴리오 의사결정",
+    "language": "ko",
+    "preferred_jurisdiction": "KR",
+    "evidence_priorities": [
+      "경쟁 기술",
+      "실증 일정",
+      "사업화 장애",
+      "시장 신호"
+    ],
+    "decision_criteria": "공시와 IR 구분; 회사 홍보는 독립 시장 전망이 아님"
+  },
+  "environment": {
+    "id": "E2",
+    "purpose": "실증·사업화·투자 검토회의를 위한 대안 심층 비교",
+    "deadline": "2026-10-15T18:00:00+09:00",
+    "depth": "deep",
+    "classification": "INTERNAL",
+    "audience": "기술·전략·재무 공동 심의위원회",
+    "as_of": "2026-10-01",
+    "cutoff": "2026-09-30",
+    "observed_at": "2026-10-01T09:00:00+09:00",
+    "policy_version": "bench-policy-v0",
+    "model_egress_policy": "local_fixture_only",
+    "allowed_apps": [
+      "openalex",
+      "kipris_plus",
+      "opendart",
+      "posco_ir",
+      "internal_mock"
+    ],
+    "soft_budget": 10,
+    "hard_budget": 12,
+    "project_id": "proj-H",
+    "allowed_projects": [
+      "proj-H"
+    ]
+  },
+  "question": "수소환원제철의 유동층·샤프트로 방식에 대해, 현재 업무에 필요한 근거를 찾아 비교하고 다음 판단에 필요한 점을 정리해 주세요.",
+  "toolset": [
+    "openalex",
+    "kipris_plus",
+    "opendart",
+    "posco_ir",
+    "internal_mock"
+  ],
+  "scope": {
+    "topic": "H",
+    "depth": "deep",
+    "from_date": "2022-01-01",
+    "to_date": "2026-09-30",
+    "jurisdiction": "KR"
+  },
+  "budget": {
+    "environment_calls": 1,
+    "soft": 10,
+    "hard": 12
+  }
+}

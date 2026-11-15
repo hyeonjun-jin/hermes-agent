@@ -1,0 +1,978 @@
+{
+  "DEV-H-A01": {
+    "id": "DEV-H-A01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "openalex",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-A01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-A01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-P01": {
+    "id": "DEV-H-P01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "kipris_plus",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-P01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-P01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-D01": {
+    "id": "DEV-H-D01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "opendart",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-04-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-D01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-D01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-IS01": {
+    "id": "DEV-H-IS01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "posco_ir",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-05-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-IS01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-IS01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-IF01": {
+    "id": "DEV-H-IF01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "posco_ir",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-06-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-IF01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-IF01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-F01": {
+    "id": "DEV-H-F01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "opendart",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-07-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-F01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-F01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-N2R": {
+    "id": "DEV-H-N2R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-N2R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-N2R",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-N2S": {
+    "id": "DEV-H-N2S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-N2S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-N2S",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-N2F": {
+    "id": "DEV-H-N2F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-N2F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-N2F",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-N3R": {
+    "id": "DEV-H-N3R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-N3R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-N3R",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-N3S": {
+    "id": "DEV-H-N3S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-N3S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-N3S",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-N3F": {
+    "id": "DEV-H-N3F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-N3F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-N3F",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-H-NOISE1": {
+    "id": "DEV-H-NOISE1",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "openalex",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-NOISE1",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님."
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-NOISE1",
+    "content_hash": "b2b7c42ed5625f8a2b01b98b9331718e121aee839de3bc167c128683db06d2a6"
+  },
+  "DEV-H-NOISE2": {
+    "id": "DEV-H-NOISE2",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "openalex",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-H-NOISE2",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님."
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-H-NOISE2",
+    "content_hash": "b2b7c42ed5625f8a2b01b98b9331718e121aee839de3bc167c128683db06d2a6"
+  },
+  "DEV-B-A01": {
+    "id": "DEV-B-A01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "openalex",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-A01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-A01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-P01": {
+    "id": "DEV-B-P01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "kipris_plus",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-P01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-P01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-D01": {
+    "id": "DEV-B-D01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "opendart",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-04-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-D01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-D01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-IS01": {
+    "id": "DEV-B-IS01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "posco_ir",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-05-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-IS01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-IS01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-IF01": {
+    "id": "DEV-B-IF01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "posco_ir",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-06-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-IF01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-IF01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-F01": {
+    "id": "DEV-B-F01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "opendart",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-07-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-F01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-F01",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-N2R": {
+    "id": "DEV-B-N2R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-N2R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-N2R",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-N2S": {
+    "id": "DEV-B-N2S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-N2S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-N2S",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-N2F": {
+    "id": "DEV-B-N2F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-N2F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-N2F",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-N3R": {
+    "id": "DEV-B-N3R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-N3R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-N3R",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-N3S": {
+    "id": "DEV-B-N3S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-N3S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-N3S",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-N3F": {
+    "id": "DEV-B-N3F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-N3F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-N3F",
+    "content_hash": "df8904e555241f5a9984d74b56756be42ba2558b6e4b0d3e50bb001339ca94c3"
+  },
+  "DEV-B-NOISE1": {
+    "id": "DEV-B-NOISE1",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "openalex",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-NOISE1",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님."
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-NOISE1",
+    "content_hash": "b2b7c42ed5625f8a2b01b98b9331718e121aee839de3bc167c128683db06d2a6"
+  },
+  "DEV-B-NOISE2": {
+    "id": "DEV-B-NOISE2",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "openalex",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 개발용 구조 검사",
+    "locator": "fixture://development/DEV-B-NOISE2",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님."
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "DEV-B-NOISE2",
+    "content_hash": "b2b7c42ed5625f8a2b01b98b9331718e121aee839de3bc167c128683db06d2a6"
+  }
+}

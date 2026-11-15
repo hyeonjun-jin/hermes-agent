@@ -1,0 +1,56 @@
+{
+  "id": "B-R-E3",
+  "synthetic": true,
+  "profile": {
+    "id": "P-R",
+    "user_id": "bench-researcher",
+    "role": "연구소 박사",
+    "expertise": "공정/소재 연구 숙련",
+    "language": "ko",
+    "preferred_jurisdiction": "KR",
+    "evidence_priorities": [
+      "논문 실험 조건·재현성",
+      "원리",
+      "특허 청구항"
+    ],
+    "decision_criteria": "특허 건수를 성능 지표로 보지 않음"
+  },
+  "environment": {
+    "id": "E3",
+    "purpose": "외부 전송 금지 과제의 내부 승인 가능성 확인",
+    "deadline": "2026-10-02T09:00:00+09:00",
+    "depth": "constrained",
+    "classification": "RESTRICTED",
+    "audience": "승인된 내부 프로젝트 위원회",
+    "as_of": "2026-10-01",
+    "cutoff": "2026-09-30",
+    "observed_at": "2026-10-01T09:00:00+09:00",
+    "policy_version": "bench-policy-v0",
+    "model_egress_policy": "local_fixture_only",
+    "allowed_apps": [
+      "internal_mock"
+    ],
+    "soft_budget": 6,
+    "hard_budget": 12,
+    "project_id": "proj-B",
+    "allowed_projects": [
+      "proj-B"
+    ]
+  },
+  "question": "이차전지 양극재의 고니켈 NCM·LFP에 대해, 현재 업무에 필요한 근거를 찾아 비교하고 다음 판단에 필요한 점을 정리해 주세요.",
+  "toolset": [
+    "internal_mock"
+  ],
+  "scope": {
+    "topic": "B",
+    "depth": "constrained",
+    "from_date": null,
+    "to_date": "2026-09-30",
+    "jurisdiction": "KR"
+  },
+  "budget": {
+    "environment_calls": 1,
+    "soft": 6,
+    "hard": 12
+  }
+}

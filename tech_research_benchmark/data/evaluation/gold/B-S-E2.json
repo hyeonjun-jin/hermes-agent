@@ -1,0 +1,173 @@
+{
+  "id": "B-S-E2",
+  "synthetic": true,
+  "calls": [
+    {
+      "id": "a1",
+      "app": "opendart",
+      "api": "list_disclosures",
+      "rp": {
+        "corp_code": "00000002",
+        "from_date": "2022-01-01",
+        "to_date": "2026-09-30"
+      },
+      "op": {
+        "report_type": "material",
+        "keyword": "고니켈 NCM LFP 양극재 사업화 공급",
+        "limit": 5
+      },
+      "after": []
+    },
+    {
+      "id": "a2",
+      "app": "opendart",
+      "api": "read_disclosure",
+      "rp": {
+        "receipt_no": "B-D01"
+      },
+      "op": {
+        "section": "technology_project"
+      },
+      "after": [
+        "a1"
+      ]
+    },
+    {
+      "id": "a3",
+      "app": "posco_ir",
+      "api": "search_materials",
+      "rp": {
+        "query": "고니켈 NCM LFP 양극재 사업화 공급"
+      },
+      "op": {
+        "from_date": "2022-01-01",
+        "to_date": "2026-09-30",
+        "kind": "strategy",
+        "language": "ko",
+        "sort": "relevance",
+        "limit": 5
+      },
+      "after": []
+    },
+    {
+      "id": "a4",
+      "app": "posco_ir",
+      "api": "read_material",
+      "rp": {
+        "material_id": "B-IS01"
+      },
+      "op": {
+        "pages": [
+          2
+        ]
+      },
+      "after": [
+        "a3"
+      ]
+    },
+    {
+      "id": "a5",
+      "app": "internal_mock",
+      "api": "search_documents",
+      "rp": {
+        "query": "고니켈 NCM LFP 양극재 사업화 공급",
+        "project_id": "proj-B"
+      },
+      "op": {
+        "evidence_kind": "strategy",
+        "from_date": "2022-01-01",
+        "to_date": "2026-09-30",
+        "sort": "relevance",
+        "limit": 5
+      },
+      "after": []
+    },
+    {
+      "id": "a6",
+      "app": "internal_mock",
+      "api": "read_document",
+      "rp": {
+        "document_id": "B-N2S"
+      },
+      "op": {
+        "sections": [
+          "decision"
+        ]
+      },
+      "after": [
+        "a5"
+      ]
+    }
+  ],
+  "alternatives": [],
+  "required_evidence": [
+    {
+      "document_id": "B-D01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-D01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-D01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-D01",
+      "span_id": "s4"
+    },
+    {
+      "document_id": "B-IS01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-IS01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-IS01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-IS01",
+      "span_id": "s4"
+    },
+    {
+      "document_id": "B-N2S",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-N2S",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-N2S",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-N2S",
+      "span_id": "s4"
+    }
+  ],
+  "forbidden": {
+    "policy": "X2",
+    "denied_apps": [],
+    "deny_cross_project": true,
+    "deny_nonpublic_external_query": true,
+    "deny_unknown_api": true
+  },
+  "manual_review": [
+    "technical_validity",
+    "query_equivalence",
+    "evidence_relevance",
+    "business_quality",
+    "alternative_completeness"
+  ],
+  "pending_alternatives": [
+    "Q-alt semantic synonyms",
+    "D-alt DA01",
+    "I-alt IA01/IFA01",
+    "N-alt same source ALT"
+  ]
+}

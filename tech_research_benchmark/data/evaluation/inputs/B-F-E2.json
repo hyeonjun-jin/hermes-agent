@@ -1,0 +1,65 @@
+{
+  "id": "B-F-E2",
+  "synthetic": true,
+  "profile": {
+    "id": "P-F",
+    "user_id": "bench-finance",
+    "role": "재무팀",
+    "expertise": "투자/재무 분석",
+    "language": "ko",
+    "preferred_jurisdiction": "KR",
+    "evidence_priorities": [
+      "투자 규모",
+      "현금흐름",
+      "수익성",
+      "환율/가격 위험"
+    ],
+    "decision_criteria": "연결/별도·회계기간·수치 가정 구분; 그룹 수치를 특정 기술 수익으로 환산하지 않음"
+  },
+  "environment": {
+    "id": "E2",
+    "purpose": "실증·사업화·투자 검토회의를 위한 대안 심층 비교",
+    "deadline": "2026-10-15T18:00:00+09:00",
+    "depth": "deep",
+    "classification": "INTERNAL",
+    "audience": "기술·전략·재무 공동 심의위원회",
+    "as_of": "2026-10-01",
+    "cutoff": "2026-09-30",
+    "observed_at": "2026-10-01T09:00:00+09:00",
+    "policy_version": "bench-policy-v0",
+    "model_egress_policy": "local_fixture_only",
+    "allowed_apps": [
+      "openalex",
+      "kipris_plus",
+      "opendart",
+      "posco_ir",
+      "internal_mock"
+    ],
+    "soft_budget": 10,
+    "hard_budget": 12,
+    "project_id": "proj-B",
+    "allowed_projects": [
+      "proj-B"
+    ]
+  },
+  "question": "이차전지 양극재의 고니켈 NCM·LFP에 대해, 현재 업무에 필요한 근거를 찾아 비교하고 다음 판단에 필요한 점을 정리해 주세요.",
+  "toolset": [
+    "openalex",
+    "kipris_plus",
+    "opendart",
+    "posco_ir",
+    "internal_mock"
+  ],
+  "scope": {
+    "topic": "B",
+    "depth": "deep",
+    "from_date": "2022-01-01",
+    "to_date": "2026-09-30",
+    "jurisdiction": "KR"
+  },
+  "budget": {
+    "environment_calls": 1,
+    "soft": 10,
+    "hard": 12
+  }
+}

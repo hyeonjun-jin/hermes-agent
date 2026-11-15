@@ -1,0 +1,81 @@
+{
+  "id": "B-F-E3",
+  "synthetic": true,
+  "calls": [
+    {
+      "id": "a1",
+      "app": "internal_mock",
+      "api": "search_documents",
+      "rp": {
+        "query": "NCM LFP 양극재 투자 수익성 위험",
+        "project_id": "proj-B"
+      },
+      "op": {
+        "evidence_kind": "financial",
+        "sort": "date_desc",
+        "limit": 3
+      },
+      "after": []
+    },
+    {
+      "id": "a2",
+      "app": "internal_mock",
+      "api": "read_document",
+      "rp": {
+        "document_id": "B-N3F"
+      },
+      "op": {
+        "sections": [
+          "assumptions"
+        ]
+      },
+      "after": [
+        "a1"
+      ]
+    }
+  ],
+  "alternatives": [],
+  "required_evidence": [
+    {
+      "document_id": "B-N3F",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-N3F",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-N3F",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-N3F",
+      "span_id": "s4"
+    }
+  ],
+  "forbidden": {
+    "policy": "X3",
+    "denied_apps": [
+      "openalex",
+      "kipris_plus",
+      "opendart",
+      "posco_ir"
+    ],
+    "deny_cross_project": true,
+    "deny_nonpublic_external_query": true,
+    "deny_unknown_api": true
+  },
+  "manual_review": [
+    "technical_validity",
+    "query_equivalence",
+    "evidence_relevance",
+    "business_quality",
+    "alternative_completeness"
+  ],
+  "pending_alternatives": [
+    "Q-alt semantic synonyms",
+    "D-alt DA01",
+    "I-alt IA01/IFA01",
+    "N-alt same source ALT"
+  ]
+}

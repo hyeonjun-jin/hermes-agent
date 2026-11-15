@@ -1,0 +1,1302 @@
+{
+  "H-A01": {
+    "id": "H-A01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "openalex",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC H A01",
+    "locator": "fixture://bench-v0/H-A01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "원리·성능 비교는 조건에 의존한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "실험 조건과 재현성을 확인한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-A01",
+    "content_hash": "ec2fb181a277c7af03aa80c74fb162d8ba45af77c89848ea114f512fc1bcdf21",
+    "kind": "paper",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "doi": null,
+      "experimental_numeric_results": null,
+      "comparison": [
+        "유동층",
+        "샤프트로"
+      ]
+    }
+  },
+  "H-P01": {
+    "id": "H-P01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "kipris_plus",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC H P01",
+    "locator": "fixture://bench-v0/H-P01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "KR 공개 범위의 합성 청구항이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "청구항에는 적용 조건이 있다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "공개 범위와 청구항을 구별한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "권리 상태 미확인; 성능이나 FTO를 보장하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-P01",
+    "content_hash": "be50a41fa5642dd2835c97465e350d77ac5f3798a1fed1b598749c19b5fdbc74",
+    "kind": "patent",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "jurisdiction": "KR",
+      "rights_status": null,
+      "claims": [
+        "s1",
+        "s2"
+      ]
+    }
+  },
+  "H-D01": {
+    "id": "H-D01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "opendart",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-04-01",
+    "title": "SYNTHETIC H D01",
+    "locator": "fixture://bench-v0/H-D01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "가상 기업의 실증·공급 프로젝트를 다룬다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "계획과 진행 사실을 구별한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "사업화에는 조건이 있다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "확정 상업화 실적을 입증하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-D01",
+    "content_hash": "ad9d48df5064bd2228661314aad710aac058b898376ad69714543c1b58f97754",
+    "kind": "disclosure",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-IS01": {
+    "id": "H-IS01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "posco_ir",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-05-01",
+    "title": "SYNTHETIC H IS01",
+    "locator": "fixture://bench-v0/H-IS01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "회사 측 경쟁 기술 관점이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "사업화 쟁점을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "회사 계획으로 해석한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "독립적인 시장 규모 근거는 없다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-IS01",
+    "content_hash": "a79c46ade82e4cd197b8f893c661f92bd6426403d41e1e8150b2aa05e39d6ac3",
+    "kind": "ir",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-IF01": {
+    "id": "H-IF01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "posco_ir",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-06-01",
+    "title": "SYNTHETIC H IF01",
+    "locator": "fixture://bench-v0/H-IF01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 투자 계획 범위는 100~120 가상 크레딧이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "계획과 확정 집행을 구별한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "기술별 이익은 제공하지 않는다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "확정 집행·실제 수익이 아니다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-IF01",
+    "content_hash": "c1a8efd62c4b593a20f2d85341eaabb6940c825290f9f80520a483d2d5466215",
+    "kind": "ir",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-F01": {
+    "id": "H-F01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "opendart",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-07-01",
+    "title": "SYNTHETIC H F01",
+    "locator": "fixture://bench-v0/H-F01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 연결 연간 영업이익은 40 가상 크레딧이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "합성 투자현금흐름은 -80 가상 크레딧이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "회계기간은 2025년이고 CFS이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "사업별 손익은 없다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-F01",
+    "content_hash": "c5c81c29fb4c9b0d646f77e6dab26c4565c1246d624d20f7daae52f62a45fd9b",
+    "kind": "financial",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "bsns_year": "2025",
+      "fs_div": "CFS",
+      "rows": [
+        {
+          "account_id": "operating_profit",
+          "value": "40",
+          "unit": "가상 크레딧",
+          "span_id": "s1"
+        },
+        {
+          "account_id": "cash_flow_investing",
+          "value": "-80",
+          "unit": "가상 크레딧",
+          "span_id": "s2"
+        }
+      ]
+    }
+  },
+  "H-N2R": {
+    "id": "H-N2R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC H N2R",
+    "locator": "fixture://bench-v0/H-N2R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 실험 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "재현성 검토가 필요하다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "시험 조건의 차이를 확인한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "상업 성능은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-N2R",
+    "content_hash": "e53308ee421d9be18071797306b34dea40777e36b4b1d5fa1427cb397345bccf",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-N2S": {
+    "id": "H-N2S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC H N2S",
+    "locator": "fixture://bench-v0/H-N2S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 경쟁기술 비교이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "의사결정 쟁점을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "사업화 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "독립적인 현재 시장 전망은 아니다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-N2S",
+    "content_hash": "ff071cb5f1b28727dfd37aeb68fbdf0b6a3400292d158b319c4e41338cbf32ff",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-N2F": {
+    "id": "H-N2F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC H N2F",
+    "locator": "fixture://bench-v0/H-N2F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 민감도: 전력 단가 +10%에서 원가 +3%.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "기준 가정에 따른 분석이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "가상 조건의 투자 위험을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "예측을 실제 수익으로 해석하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-N2F",
+    "content_hash": "5b738e722c2de444c4897f11138c77a77f0e21f1c9721a407c75de162adc4523",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-N3R": {
+    "id": "H-N3R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC H N3R",
+    "locator": "fixture://bench-v0/H-N3R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 실험 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "재현성 검토가 필요하다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "시험 조건의 차이를 확인한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "2026-03-01 승인 Snapshot이며 최신 외부 실증은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-N3R",
+    "content_hash": "3e8209299d856c8f1da3e3242256262b9474392bf1a61f2453231fd3a8b17991",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-N3S": {
+    "id": "H-N3S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC H N3S",
+    "locator": "fixture://bench-v0/H-N3S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 경쟁기술 비교이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "의사결정 쟁점을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "사업화 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "2026-03-01 승인 Snapshot이며 최신 외부 실증은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-N3S",
+    "content_hash": "fad3a1aa3323b1fd315010914f79a1aac70ca1333c20b100c29987ba41a611fd",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-N3F": {
+    "id": "H-N3F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "internal_mock",
+    "project_id": "proj-H",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC H N3F",
+    "locator": "fixture://bench-v0/H-N3F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 민감도: 전력 단가 +10%에서 원가 +3%.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "기준 가정에 따른 분석이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "가상 조건의 투자 위험을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "2026-03-01 승인 Snapshot이며 최신 외부 실증은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-N3F",
+    "content_hash": "1a12e6aa1b229febbc4f5e15c2d0ba0dcf6f5b9834e02cf9f07d79c484988ab3",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "H-NOISE1": {
+    "id": "H-NOISE1",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "openalex",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 방해 문서",
+    "locator": "fixture://bench-v0/H-NOISE1",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "수소 연료전지·일반 철강 가격"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-NOISE1",
+    "content_hash": "2e4d51657f70773fe401de98c5c29938f9868fec5a02bf60941e139b397e7b50",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1"
+      ]
+    }
+  },
+  "H-NOISE2": {
+    "id": "H-NOISE2",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "H",
+    "app": "openalex",
+    "project_id": "proj-H",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 방해 문서",
+    "locator": "fixture://bench-v0/H-NOISE2",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "수소 연료전지·일반 철강 가격"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "H-NOISE2",
+    "content_hash": "2e4d51657f70773fe401de98c5c29938f9868fec5a02bf60941e139b397e7b50",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1"
+      ]
+    }
+  },
+  "B-A01": {
+    "id": "B-A01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "openalex",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC B A01",
+    "locator": "fixture://bench-v0/B-A01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "운전·시험 조건을 맞춰 비교해야 한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "원리·성능 비교는 조건에 의존한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "실험 조건과 재현성을 확인한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "실험실 결과는 상업 성능을 보장하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-A01",
+    "content_hash": "ec2fb181a277c7af03aa80c74fb162d8ba45af77c89848ea114f512fc1bcdf21",
+    "kind": "paper",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "doi": null,
+      "experimental_numeric_results": null,
+      "comparison": [
+        "고니켈 NCM",
+        "LFP"
+      ]
+    }
+  },
+  "B-P01": {
+    "id": "B-P01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "kipris_plus",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC B P01",
+    "locator": "fixture://bench-v0/B-P01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "KR 공개 범위의 합성 청구항이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "청구항에는 적용 조건이 있다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "공개 범위와 청구항을 구별한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "권리 상태 미확인; 성능이나 FTO를 보장하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-P01",
+    "content_hash": "be50a41fa5642dd2835c97465e350d77ac5f3798a1fed1b598749c19b5fdbc74",
+    "kind": "patent",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "jurisdiction": "KR",
+      "rights_status": null,
+      "claims": [
+        "s1",
+        "s2"
+      ]
+    }
+  },
+  "B-D01": {
+    "id": "B-D01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "opendart",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-04-01",
+    "title": "SYNTHETIC B D01",
+    "locator": "fixture://bench-v0/B-D01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "가상 기업의 실증·공급 프로젝트를 다룬다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "계획과 진행 사실을 구별한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "사업화에는 조건이 있다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "확정 상업화 실적을 입증하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-D01",
+    "content_hash": "ad9d48df5064bd2228661314aad710aac058b898376ad69714543c1b58f97754",
+    "kind": "disclosure",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-IS01": {
+    "id": "B-IS01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "posco_ir",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-05-01",
+    "title": "SYNTHETIC B IS01",
+    "locator": "fixture://bench-v0/B-IS01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "회사 측 경쟁 기술 관점이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "사업화 쟁점을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "회사 계획으로 해석한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "독립적인 시장 규모 근거는 없다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-IS01",
+    "content_hash": "a79c46ade82e4cd197b8f893c661f92bd6426403d41e1e8150b2aa05e39d6ac3",
+    "kind": "ir",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-IF01": {
+    "id": "B-IF01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "posco_ir",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-06-01",
+    "title": "SYNTHETIC B IF01",
+    "locator": "fixture://bench-v0/B-IF01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 투자 계획 범위는 100~120 가상 크레딧이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "계획과 확정 집행을 구별한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "기술별 이익은 제공하지 않는다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "확정 집행·실제 수익이 아니다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-IF01",
+    "content_hash": "c1a8efd62c4b593a20f2d85341eaabb6940c825290f9f80520a483d2d5466215",
+    "kind": "ir",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-F01": {
+    "id": "B-F01",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "opendart",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-07-01",
+    "title": "SYNTHETIC B F01",
+    "locator": "fixture://bench-v0/B-F01",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 연결 연간 영업이익은 40 가상 크레딧이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "합성 투자현금흐름은 -80 가상 크레딧이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "회계기간은 2025년이고 CFS이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "사업별 손익은 없다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-F01",
+    "content_hash": "c5c81c29fb4c9b0d646f77e6dab26c4565c1246d624d20f7daae52f62a45fd9b",
+    "kind": "financial",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "bsns_year": "2025",
+      "fs_div": "CFS",
+      "rows": [
+        {
+          "account_id": "operating_profit",
+          "value": "40",
+          "unit": "가상 크레딧",
+          "span_id": "s1"
+        },
+        {
+          "account_id": "cash_flow_investing",
+          "value": "-80",
+          "unit": "가상 크레딧",
+          "span_id": "s2"
+        }
+      ]
+    }
+  },
+  "B-N2R": {
+    "id": "B-N2R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC B N2R",
+    "locator": "fixture://bench-v0/B-N2R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 실험 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "재현성 검토가 필요하다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "시험 조건의 차이를 확인한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "상업 성능은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-N2R",
+    "content_hash": "e53308ee421d9be18071797306b34dea40777e36b4b1d5fa1427cb397345bccf",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-N2S": {
+    "id": "B-N2S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC B N2S",
+    "locator": "fixture://bench-v0/B-N2S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 경쟁기술 비교이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "의사결정 쟁점을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "사업화 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "독립적인 현재 시장 전망은 아니다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-N2S",
+    "content_hash": "ff071cb5f1b28727dfd37aeb68fbdf0b6a3400292d158b319c4e41338cbf32ff",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-N2F": {
+    "id": "B-N2F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "INTERNAL",
+    "published_at": "2026-09-01",
+    "title": "SYNTHETIC B N2F",
+    "locator": "fixture://bench-v0/B-N2F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 민감도: 전력 단가 +10%에서 원가 +3%.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "기준 가정에 따른 분석이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "가상 조건의 투자 위험을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "예측을 실제 수익으로 해석하지 않는다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-N2F",
+    "content_hash": "5b738e722c2de444c4897f11138c77a77f0e21f1c9721a407c75de162adc4523",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-N3R": {
+    "id": "B-N3R",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC B N3R",
+    "locator": "fixture://bench-v0/B-N3R",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 실험 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "재현성 검토가 필요하다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "시험 조건의 차이를 확인한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "2026-03-01 승인 Snapshot이며 최신 외부 실증은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-N3R",
+    "content_hash": "3e8209299d856c8f1da3e3242256262b9474392bf1a61f2453231fd3a8b17991",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-N3S": {
+    "id": "B-N3S",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC B N3S",
+    "locator": "fixture://bench-v0/B-N3S",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 경쟁기술 비교이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "의사결정 쟁점을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "사업화 조건을 비교한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "2026-03-01 승인 Snapshot이며 최신 외부 실증은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-N3S",
+    "content_hash": "fad3a1aa3323b1fd315010914f79a1aac70ca1333c20b100c29987ba41a611fd",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-N3F": {
+    "id": "B-N3F",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "internal_mock",
+    "project_id": "proj-B",
+    "classification": "RESTRICTED",
+    "published_at": "2026-03-01",
+    "title": "SYNTHETIC B N3F",
+    "locator": "fixture://bench-v0/B-N3F",
+    "spans": [
+      {
+        "id": "s1",
+        "text": "합성 민감도: 전력 단가 +10%에서 원가 +3%.",
+        "kind": "claim"
+      },
+      {
+        "id": "s2",
+        "text": "기준 가정에 따른 분석이다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s3",
+        "text": "가상 조건의 투자 위험을 검토한다.",
+        "kind": "claim"
+      },
+      {
+        "id": "s4",
+        "text": "2026-03-01 승인 Snapshot이며 최신 외부 실증은 미확인이다.",
+        "kind": "uncertainty"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-N3F",
+    "content_hash": "1a12e6aa1b229febbc4f5e15c2d0ba0dcf6f5b9834e02cf9f07d79c484988ab3",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    }
+  },
+  "B-NOISE1": {
+    "id": "B-NOISE1",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "openalex",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 방해 문서",
+    "locator": "fixture://bench-v0/B-NOISE1",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "음극재·일반 배터리 재무"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-NOISE1",
+    "content_hash": "4431968c280f14d1e1c8bee868a3629c2ad74c377237e92d4194caef5ac94a95",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1"
+      ]
+    }
+  },
+  "B-NOISE2": {
+    "id": "B-NOISE2",
+    "synthetic": true,
+    "label": "SYNTHETIC",
+    "topic": "B",
+    "app": "openalex",
+    "project_id": "proj-B",
+    "classification": "PUBLIC",
+    "published_at": "2026-02-01",
+    "title": "SYNTHETIC 방해 문서",
+    "locator": "fixture://bench-v0/B-NOISE2",
+    "spans": [
+      {
+        "id": "s1",
+        "kind": "claim",
+        "text": "음극재·일반 배터리 재무"
+      }
+    ],
+    "review_status": "pending_expert_review",
+    "native_id": "B-NOISE2",
+    "content_hash": "4431968c280f14d1e1c8bee868a3629c2ad74c377237e92d4194caef5ac94a95",
+    "kind": "internal",
+    "payload": {
+      "coverage": "synthetic_outline_only",
+      "span_ids": [
+        "s1"
+      ]
+    }
+  }
+}

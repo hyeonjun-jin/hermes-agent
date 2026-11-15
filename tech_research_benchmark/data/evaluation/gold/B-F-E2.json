@@ -1,0 +1,161 @@
+{
+  "id": "B-F-E2",
+  "synthetic": true,
+  "calls": [
+    {
+      "id": "a1",
+      "app": "opendart",
+      "api": "read_financials",
+      "rp": {
+        "corp_code": "00000002",
+        "bsns_year": "2025",
+        "reprt_code": "11011",
+        "fs_div": "CFS"
+      },
+      "op": {
+        "account_ids": [
+          "cash_flow_investing",
+          "operating_profit"
+        ]
+      },
+      "after": []
+    },
+    {
+      "id": "a2",
+      "app": "posco_ir",
+      "api": "search_materials",
+      "rp": {
+        "query": "NCM LFP 양극재 투자 수익성 위험"
+      },
+      "op": {
+        "from_date": "2022-01-01",
+        "to_date": "2026-09-30",
+        "kind": "earnings",
+        "language": "ko",
+        "sort": "relevance",
+        "limit": 5
+      },
+      "after": []
+    },
+    {
+      "id": "a3",
+      "app": "posco_ir",
+      "api": "read_material",
+      "rp": {
+        "material_id": "B-IF01"
+      },
+      "op": {
+        "pages": [
+          3
+        ]
+      },
+      "after": [
+        "a2"
+      ]
+    },
+    {
+      "id": "a4",
+      "app": "internal_mock",
+      "api": "search_documents",
+      "rp": {
+        "query": "NCM LFP 양극재 투자 수익성 위험",
+        "project_id": "proj-B"
+      },
+      "op": {
+        "evidence_kind": "financial",
+        "from_date": "2022-01-01",
+        "to_date": "2026-09-30",
+        "sort": "relevance",
+        "limit": 5
+      },
+      "after": []
+    },
+    {
+      "id": "a5",
+      "app": "internal_mock",
+      "api": "read_document",
+      "rp": {
+        "document_id": "B-N2F"
+      },
+      "op": {
+        "sections": [
+          "assumptions"
+        ]
+      },
+      "after": [
+        "a4"
+      ]
+    }
+  ],
+  "alternatives": [],
+  "required_evidence": [
+    {
+      "document_id": "B-F01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-F01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-F01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-F01",
+      "span_id": "s4"
+    },
+    {
+      "document_id": "B-IF01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-IF01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-IF01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-IF01",
+      "span_id": "s4"
+    },
+    {
+      "document_id": "B-N2F",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "B-N2F",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "B-N2F",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "B-N2F",
+      "span_id": "s4"
+    }
+  ],
+  "forbidden": {
+    "policy": "X2",
+    "denied_apps": [],
+    "deny_cross_project": true,
+    "deny_nonpublic_external_query": true,
+    "deny_unknown_api": true
+  },
+  "manual_review": [
+    "technical_validity",
+    "query_equivalence",
+    "evidence_relevance",
+    "business_quality",
+    "alternative_completeness"
+  ],
+  "pending_alternatives": [
+    "Q-alt semantic synonyms",
+    "D-alt DA01",
+    "I-alt IA01/IFA01",
+    "N-alt same source ALT"
+  ]
+}

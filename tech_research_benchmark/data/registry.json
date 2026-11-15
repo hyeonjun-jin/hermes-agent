@@ -1,0 +1,510 @@
+{
+  "opendart/list_disclosures": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "corp_code": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[0-9]{8}$"
+        },
+        "from_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "to_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        }
+      },
+      "required": [
+        "corp_code",
+        "from_date",
+        "to_date"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "report_type": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "material",
+            "annual",
+            "quarterly",
+            "all"
+          ]
+        },
+        "keyword": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "cursor": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "opendart/read_disclosure": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "receipt_no": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "receipt_no"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "section": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "posco_ir/search_materials": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "from_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "to_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "strategy",
+            "earnings",
+            "all"
+          ]
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "ko",
+            "en"
+          ]
+        },
+        "sort": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "date_desc",
+            "relevance",
+            "citations_desc"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "cursor": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "posco_ir/read_material": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "material_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "material_id"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "internal_mock/search_documents": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "query",
+        "project_id"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "evidence_kind": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "experiment",
+            "strategy",
+            "financial",
+            "all"
+          ]
+        },
+        "sort": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "date_desc",
+            "relevance",
+            "citations_desc"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "from_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "to_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "cursor": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "internal_mock/read_document": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "document_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "document_id"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "opendart/read_financials": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "corp_code": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[0-9]{8}$"
+        },
+        "bsns_year": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[0-9]{4}$"
+        },
+        "reprt_code": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "11011",
+            "11012",
+            "11013",
+            "11014"
+          ]
+        },
+        "fs_div": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "CFS",
+            "OFS"
+          ]
+        }
+      },
+      "required": [
+        "corp_code",
+        "bsns_year",
+        "reprt_code",
+        "fs_div"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "account_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "openalex/search_works": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "from_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "to_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "sort": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "date_desc",
+            "relevance",
+            "citations_desc"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "cursor": {
+          "type": "string"
+        },
+        "open_access": {
+          "type": "boolean"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "ko",
+            "en"
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "openalex/read_work": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "work_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "work_id"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "include_abstract": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "kipris_plus/search_patents": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jurisdiction": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "KR"
+          ]
+        }
+      },
+      "required": [
+        "query",
+        "jurisdiction"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "from_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "to_date": {
+          "type": "string",
+          "minLength": 1,
+          "format": "date"
+        },
+        "sort": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "date_desc",
+            "relevance",
+            "citations_desc"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "cursor": {
+          "type": "string"
+        },
+        "applicant": {
+          "type": "string"
+        },
+        "ipc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "kipris_plus/read_patent": {
+    "rp": {
+      "type": "object",
+      "properties": {
+        "application_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "application_id"
+      ],
+      "additionalProperties": false
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "include_claims": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+}

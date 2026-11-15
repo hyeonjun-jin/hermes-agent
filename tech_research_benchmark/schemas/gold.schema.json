@@ -1,0 +1,188 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "app",
+          "api",
+          "rp",
+          "op",
+          "after"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "app": {
+            "type": "string"
+          },
+          "api": {
+            "type": "string"
+          },
+          "rp": {
+            "type": "object"
+          },
+          "op": {
+            "type": "object"
+          },
+          "after": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "replace",
+          "call",
+          "review_status"
+        ],
+        "properties": {
+          "replace": {
+            "type": "string"
+          },
+          "call": {
+            "type": "object",
+            "required": [
+              "id",
+              "app",
+              "api",
+              "rp",
+              "op",
+              "after"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "app": {
+                "type": "string"
+              },
+              "api": {
+                "type": "string"
+              },
+              "rp": {
+                "type": "object"
+              },
+              "op": {
+                "type": "object"
+              },
+              "after": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "review_status": {
+            "enum": [
+              "pending",
+              "approved"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "span_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "document_id",
+          "span_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "forbidden": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "denied_apps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "deny_cross_project": {
+          "type": "boolean"
+        },
+        "deny_nonpublic_external_query": {
+          "type": "boolean"
+        },
+        "deny_unknown_api": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "policy",
+        "denied_apps",
+        "deny_cross_project",
+        "deny_nonpublic_external_query",
+        "deny_unknown_api"
+      ],
+      "additionalProperties": false
+    },
+    "manual_review": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pending_alternatives": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "id",
+    "synthetic",
+    "calls",
+    "alternatives",
+    "required_evidence",
+    "forbidden",
+    "manual_review",
+    "pending_alternatives"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

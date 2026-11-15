@@ -1,0 +1,106 @@
+{
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "synthetic": {
+        "type": "boolean"
+      },
+      "label": {
+        "type": "string",
+        "minLength": 1
+      },
+      "topic": {
+        "type": "string",
+        "minLength": 1
+      },
+      "app": {
+        "type": "string",
+        "minLength": 1
+      },
+      "project_id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "classification": {
+        "type": "string",
+        "minLength": 1
+      },
+      "published_at": {
+        "type": "string",
+        "minLength": 1
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "locator": {
+        "type": "string",
+        "minLength": 1
+      },
+      "spans": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "text",
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "review_status": {
+        "type": "string"
+      },
+      "native_id": {
+        "type": "string"
+      },
+      "content_hash": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "payload": {
+        "type": "object"
+      }
+    },
+    "required": [
+      "id",
+      "synthetic",
+      "label",
+      "topic",
+      "app",
+      "project_id",
+      "classification",
+      "published_at",
+      "title",
+      "locator",
+      "spans",
+      "review_status",
+      "native_id",
+      "content_hash"
+    ],
+    "additionalProperties": false
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

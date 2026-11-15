@@ -1,0 +1,234 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expertise": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preferred_jurisdiction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_priorities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "decision_criteria": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "user_id",
+        "role",
+        "expertise",
+        "language",
+        "preferred_jurisdiction",
+        "evidence_priorities",
+        "decision_criteria"
+      ],
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deadline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "depth": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "as_of": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cutoff": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_egress_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_apps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "soft_budget": {
+          "type": "integer"
+        },
+        "hard_budget": {
+          "type": "integer"
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_projects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "id",
+        "purpose",
+        "deadline",
+        "depth",
+        "classification",
+        "audience",
+        "as_of",
+        "cutoff",
+        "observed_at",
+        "policy_version",
+        "model_egress_policy",
+        "allowed_apps",
+        "soft_budget",
+        "hard_budget",
+        "project_id",
+        "allowed_projects"
+      ],
+      "additionalProperties": false
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "toolset": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "depth": {
+          "type": "string",
+          "minLength": 1
+        },
+        "from_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "to_date": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jurisdiction": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "topic",
+        "depth",
+        "from_date",
+        "to_date",
+        "jurisdiction"
+      ],
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "environment_calls": {
+          "type": "integer"
+        },
+        "soft": {
+          "type": "integer"
+        },
+        "hard": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "environment_calls",
+        "soft",
+        "hard"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "synthetic",
+    "profile",
+    "environment",
+    "question",
+    "toolset",
+    "scope",
+    "budget"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

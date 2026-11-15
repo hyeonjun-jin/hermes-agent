@@ -1,0 +1,2 @@
+# Offline validator dependency; not imported by Hermes or the live prototype.
+jsonschema>=4.23,<5

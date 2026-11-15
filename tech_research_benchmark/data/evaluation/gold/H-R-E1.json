@@ -1,0 +1,170 @@
+{
+  "id": "H-R-E1",
+  "synthetic": true,
+  "calls": [
+    {
+      "id": "a1",
+      "app": "openalex",
+      "api": "search_works",
+      "rp": {
+        "query": "hydrogen iron reduction fluidized bed shaft furnace"
+      },
+      "op": {
+        "from_date": "2025-10-01",
+        "to_date": "2026-09-30",
+        "types": [
+          "article",
+          "review"
+        ],
+        "sort": "date_desc",
+        "limit": 3
+      },
+      "after": []
+    },
+    {
+      "id": "a2",
+      "app": "openalex",
+      "api": "read_work",
+      "rp": {
+        "work_id": "H-A01"
+      },
+      "op": {
+        "include_abstract": true
+      },
+      "after": [
+        "a1"
+      ]
+    },
+    {
+      "id": "a3",
+      "app": "kipris_plus",
+      "api": "search_patents",
+      "rp": {
+        "query": "수소환원 유동층 샤프트로",
+        "jurisdiction": "KR"
+      },
+      "op": {
+        "from_date": "2025-10-01",
+        "to_date": "2026-09-30",
+        "sort": "date_desc",
+        "limit": 3
+      },
+      "after": []
+    },
+    {
+      "id": "a4",
+      "app": "kipris_plus",
+      "api": "read_patent",
+      "rp": {
+        "application_id": "H-P01"
+      },
+      "op": {
+        "include_claims": true
+      },
+      "after": [
+        "a3"
+      ]
+    }
+  ],
+  "alternatives": [
+    {
+      "replace": "a1",
+      "call": {
+        "id": "a1",
+        "app": "openalex",
+        "api": "search_works",
+        "rp": {
+          "query": "hydrogen iron reduction fluidized bed shaft furnace"
+        },
+        "op": {
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30",
+          "types": [
+            "article",
+            "review"
+          ],
+          "sort": "relevance",
+          "limit": 3
+        },
+        "after": []
+      },
+      "review_status": "pending"
+    },
+    {
+      "replace": "a3",
+      "call": {
+        "id": "a3",
+        "app": "kipris_plus",
+        "api": "search_patents",
+        "rp": {
+          "query": "수소환원 유동층 샤프트로",
+          "jurisdiction": "KR"
+        },
+        "op": {
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30",
+          "sort": "relevance",
+          "limit": 3
+        },
+        "after": []
+      },
+      "review_status": "pending"
+    }
+  ],
+  "required_evidence": [
+    {
+      "document_id": "H-A01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "H-A01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "H-A01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "H-A01",
+      "span_id": "s4"
+    },
+    {
+      "document_id": "H-P01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "H-P01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "H-P01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "H-P01",
+      "span_id": "s4"
+    }
+  ],
+  "forbidden": {
+    "policy": "X1",
+    "denied_apps": [
+      "internal_mock"
+    ],
+    "deny_cross_project": true,
+    "deny_nonpublic_external_query": true,
+    "deny_unknown_api": true
+  },
+  "manual_review": [
+    "technical_validity",
+    "query_equivalence",
+    "evidence_relevance",
+    "business_quality",
+    "alternative_completeness"
+  ],
+  "pending_alternatives": [
+    "Q-alt semantic synonyms",
+    "D-alt DA01",
+    "I-alt IA01/IFA01",
+    "N-alt same source ALT"
+  ]
+}

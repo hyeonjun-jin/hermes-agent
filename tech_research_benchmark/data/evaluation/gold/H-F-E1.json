@@ -1,0 +1,114 @@
+{
+  "id": "H-F-E1",
+  "synthetic": true,
+  "calls": [
+    {
+      "id": "a1",
+      "app": "opendart",
+      "api": "read_financials",
+      "rp": {
+        "corp_code": "00000001",
+        "bsns_year": "2025",
+        "reprt_code": "11011",
+        "fs_div": "CFS"
+      },
+      "op": {
+        "account_ids": [
+          "cash_flow_investing",
+          "operating_profit"
+        ]
+      },
+      "after": []
+    },
+    {
+      "id": "a2",
+      "app": "posco_ir",
+      "api": "search_materials",
+      "rp": {
+        "query": "수소환원제철 투자 비용 위험"
+      },
+      "op": {
+        "from_date": "2025-10-01",
+        "to_date": "2026-09-30",
+        "kind": "earnings",
+        "language": "ko",
+        "sort": "date_desc",
+        "limit": 3
+      },
+      "after": []
+    },
+    {
+      "id": "a3",
+      "app": "posco_ir",
+      "api": "read_material",
+      "rp": {
+        "material_id": "H-IF01"
+      },
+      "op": {
+        "pages": [
+          3
+        ]
+      },
+      "after": [
+        "a2"
+      ]
+    }
+  ],
+  "alternatives": [],
+  "required_evidence": [
+    {
+      "document_id": "H-F01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "H-F01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "H-F01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "H-F01",
+      "span_id": "s4"
+    },
+    {
+      "document_id": "H-IF01",
+      "span_id": "s1"
+    },
+    {
+      "document_id": "H-IF01",
+      "span_id": "s2"
+    },
+    {
+      "document_id": "H-IF01",
+      "span_id": "s3"
+    },
+    {
+      "document_id": "H-IF01",
+      "span_id": "s4"
+    }
+  ],
+  "forbidden": {
+    "policy": "X1",
+    "denied_apps": [
+      "internal_mock"
+    ],
+    "deny_cross_project": true,
+    "deny_nonpublic_external_query": true,
+    "deny_unknown_api": true
+  },
+  "manual_review": [
+    "technical_validity",
+    "query_equivalence",
+    "evidence_relevance",
+    "business_quality",
+    "alternative_completeness"
+  ],
+  "pending_alternatives": [
+    "Q-alt semantic synonyms",
+    "D-alt DA01",
+    "I-alt IA01/IFA01",
+    "N-alt same source ALT"
+  ]
+}
