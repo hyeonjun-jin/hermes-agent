@@ -57,3 +57,9 @@ pending_alternatives에 기록하고 자동 허용하지 않는다. query 의미
 
 공식 runner로 신규 scorer/validator 검사와 기존 persona·Memory·위임 회귀를 함께 실행한다.
 코어·기존 Mock·사용량 원장·예산 설정은 수정하지 않는다. 실행 결과는 P0_VALIDATION.md에 기록한다.
+
+## P1 Offline 실행
+
+[정책·Adapter·Replay 구현 및 검증](P1_IMPLEMENTATION.md)을 참고한다.
+`python -m tech_research_benchmark.demo`로 Gold 없이 DEV 실행 예제를 재현할 수 있다.
+P0 평가 JSON과 manifest는 변경하지 않았다.

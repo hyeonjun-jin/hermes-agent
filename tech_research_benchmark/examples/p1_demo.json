@@ -1,0 +1,186 @@
+{
+  "synthetic": true,
+  "trace": [
+    {
+      "index": 0,
+      "plan": {
+        "id": "normal",
+        "app": "internal_mock",
+        "api": "search_documents",
+        "rp": {
+          "query": "NCM",
+          "project_id": "proj-B"
+        },
+        "op": {
+          "evidence_kind": "financial",
+          "limit": 3
+        },
+        "after": []
+      },
+      "executed": true,
+      "execution_args": {
+        "rp": {
+          "query": "NCM",
+          "project_id": "proj-B"
+        },
+        "op": {
+          "evidence_kind": "financial",
+          "limit": 3
+        }
+      },
+      "reason": null,
+      "result": {
+        "status": "ok",
+        "items": [
+          {
+            "source_id": "DEV-B-N2F",
+            "title": "SYNTHETIC 개발용 구조 검사",
+            "origin_app": "internal_mock",
+            "retrieved_at": "2026-10-01T09:00:00+09:00",
+            "published_at": "2026-09-01",
+            "classification": "INTERNAL",
+            "locator": "fixture://development/DEV-B-N2F",
+            "synthetic": true,
+            "spans": [
+              {
+                "id": "s1",
+                "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+                "kind": "claim"
+              },
+              {
+                "id": "s2",
+                "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+                "kind": "claim"
+              },
+              {
+                "id": "s3",
+                "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+                "kind": "claim"
+              },
+              {
+                "id": "s4",
+                "text": "SYNTHETIC 개발용 참조 무결성 검사 문장; 기술적 사실이 아님.",
+                "kind": "uncertainty"
+              }
+            ]
+          }
+        ],
+        "cost": {
+          "mock_units": 1
+        },
+        "warnings": [],
+        "next_cursor": null
+      }
+    },
+    {
+      "index": 1,
+      "plan": {
+        "id": "bad-op",
+        "app": "internal_mock",
+        "api": "search_documents",
+        "rp": {
+          "query": "NCM",
+          "project_id": "proj-B"
+        },
+        "op": {
+          "limit": 99
+        },
+        "after": []
+      },
+      "executed": false,
+      "execution_args": null,
+      "reason": "invalid_schema",
+      "result": {
+        "status": "denied",
+        "reason": "invalid_schema",
+        "cost": {
+          "mock_units": 0
+        }
+      }
+    },
+    {
+      "index": 2,
+      "plan": {
+        "id": "revoked",
+        "app": "internal_mock",
+        "api": "read_document",
+        "rp": {
+          "document_id": "DEV-B-N2F"
+        },
+        "op": {},
+        "after": [
+          "normal"
+        ]
+      },
+      "executed": false,
+      "execution_args": null,
+      "reason": "access_denied",
+      "result": {
+        "status": "denied",
+        "reason": "access_denied",
+        "cost": {
+          "mock_units": 0
+        }
+      }
+    },
+    {
+      "index": 3,
+      "plan": {
+        "id": "restricted",
+        "app": "openalex",
+        "api": "search_works",
+        "rp": {
+          "query": "NCM"
+        },
+        "op": {},
+        "after": []
+      },
+      "executed": false,
+      "execution_args": null,
+      "reason": "access_denied",
+      "result": {
+        "status": "denied",
+        "reason": "access_denied",
+        "cost": {
+          "mock_units": 0
+        }
+      }
+    }
+  ],
+  "scorer_inputs": {
+    "predicted": [
+      {
+        "id": "normal",
+        "app": "internal_mock",
+        "api": "search_documents",
+        "rp": {
+          "query": "NCM",
+          "project_id": "proj-B"
+        },
+        "op": {
+          "evidence_kind": "financial",
+          "limit": 3
+        },
+        "after": []
+      }
+    ],
+    "evidence": [],
+    "policy_audit": [
+      {
+        "index": 1,
+        "reason": "invalid_schema"
+      },
+      {
+        "index": 2,
+        "reason": "access_denied"
+      },
+      {
+        "index": 3,
+        "reason": "access_denied"
+      }
+    ],
+    "mock_units": 1,
+    "attempts": 4,
+    "execution_failures": []
+  }
+}
