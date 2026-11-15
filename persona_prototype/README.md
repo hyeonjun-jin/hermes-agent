@@ -10,6 +10,8 @@ For the Profile/Memory/Environment source contract and current-stage lookup poli
 see [FACT_GROUNDING.md](FACT_GROUNDING.md).
 For opt-in feedback, local Mock Persona comparisons, manual approval and versioned
 rollback, see [ALIGNMENT.md](ALIGNMENT.md). This is a bounded prototype, not TextGrad.
+For a manual eight-call Alice v1/v2 control experiment using the existing backend
+ledger, see [PERSONA_COMPARISON.md](PERSONA_COMPARISON.md); no live run has been performed.
 
 For the repaired automatic-memory flow, tag provenance, output-format auditing
 and latest live controlled experiment, see [PERSONALIZATION_FIXES.md](PERSONALIZATION_FIXES.md).

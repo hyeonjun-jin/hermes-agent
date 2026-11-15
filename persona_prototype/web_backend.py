@@ -214,6 +214,11 @@ def create_app(root: Path, *, mode="mock", dev_mode=False):
         budget = api.state.sessions.budget
         return {"mode": mode, "calls": budget.calls if budget else [], "totals": budget.totals() if budget else None}
 
+    @api.post("/sessions/{session_id}/validation/persona-comparison")
+    def persona_comparison(session_id: str, body: Approval, authorization: str | None = Header(default=None)):
+        credential = token(authorization)
+        return invoke(lambda: api.state.sessions.compare_personas(session_id, credential))
+
     return api
 
 

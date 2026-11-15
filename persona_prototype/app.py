@@ -31,12 +31,13 @@ def seed(store):
 
 class ChatApplication:
     def __init__(self, root: Path, *, base_url: str, api_key: str, model: str, authorizer=None,
-                 validation_limits=False, multi_agent=False):
+                 validation_limits=False, multi_agent=False, provider_class=None):
         self.root = root.resolve()
         self.store = MemoryStore(self.root / "memory.sqlite", authorizer or OwnerOnly())
         self.base_url, self.api_key, self.model = base_url, api_key, model
         self.validation_limits = validation_limits
         self.multi_agent = multi_agent
+        self.provider_class = provider_class
 
     def chat(self, principal: Principal, user_id: str, question: str, *, session_id=None,
              conversation_history=None, persona_snapshot=None, known_source_ids=(), prior_environment=None) -> dict:
@@ -63,7 +64,7 @@ class ChatApplication:
         if self.multi_agent:
             from .multi_agent import MultiAgentProvider
             provider_class = MultiAgentProvider
-        provider = provider_class(self.store, principal)
+        provider = (self.provider_class or provider_class)(self.store, principal)
         provider.session_mode = session_id is not None
         provider.question = question
         provider.known_source_ids = set(known_source_ids)

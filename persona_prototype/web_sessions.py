@@ -140,3 +140,13 @@ class ChatSessions:
             if action == "rollback":
                 return repository.activate(actor, rollback_revision=value)
             raise ValueError("Unknown Alignment action")
+
+    def compare_personas(self, session_id, token):
+        with self.lock:
+            row = self.owned(session_id, token)
+            if row[0] != "alice":
+                raise PermissionError("This experiment is Alice-only")
+            if self.budget is None:
+                raise ValueError("Use the standalone Mock runner; this route requires a real ledger")
+            from .persona_comparison import compare
+            return compare(self.app, self.budget, mode="real")

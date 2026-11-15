@@ -73,22 +73,9 @@ def register_role_tools(owner):
         messages = request.get("messages", [])
         boundary = max((i for i, m in enumerate(messages) if m.get("role") == "user"), default=-1)
         has_results = any(m.get("role") == "tool" for m in messages[boundary + 1:])
-        full = all(w in owner.question for w in ("조사", "분석", "검증"))
-        route = fact_policy(owner.question)["route"]
-        if not scope and route == "direct_environment":
-            attempted = any(e["tool"] == "mock_environment" for e in owner.trace)
-            effective["tool_choice"] = "none" if attempted else {
-                "type": "function", "function": {"name": "mock_environment"}}
-        elif not scope and route == "known_facts":
-            effective["tool_choice"] = "none"
-        elif scope or full:
-            # One evidence round followed by one summary, without changing the tool schemas.
-            if has_results:
-                effective["tool_choice"] = "none"
-            elif scope:
-                effective["tool_choice"] = "required"
-            else:
-                effective["tool_choice"] = {"type": "function", "function": {"name": "delegate_specialist"}}
+        choice = ("none" if has_results else "required") if scope else owner.main_tool_choice(has_results)
+        if choice is not None:
+            effective["tool_choice"] = choice
         return {"request": effective}
     handles.append(ctx.register_middleware("llm_request", restrict_request))
     return handles
@@ -103,6 +90,17 @@ class MultiAgentProvider(PersonaMemoryProvider):
         self.results = {}
         self.documents = {}
         self.checked = set()
+
+    def main_tool_choice(self, has_results):
+        route = fact_policy(self.question)["route"]
+        if route == "direct_environment":
+            attempted = any(e["tool"] == "mock_environment" for e in self.trace)
+            return "none" if attempted else {"type": "function", "function": {"name": "mock_environment"}}
+        if route == "known_facts":
+            return "none"
+        if route == "workflow":
+            return "none" if has_results else {"type": "function", "function": {"name": "delegate_specialist"}}
+        return None
 
     def system_prompt_block(self):
         # Do not inherit the single-agent instruction to query RAG/environment directly.
