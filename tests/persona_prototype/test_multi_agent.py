@@ -86,8 +86,10 @@ def test_local_formatting_changes_presentation_not_facts():
     bullets, _ = format_answer(text, "bullets")
     assert "\n".join(line.removeprefix("- ") for line in bullets.splitlines()) == text
     table, _ = format_answer(text, "table")
-    cell = table.splitlines()[2][2:-2].replace("<br>", "\n").replace("\\|", "|")
-    assert cell == text
+    rows = table.splitlines()[2:]
+    content = "\n".join(row.split(" | ", 1)[1][:-2].replace("\\|", "|") for row in rows)
+    assert content == text
+    assert "<br>" not in table
 
 
 def test_multi_budget_caps_children_and_stops_after_remote_error(tmp_path):

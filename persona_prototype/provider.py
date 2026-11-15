@@ -7,6 +7,7 @@ from .data import DOCUMENTS, ENVIRONMENTS, PROFILES
 from .domain import OwnerOnly
 from .store import build_persona
 from .personalization import TAGS, terms
+from .evidence import EVIDENCE_RULES
 from .fact_grounding import SOURCE_RULES
 
 
@@ -83,7 +84,7 @@ class PersonaMemoryProvider(MemoryProvider):
     def system_prompt_block(self):
         return ('PERSONA_JSON=' + json.dumps(self.persona, ensure_ascii=False) + '\n'
                 'PROFILE_FACTS_JSON=' + json.dumps({"project_id": PROFILES[self.principal.user_id]["project"],
-                                                   "source": "profile:" + self.principal.user_id}) + '\n' + SOURCE_RULES + ' '
+                                                   "source": "profile:" + self.principal.user_id}) + '\n' + SOURCE_RULES + EVIDENCE_RULES + ' '
                 'Relevant confirmed episodes may already be in recalled memory context. '
                 'Use persona_recall only if more relevant history is needed; never call it for every question. '
                 'For project planning consult mock_rag with an explicitly approved PERSONA_JSON.focus when present; '

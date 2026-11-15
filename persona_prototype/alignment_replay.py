@@ -4,7 +4,6 @@ The responder implements deterministic preference following. Scores verify the
 prototype plumbing only; they do not estimate GPT-4o mini performance.
 """
 import tempfile
-import re
 from pathlib import Path
 
 from .app import ChatApplication, SCOPES, seed
@@ -12,6 +11,7 @@ from .data import ENVIRONMENTS, PROFILES
 from .domain import Principal
 from .mock_llm import mock_endpoint
 from .web_mock import web_respond
+from .output_format import format_matches
 
 
 class MockReplay:
@@ -67,12 +67,3 @@ def measure(response, facts, target, user):
             "tools": [{"tool": e["tool"], "args": e["args"], "status": e.get("status")} for e in events],
             "answer": response["answer"], "raw_answer": response["raw_answer"],
             "format_validation": response["format_validation"], "facts": source}
-
-
-def format_matches(text, style):
-    lines = [line.strip() for line in text.splitlines() if line.strip()]
-    if not lines:
-        return False
-    table = len(lines) >= 2 and lines[0].startswith("|") and bool(re.fullmatch(r"\|[ :|-]+\|", lines[1]))
-    bullets = all(re.match(r"^[-*] ", line) for line in lines)
-    return {"table": table, "bullets": bullets, "explanation": not table and not bullets}[style]

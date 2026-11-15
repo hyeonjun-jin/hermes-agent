@@ -1,5 +1,6 @@
 """Project facts are sourced from Profile and authorized Environment, not preference recall."""
 import json
+import difflib
 
 import pytest
 from fastapi.testclient import TestClient
@@ -60,7 +61,9 @@ def test_snapshot_reuse_and_fresh_lookup_keep_stable_prompt_and_tools(tmp_path, 
         assert "pilot" in current["answer"] and "prototype" not in current["answer"]
         assert len(current["tool_calls"]) == 1
     systems = [[m["content"] for m in r["messages"] if m["role"] == "system"] for r in requests]
-    assert all(system == systems[0] for system in systems)
+    for system in systems:
+        assert system == systems[0], "\n".join(difflib.unified_diff(
+            "\n".join(systems[0]).splitlines(), "\n".join(system).splitlines()))
     assert all(r["tools"] == requests[0]["tools"] for r in requests)
     assert requests[0]["tool_choice"]["function"]["name"] == "mock_environment"
 

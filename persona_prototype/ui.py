@@ -3,7 +3,8 @@ import os
 
 import httpx
 import streamlit as st
-from ui_alignment import alignment_panel
+from persona_prototype.ui_alignment import alignment_panel
+from persona_prototype.ui_output import render_answer
 
 st.set_page_config(page_title="Persona Chat", page_icon="💬", layout="centered")
 
@@ -81,7 +82,7 @@ for turn in history["turns"]:
         st.write(turn["question"])
     result = turn["result"]
     with st.chat_message("assistant"):
-        st.markdown(result["answer"])
+        render_answer(result)
         quality = result.get("quality", {})
         if quality.get("source_ids"):
             st.caption("참고 문서: " + ", ".join(quality["source_ids"]))

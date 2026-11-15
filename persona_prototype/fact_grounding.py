@@ -37,7 +37,8 @@ def fact_policy(question):
 def environment_observation(provider):
     project = PROFILES[provider.principal.user_id]["project"]
     observations = [e for e in provider.trace if e["tool"] == "mock_environment"]
-    observations += [e for e in getattr(provider, "role_traces", []) if e["role"] == "analysis"]
+    observations += [e for e in getattr(provider, "role_traces", [])
+                     if e.get("role") == "analysis" and e.get("tool") == "persona_analysis_environment"]
     for event in reversed(observations):
         value = event.get("result")
         if (event.get("status") == "ok" and event.get("args", {}).get("project") == project

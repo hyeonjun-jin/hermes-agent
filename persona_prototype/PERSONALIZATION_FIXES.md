@@ -26,10 +26,12 @@ The repaired flow is:
    delivery/deployment, risk, onboarding/beginner and their Korean equivalents).
    This is a fixture-scale bilingual baseline, not a translator or vector index.
 5. `raw_answer` is preserved. A local format validator retains compliant responses
-   or wraps the same text as bullets/a one-column table, without another LLM call.
+   or rearranges the same text into bullets or a multi-column table, without another LLM call.
+   The current renderer splits HTML line breaks into rows and retains existing multi-column tables.
    `format_validation` distinguishes native adherence from presentation repair.
-   Hermes' stored transcript retains the raw model response; the app returns the
-   formatted view. This is not a factual-quality or citation validator.
+   The current app records `raw_answer`, `presentation_input` and `answer` separately.
+   Source-bound corrections are audited independently; see [FACT_GROUNDING.md](FACT_GROUNDING.md).
+   Format validation alone is not a factual-quality or citation validator.
 
 ## Tests and live experiment
 

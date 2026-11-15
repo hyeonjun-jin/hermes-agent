@@ -12,6 +12,8 @@ from .provider import PersonaMemoryProvider
 from .store import MemoryStore
 from .personalization import format_answer
 from .fact_grounding import ground_project_facts
+from .evidence import collect_evidence, evidence_review, ground_evidence
+from .output_format import format_matches
 
 SCOPES = frozenset({"memory:read", "memory:write", "documents:read", "environment:read",
                     "persona:read", "persona:propose", "persona:approve", "persona:rollback"})
@@ -119,13 +121,26 @@ class ChatApplication:
         raw_answer, facts = ground_project_facts(provider, raw_answer)
         if facts.get("applied") and not facts["grounded"]:
             completion.update(complete=False, quality_review_required=True)
-        answer, formatting = format_answer(raw_answer, provider.persona["format"])
+        sources = collect_evidence(provider)
+        evidence_audit = {"applied": False, "sources": sources,
+                          "raw_review": evidence_review(result["final_response"], sources),
+                          "semantic_review_required": True}
+        if not facts.get("applied"):
+            raw_answer, evidence_audit = ground_evidence(provider, raw_answer, raw_answer=result["final_response"])
+        presentation_input = raw_answer
+        answer, formatting = format_answer(presentation_input, provider.persona["format"])
+        formatting["presentation_input_valid"] = formatting["raw_valid"]
+        formatting["raw_valid"] = format_matches(result["final_response"], provider.persona["format"])
+        if evidence_audit["raw_review"]["issues"]:
+            completion["quality_review_required"] = True
         history = [dict(m) for m in result.get("messages", [])]
-        if facts.get("applied") and history and history[-1].get("role") == "assistant" and not history[-1].get("tool_calls"):
+        if (facts.get("applied") or evidence_audit["applied"]) and history and history[-1].get("role") == "assistant" and not history[-1].get("tool_calls"):
             # Only the just-generated final message is grounded before becoming session history.
             history[-1]["content"] = answer
         return {"session_id": session_id, "persona": provider.persona,
-                "raw_answer": result["final_response"], "answer": answer, "format_validation": formatting,
+                "raw_answer": result["final_response"], "presentation_input": presentation_input,
+                "answer": answer, "format_validation": formatting,
+                "source_evidence": evidence_audit["sources"], "evidence_validation": evidence_audit,
                 "recall_events": provider.recall_trace, "tool_calls": provider.trace,
                 "history": history, "fact_validation": facts,
                 "delegations": getattr(provider, "delegations", []),

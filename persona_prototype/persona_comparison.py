@@ -12,7 +12,7 @@ import httpx
 from openai import OpenAIError
 
 from .app import ChatApplication, SCOPES, seed
-from .alignment_replay import format_matches
+from .output_format import format_matches
 from .comparison_provider import ComparisonProvider, ENTRYPOINT
 from .comparison_controls import paired_request_guard
 from .data import PROFILES, ENVIRONMENTS
@@ -55,6 +55,8 @@ def summarize(label, result, snapshot, calls):
     metrics = {"raw_format_compliant": format_matches(raw, result["persona"]["format"]),
                "final_format_compliant": format_matches(answer, result["persona"]["format"]),
                "fallback_applied": result["format_validation"]["fallback_applied"],
+               "raw_evidence_issues": result["evidence_validation"]["raw_review"]["issues"],
+               "local_evidence_correction_applied": result["evidence_validation"]["applied"],
                "cited_document_ids": cited, "citations_present": bool(cited), "checked_document_ids": checked,
                "unsupported_citations": sorted(set(cited) - set(checked)),
                "expected_project_literal_present": snapshot["profile"]["project"] in raw,
@@ -72,6 +74,8 @@ def summarize(label, result, snapshot, calls):
             "main_model_tool_calls": result["model_tool_calls"], "research_tool_calls": searches,
             "research_documents": documents, "delegations": result["delegations"],
             "environment_observations": result["tool_calls"], "raw_answer": raw, "final_answer": answer,
+            "presentation_input": result["presentation_input"],
+            "format_validation": result["format_validation"], "evidence_validation": result["evidence_validation"],
             "metrics": metrics, "completion": result["completion"], "complete": bool(complete), "calls": calls}
 
 

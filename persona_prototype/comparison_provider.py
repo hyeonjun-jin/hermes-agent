@@ -3,6 +3,7 @@ import json
 import re
 
 from .data import PROFILES
+from .evidence import EVIDENCE_RULES
 from .fact_grounding import SOURCE_RULES
 from .multi_agent import MultiAgentProvider, successful
 from .provider import schema
@@ -15,7 +16,7 @@ class ComparisonProvider(MultiAgentProvider):
     def system_prompt_block(self):
         profile = {"project_id": PROFILES[self.principal.user_id]["project"], "source": "profile:" + self.principal.user_id}
         return ("PERSONA_JSON=" + json.dumps(self.persona, ensure_ascii=False) + "\nPROFILE_FACTS_JSON=" + json.dumps(profile)
-                + "\n" + SOURCE_RULES + "\n"
+                + "\n" + SOURCE_RULES + EVIDENCE_RULES + "\n"
                 "This controlled experiment runs only Main and a native Research child. Call comparison_research once, "
                 "then synthesize the returned document originals and authorized Environment. "
                 "There are no Analysis/Verification agent runs; source checks are deterministic code. "

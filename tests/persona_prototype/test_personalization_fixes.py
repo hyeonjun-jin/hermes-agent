@@ -38,7 +38,7 @@ def test_format_fallback_preserves_content_without_llm():
     mixed, _ = format_answer("설명\n- 이미 목록", "bullets")
     assert mixed == "- 설명\n- 이미 목록"
     table, audit = format_answer(raw, "table")
-    assert table.startswith("| 내용 |\n|---|\n")
+    assert table.startswith("| 순서 | 내용 |\n| --- | --- |\n")
     assert "위험 \\| 관리" in table and audit["fallback_applied"]
     assert format_answer(raw, "explanation")[0] == raw
 
