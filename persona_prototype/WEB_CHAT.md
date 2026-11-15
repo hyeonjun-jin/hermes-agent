@@ -64,7 +64,8 @@ requires the platform's connection/port-forwarding support.
 The sidebar selects Alice/Bob/Carol, creates or resumes conversations and displays
 the frozen Persona and conversation history. The chat view shows answers, source
 IDs, recall/role traces, separate quality/format audits and feedback. Feedback is
-stored for inspection only; it never runs Test-Time Alignment or modifies Persona.
+stored for inspection by default. Explicitly consented preferences can now be evaluated
+through the [bounded Alignment prototype](ALIGNMENT.md); activation requires a separate approval.
 
 ## Sessions and development identity
 
@@ -163,5 +164,6 @@ python -m persona_prototype.web_validation --api http://127.0.0.1:8001 \
   --output "$TMPDIR/persona-web-real-validation.json"
 ```
 
-No web UI conversation automatically retrains a model, optimizes a Persona or
-performs Test-Time User Preference Alignment.
+Ordinary chat never automatically retrains a model or updates a Persona. The optional
+[Alignment controls](ALIGNMENT.md) perform local Mock comparison and require explicit approval;
+LLM textual-gradient optimization is not implemented.

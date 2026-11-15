@@ -109,6 +109,7 @@ python3 tests/browser/persona_chat_smoke.py
 - 단일 Backend/worker만 지원한다. 상태 DB 암호화·보존 정책·요청 중복 방지는 미구현이다.
 - 문서 ID는 Mock 문서 식별자이며 외부 원문 링크/문서 뷰어는 없다.
 - 일부 응답은 로컬 형식 보정을 사용한다. 자동 출처/언어 검사는 의미 정확성을 보증하지 않는다.
-- 피드백은 저장만 한다. Test-Time Alignment와 자동 학습은 하지 않는다.
+- 기본 피드백은 저장만 한다. 동의한 선호는 [제한된 Alignment 기능](ALIGNMENT.md)으로
+  Mock 검증 후 별도 승인할 수 있다. LLM TextGrad와 자동 적용은 구현하지 않았다.
 - 이 로컬 가이드는 Mock 모드 대상이다. Codespaces의 실제 모델 Backend 실행은
   [CODESPACES.md](CODESPACES.md)를 따른다. Codex 정책 파일을 만들어 우회하지 않는다.

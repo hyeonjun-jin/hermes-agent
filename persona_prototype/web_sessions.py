@@ -9,8 +9,8 @@ import uuid
 from .app import SCOPES, seed
 from .data import PROFILES
 from .domain import Principal
-from .store import build_persona
 from .quality import quality_review
+from .alignment import PreferenceAligner, COMMENT_PREFERENCES
 
 
 class ChatSessions:
@@ -27,12 +27,13 @@ class ChatSessions:
                 CREATE TABLE IF NOT EXISTS web_feedback (id INTEGER PRIMARY KEY, session_id TEXT,
                     turn_id TEXT, rating TEXT, comment TEXT);
             """)
+        self.aligner = PreferenceAligner(self.app.store)
 
     def create(self, user):
         if user not in PROFILES:
             raise ValueError("Unknown development user")
         actor = Principal(user, SCOPES)
-        persona = build_persona(PROFILES[user], self.app.store.semantic(actor, user))
+        persona = self.aligner.repository.current(actor)["persona"]
         session_id, token = uuid.uuid4().hex, secrets.token_urlsafe(32)
         with self.app.store.connect() as db:
             db.execute("INSERT INTO web_sessions VALUES (?,?,?,?,?)", (session_id, user,
@@ -110,10 +111,32 @@ class ChatSessions:
                 db.execute("UPDATE web_sessions SET history=? WHERE id=?", (json.dumps(history, ensure_ascii=False), session_id))
             return {"turn_id": turn_id, **result}
 
-    def feedback(self, session_id, token, turn_id, rating, comment):
-        self.owned(session_id, token)
-        with self.app.store.connect() as db:
-            if not db.execute("SELECT 1 FROM web_turns WHERE id=? AND session_id=?", (turn_id, session_id)).fetchone():
-                raise ValueError("Turn not in this session")
-            db.execute("INSERT INTO web_feedback VALUES(NULL,?,?,?,?)", (session_id, turn_id, rating, comment))
-        return {"saved": True, "used_for_alignment": False}
+    def feedback(self, session_id, token, turn_id, rating, comment, *, consent=False, preference=None):
+        with self.lock:
+            row = self.owned(session_id, token)
+            with self.app.store.connect() as db:
+                if not db.execute("SELECT 1 FROM web_turns WHERE id=? AND session_id=?", (turn_id, session_id)).fetchone():
+                    raise ValueError("Turn not in this session")
+                db.execute("INSERT INTO web_feedback VALUES(NULL,?,?,?,?)", (session_id, turn_id, rating, comment))
+            if consent:
+                value = preference or COMMENT_PREFERENCES.get(comment.strip().rstrip(".!"))
+                if value:
+                    self.aligner.repository.feedback(Principal(row[0], SCOPES), turn_id, value)
+                    return {"saved": True, "used_for_alignment": False, "eligible_for_alignment": True}
+            self.aligner.repository.revoke_feedback(Principal(row[0], SCOPES), turn_id)
+            return {"saved": True, "used_for_alignment": False}
+
+    def alignment_action(self, session_id, token, action, value=None):
+        with self.lock:
+            row = self.owned(session_id, token)
+            actor = Principal(row[0], SCOPES)
+            repository = self.aligner.repository
+            if action == "inspect":
+                return repository.inspect(actor)
+            if action == "propose":
+                return self.aligner.propose(actor)
+            if action == "approve":
+                return repository.activate(actor, proposal_id=value)
+            if action == "rollback":
+                return repository.activate(actor, rollback_revision=value)
+            raise ValueError("Unknown Alignment action")

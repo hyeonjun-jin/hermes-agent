@@ -86,7 +86,8 @@ class PersonaMemoryProvider(MemoryProvider):
                                                    "source": "profile:" + self.principal.user_id}) + '\n' + SOURCE_RULES + ' '
                 'Relevant confirmed episodes may already be in recalled memory context. '
                 'Use persona_recall only if more relevant history is needed; never call it for every question. '
-                'For project planning consult mock_rag with the most recent relevant confirmed focus tag '
+                'For project planning consult mock_rag with an explicitly approved PERSONA_JSON.focus when present; '
+                'otherwise use the most recent relevant confirmed focus tag '
                 'and mock_environment for current constraints. Request both in the same round when independent. '
                 'Valid tags: delivery, risk, onboarding. '
                 'Project identifiers atlas/beacon/cedar are NOT tags. Cite document IDs and memory IDs used. '
@@ -130,6 +131,9 @@ class PersonaMemoryProvider(MemoryProvider):
             if tool_name == "mock_rag":
                 self.trace[-1]["tag_sources"] = [hint for event in self.recall_trace for hint in event["tag_hints"]
                                                   if hint["tag"] == args["tag"]]
+                if self.persona.get("focus") == args["tag"]:
+                    self.trace[-1]["tag_sources"].append({"source": "approved_persona", "tag": args["tag"],
+                                                         "version": self.persona["version"]})
             return json.dumps({"result": result}, ensure_ascii=False)
         except PermissionError:
             return self._failure(tool_name, args, "denied", "Access denied")

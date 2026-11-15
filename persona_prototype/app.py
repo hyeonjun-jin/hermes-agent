@@ -13,7 +13,8 @@ from .store import MemoryStore
 from .personalization import format_answer
 from .fact_grounding import ground_project_facts
 
-SCOPES = frozenset({"memory:read", "memory:write", "documents:read", "environment:read"})
+SCOPES = frozenset({"memory:read", "memory:write", "documents:read", "environment:read",
+                    "persona:read", "persona:propose", "persona:approve", "persona:rollback"})
 
 
 def seed(store):

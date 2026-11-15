@@ -3,6 +3,7 @@ import os
 
 import httpx
 import streamlit as st
+from ui_alignment import alignment_panel
 
 st.set_page_config(page_title="Persona Chat", page_icon="💬", layout="centered")
 
@@ -72,6 +73,7 @@ with st.sidebar.expander("적용된 Persona"):
 with st.sidebar.expander("대화 기록"):
     for turn in history["turns"]:
         st.write(turn["question"])
+alignment_panel(request, session)
 if health["mode"] == "mock":
     st.info("현재 Mock 모드입니다. 연결·세션 동작을 시험하며 실제 LLM 품질을 뜻하지 않습니다.")
 for turn in history["turns"]:
@@ -91,13 +93,20 @@ for turn in history["turns"]:
             st.json({"memory": result.get("recall_events", []), "agents": result.get("delegations", []),
                      "quality": quality, "format": result.get("format_validation", {})})
         with st.expander("답변 피드백"):
-            comment = st.text_input("의견", key="comment-" + turn["turn_id"])
-            rating = st.radio("평가", ["helpful", "unhelpful"], key="rating-" + turn["turn_id"], horizontal=True,
-                              format_func=lambda value: "도움돼요" if value == "helpful" else "아쉬워요")
-            if st.button("피드백 저장", key="save-" + turn["turn_id"]):
+            with st.form("feedback-" + turn["turn_id"]):
+                comment = st.text_input("의견", key="comment-" + turn["turn_id"])
+                rating = st.radio("평가", ["helpful", "unhelpful"], key="rating-" + turn["turn_id"], horizontal=True,
+                                  format_func=lambda value: "도움돼요" if value == "helpful" else "아쉬워요")
+                consent = st.checkbox("이 선호를 Persona 후보 검증에 사용하는 데 동의합니다", key="consent-" + turn["turn_id"])
+                style = st.selectbox("선호 응답 형식", ["선택 안 함", "bullets", "table", "explanation"], key="pref-format-" + turn["turn_id"])
+                focus = st.selectbox("선호 검색 초점", ["선택 안 함", "delivery", "risk", "onboarding"], key="pref-focus-" + turn["turn_id"])
+                preference = {k: v for k, v in {"format": style, "focus": focus}.items() if v != "선택 안 함"}
+                saved = st.form_submit_button("피드백 저장")
+            if saved:
                 try:
                     request("POST", f"/sessions/{sid}/feedback", session=session,
-                            body={"turn_id": turn["turn_id"], "rating": rating, "comment": comment})
+                            body={"turn_id": turn["turn_id"], "rating": rating, "comment": comment,
+                                  "consent_for_alignment": consent, "preference": preference or None})
                     st.success("피드백을 저장했습니다. 자동 학습에는 사용하지 않습니다.")
                 except httpx.HTTPError:
                     st.error("피드백 저장에 실패했습니다.")

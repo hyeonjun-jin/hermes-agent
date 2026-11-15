@@ -50,10 +50,23 @@ class Message(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
 
 
+class PreferenceInput(BaseModel):
+    model_config = {"extra": "forbid"}
+    format: Literal["bullets", "table", "explanation"] | None = None
+    focus: Literal["delivery", "risk", "onboarding"] | None = None
+
+
 class Feedback(BaseModel):
     turn_id: str
     rating: Literal["helpful", "unhelpful"]
     comment: str = Field(default="", max_length=2000)
+    consent_for_alignment: bool = False
+    preference: PreferenceInput | None = None
+
+
+class Approval(BaseModel):
+    model_config = {"extra": "forbid"}
+    confirm: Literal[True]
 
 
 def check_real_network(environ, policy_path=None):
@@ -169,7 +182,31 @@ def create_app(root: Path, *, mode="mock", dev_mode=False):
     @api.post("/sessions/{session_id}/feedback")
     def feedback(session_id: str, body: Feedback, authorization: str | None = Header(default=None)):
         credential = token(authorization)
-        return invoke(lambda: api.state.sessions.feedback(session_id, credential, body.turn_id, body.rating, body.comment))
+        return invoke(lambda: api.state.sessions.feedback(
+            session_id, credential, body.turn_id, body.rating, body.comment, consent=body.consent_for_alignment,
+            preference=body.preference.model_dump(exclude_none=True) if body.preference else None))
+
+    @api.get("/sessions/{session_id}/alignment")
+    def alignment_status(session_id: str, authorization: str | None = Header(default=None)):
+        credential = token(authorization)
+        return invoke(lambda: api.state.sessions.alignment_action(session_id, credential, "inspect"))
+
+    @api.post("/sessions/{session_id}/alignment/proposals")
+    def alignment_propose(session_id: str, authorization: str | None = Header(default=None)):
+        credential = token(authorization)
+        return invoke(lambda: api.state.sessions.alignment_action(session_id, credential, "propose"))
+
+    @api.post("/sessions/{session_id}/alignment/{proposal_id}/approve")
+    def alignment_approve(session_id: str, proposal_id: str, body: Approval,
+                          authorization: str | None = Header(default=None)):
+        credential = token(authorization)
+        return invoke(lambda: api.state.sessions.alignment_action(session_id, credential, "approve", proposal_id))
+
+    @api.post("/sessions/{session_id}/alignment/rollback/{revision}")
+    def alignment_rollback(session_id: str, revision: int, body: Approval,
+                           authorization: str | None = Header(default=None)):
+        credential = token(authorization)
+        return invoke(lambda: api.state.sessions.alignment_action(session_id, credential, "rollback", revision))
 
     @api.get("/dev/audit")
     def audit():

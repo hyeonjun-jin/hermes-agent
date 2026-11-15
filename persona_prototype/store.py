@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import UTC, datetime
 
 from .domain import Authorizer, Principal
-from .personalization import terms
+from .personalization import terms, TAGS
 
 
 class MemoryStore:
@@ -76,5 +76,12 @@ def build_persona(profile: dict, semantic: dict) -> dict:
     style = semantic.get("format", profile["format"])
     if style not in {"bullets", "table", "explanation"}:
         raise ValueError("Unsupported format")
-    return {"version": 1, "project": profile["project"], "format": style,
-            "language": profile["language"]}
+    version = semantic.get("persona_version", 1)
+    if type(version) is not int or version < 1:
+        raise ValueError("Invalid Persona version")
+    result = {"version": version, "project": profile["project"], "format": style, "language": profile["language"]}
+    if "focus" in semantic:
+        if semantic["focus"] not in TAGS:
+            raise ValueError("Unsupported search focus")
+        result["focus"] = semantic["focus"]
+    return result

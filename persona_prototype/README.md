@@ -8,6 +8,8 @@ For explicit real GPT-4o mini mode with Codespaces Secrets and private port
 forwarding, see [CODESPACES.md](CODESPACES.md).
 For the Profile/Memory/Environment source contract and current-stage lookup policy,
 see [FACT_GROUNDING.md](FACT_GROUNDING.md).
+For opt-in feedback, local Mock Persona comparisons, manual approval and versioned
+rollback, see [ALIGNMENT.md](ALIGNMENT.md). This is a bounded prototype, not TextGrad.
 
 For the repaired automatic-memory flow, tag provenance, output-format auditing
 and latest live controlled experiment, see [PERSONALIZATION_FIXES.md](PERSONALIZATION_FIXES.md).
