@@ -1,0 +1,249 @@
+[
+  {
+    "user": "researcher",
+    "mode": "mock",
+    "complete": true,
+    "model_calls": 6,
+    "tools": [
+      {
+        "id": "research-tool-0",
+        "app": "openalex",
+        "api": "search_works",
+        "rp": {
+          "query": "hydrogen 수소환원제철 실험 조건"
+        },
+        "op": {
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30",
+          "sort": "date_desc",
+          "limit": 3,
+          "types": [
+            "article",
+            "review"
+          ]
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-1",
+        "app": "kipris_plus",
+        "api": "search_patents",
+        "rp": {
+          "query": "hydrogen 수소환원제철",
+          "jurisdiction": "KR"
+        },
+        "op": {
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30",
+          "sort": "date_desc",
+          "limit": 3
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-2",
+        "app": "openalex",
+        "api": "read_work",
+        "rp": {
+          "work_id": "H-A01"
+        },
+        "op": {
+          "include_abstract": true
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-3",
+        "app": "kipris_plus",
+        "api": "read_patent",
+        "rp": {
+          "application_id": "H-P01"
+        },
+        "op": {
+          "include_claims": true
+        },
+        "after": []
+      },
+      {
+        "id": "verification-tool-4",
+        "app": "openalex",
+        "api": "read_work",
+        "rp": {
+          "work_id": "H-A01"
+        },
+        "op": {
+          "include_abstract": true
+        },
+        "after": []
+      },
+      {
+        "id": "verification-tool-5",
+        "app": "kipris_plus",
+        "api": "read_patent",
+        "rp": {
+          "application_id": "H-P01"
+        },
+        "op": {
+          "include_claims": true
+        },
+        "after": []
+      }
+    ],
+    "source_ids": [
+      "H-A01",
+      "H-P01"
+    ]
+  },
+  {
+    "user": "strategy",
+    "mode": "mock",
+    "complete": true,
+    "model_calls": 6,
+    "tools": [
+      {
+        "id": "research-tool-0",
+        "app": "opendart",
+        "api": "list_disclosures",
+        "rp": {
+          "corp_code": "00000001",
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30"
+        },
+        "op": {
+          "report_type": "material",
+          "keyword": "hydrogen 수소환원제철",
+          "limit": 3
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-1",
+        "app": "posco_ir",
+        "api": "search_materials",
+        "rp": {
+          "query": "hydrogen 수소환원제철"
+        },
+        "op": {
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30",
+          "sort": "date_desc",
+          "limit": 3,
+          "kind": "strategy",
+          "language": "ko"
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-2",
+        "app": "opendart",
+        "api": "read_disclosure",
+        "rp": {
+          "receipt_no": "H-D01"
+        },
+        "op": {},
+        "after": []
+      },
+      {
+        "id": "research-tool-3",
+        "app": "posco_ir",
+        "api": "read_material",
+        "rp": {
+          "material_id": "H-IS01"
+        },
+        "op": {},
+        "after": []
+      },
+      {
+        "id": "verification-tool-4",
+        "app": "opendart",
+        "api": "read_disclosure",
+        "rp": {
+          "receipt_no": "H-D01"
+        },
+        "op": {},
+        "after": []
+      },
+      {
+        "id": "verification-tool-5",
+        "app": "posco_ir",
+        "api": "read_material",
+        "rp": {
+          "material_id": "H-IS01"
+        },
+        "op": {},
+        "after": []
+      }
+    ],
+    "source_ids": [
+      "H-D01",
+      "H-IS01"
+    ]
+  },
+  {
+    "user": "finance",
+    "mode": "mock",
+    "complete": true,
+    "model_calls": 6,
+    "tools": [
+      {
+        "id": "research-tool-0",
+        "app": "opendart",
+        "api": "read_financials",
+        "rp": {
+          "corp_code": "00000001",
+          "bsns_year": "2025",
+          "reprt_code": "11011",
+          "fs_div": "CFS"
+        },
+        "op": {
+          "account_ids": [
+            "cash_flow_investing",
+            "operating_profit"
+          ]
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-1",
+        "app": "posco_ir",
+        "api": "search_materials",
+        "rp": {
+          "query": "hydrogen 수소환원제철"
+        },
+        "op": {
+          "from_date": "2025-10-01",
+          "to_date": "2026-09-30",
+          "sort": "date_desc",
+          "limit": 3,
+          "kind": "earnings",
+          "language": "ko"
+        },
+        "after": []
+      },
+      {
+        "id": "research-tool-2",
+        "app": "posco_ir",
+        "api": "read_material",
+        "rp": {
+          "material_id": "H-IF01"
+        },
+        "op": {},
+        "after": []
+      },
+      {
+        "id": "verification-tool-3",
+        "app": "posco_ir",
+        "api": "read_material",
+        "rp": {
+          "material_id": "H-IF01"
+        },
+        "op": {},
+        "after": []
+      }
+    ],
+    "source_ids": [
+      "H-F01",
+      "H-IF01"
+    ]
+  }
+]

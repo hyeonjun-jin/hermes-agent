@@ -1,5 +1,7 @@
 # 개인화 기술조사 Agent 전환 계획
 
+> 현재 개발 방향(2026-11-16): 기술조사 애플리케이션 구현이 우선이며, 벤치마크 개발과 성능 평가 연구는 범위에서 제외한다. 아래 초기 연구 설계는 이력으로 보존한다. 현재 작동 버전과 제약은 [기술조사 Agent 안내](tech_research_agent/README.md)를 따른다.
+
 설계 기준: `0874e772`, `feat/persona-gpt4o-mini-validation`. 작성일: 2026-11-15.
 이번 변경은 이 문서와 [BENCHMARK_DESIGN.md](BENCHMARK_DESIGN.md)뿐이다.
 코드, 기존 Mock, 사용량 원장, 호출 제한은 그대로 둔다. 아래 Registry와 데이터셋은

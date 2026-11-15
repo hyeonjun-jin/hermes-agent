@@ -161,6 +161,7 @@ def test_financial_rows_are_selected_by_period_and_accounts(adapter):
            {'account_ids':['operating_profit']})
     result=adapter.execute(c)
     assert result['status']=='ok' and [r['value'] for r in result['rows']]==['40']
+    assert [i['source_id'] for i in result['items']]==['DEV-B-F01']
     c['op']['account_ids'].append('net_debt')
     assert adapter.execute(c)['status']=='partial'
     c['rp']['bsns_year']='2024'

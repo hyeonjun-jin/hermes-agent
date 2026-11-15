@@ -138,7 +138,7 @@ class OfflineAdapter:
     def _financials(self, call):
         params = {**call['rp'], **call['op']}
         topic = self.context.entity_topics[params['corp_code']]
-        sources = [s for s in self.corpus.values() if s['topic']==topic and s['id'].endswith('F01')
+        sources = [s for s in self.corpus.values() if s['topic']==topic and s['app']=='opendart' and s['id'].rsplit('-',1)[-1]=='F01'
                    and self.context.permits(s)]
         rows = []
         for source in sources:
