@@ -20,4 +20,5 @@ def quality_review(result, prior_sources=()):
             "source_ids": cited, "unsupported_source_ids": sorted(set(cited) - known),
             "observed_environment": environment, "possible_environment_contradiction": contradiction,
             "semantic_review_required": True,
+            "fact_grounding": result.get("fact_validation", {"applied": False}),
             "note": "Korean presence and source coverage do not prove semantic accuracy; absence in RAG is not global absence."}

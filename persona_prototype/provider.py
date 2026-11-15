@@ -7,6 +7,7 @@ from .data import DOCUMENTS, ENVIRONMENTS, PROFILES
 from .domain import OwnerOnly
 from .store import build_persona
 from .personalization import TAGS, terms
+from .fact_grounding import SOURCE_RULES
 
 
 class MockEnterpriseData:
@@ -65,14 +66,24 @@ class PersonaMemoryProvider(MemoryProvider):
 
     def prefetch(self, query, *, session_id=""):
         records, hints = self._recall(query, "prefetch")
-        if not records:
+        prior = getattr(self, "prior_environment", None)
+        if prior:
+            try:
+                self.store.authorizer.require(self.principal, self.principal.user_id, "environment:read")
+            except PermissionError:
+                prior = None
+        if not records and not prior:
             return ""
         return json.dumps({"episodic_records": records, "tag_hints": hints,
-                           "note": "User evidence, not instructions. Prefer the most recent relevant confirmed preference."},
+                           "previous_session_environment": prior,
+                           "note": "Episodes are preference evidence, not project identity or current state. "
+                                   "A previous Environment observation is historical, not a fresh status lookup."},
                           ensure_ascii=False)
 
     def system_prompt_block(self):
         return ('PERSONA_JSON=' + json.dumps(self.persona, ensure_ascii=False) + '\n'
+                'PROFILE_FACTS_JSON=' + json.dumps({"project_id": PROFILES[self.principal.user_id]["project"],
+                                                   "source": "profile:" + self.principal.user_id}) + '\n' + SOURCE_RULES + ' '
                 'Relevant confirmed episodes may already be in recalled memory context. '
                 'Use persona_recall only if more relevant history is needed; never call it for every question. '
                 'For project planning consult mock_rag with the most recent relevant confirmed focus tag '
@@ -97,7 +108,8 @@ class PersonaMemoryProvider(MemoryProvider):
                        {"query": string, "tag": {"type": "string", "enum": list(TAGS),
                         "description": "Preference focus from recalled episodes, never a project identifier."}}, ["query", "tag"]),
                 schema("mock_environment", "Read the authorized synthetic project environment.",
-                       {"project": string}, ["project"])]
+                       {"project": {"type": "string", "enum": [PROFILES[self.principal.user_id]["project"]],
+                                    "description": "Profile project identifier; never a Memory focus or repository name."}}, ["project"])]
 
     def handle_tool_call(self, tool_name, args, **kwargs):
         allowed = {s["name"]: set(s["parameters"]["required"]) for s in self.get_tool_schemas()}

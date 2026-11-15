@@ -1,6 +1,7 @@
 """Deterministic development model for UI/HTTP tests, never a fallback for real mode."""
 import json
 import re
+from .fact_grounding import fact_policy
 
 def web_respond(messages):
     system = "\n".join(str(m.get("content", "")) for m in messages if m["role"] == "system")
@@ -44,6 +45,12 @@ def web_respond(messages):
     plain = re.sub(r"<memory-context>.*?</memory-context>", "", user, flags=re.DOTALL)
     if all(w in plain for w in ("조사", "분석", "검증")):
         return calls([("delegate_specialist", {"role": "workflow"})])
+    if fact_policy(plain)["route"] == "direct_environment":
+        if not tools:
+            return calls([("mock_environment", {"project": persona["project"]})])
+        environment = tools[-1].get("result", {})
+        return {"role": "assistant", "content": (
+            f'프로젝트 이름: {persona["project"]}\n현재 진행 단계: {environment.get("stage", "미확인")}')}, "stop"
     prior = " ".join(str(m.get("content", "")) for m in messages[:index] if m["role"] == "user")
     code = re.search(r"R-\d+", prior)
     if code and any(w in plain for w in ("코드", "기억", "앞서")):

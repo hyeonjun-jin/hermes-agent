@@ -81,15 +81,24 @@ class ChatSessions:
             if self.budget:
                 self.budget.case = session_id + ":" + uuid.uuid4().hex
             sources = set()
+            prior_environment = None
             for turn in previous:
                 saved = turn["result"]
+                events = saved.get("tool_calls", []) + saved.get("role_tool_calls", [])
+                for event in events:
+                    if (event.get("tool") in {"mock_environment", "persona_analysis_environment"}
+                            and event.get("status") == "ok"
+                            and isinstance(event.get("result"), dict)
+                            and event["result"].get("project") == PROFILES[row[0]]["project"]):
+                        prior_environment = event["result"]
                 sources.update(d["id"] for e in saved.get("role_tool_calls", [])
                                if e["role"] == "research" and e.get("status") == "ok" for d in e["result"])
                 sources.update(d["id"] for e in saved.get("tool_calls", [])
                                if e["tool"] == "mock_rag" and e.get("status") == "ok" for d in e["result"])
             result = self.app.chat(Principal(row[0], SCOPES), row[0], question,
                                    session_id=session_id, conversation_history=json.loads(row[3]),
-                                   persona_snapshot=json.loads(row[2]), known_source_ids=sources)
+                                   persona_snapshot=json.loads(row[2]), known_source_ids=sources,
+                                   prior_environment=prior_environment)
             history = result.pop("history")
             result["quality"] = quality_review(result, sources)
             if self.budget:

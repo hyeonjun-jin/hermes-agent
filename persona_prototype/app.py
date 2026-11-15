@@ -11,6 +11,7 @@ from .domain import Principal, OwnerOnly
 from .provider import PersonaMemoryProvider
 from .store import MemoryStore
 from .personalization import format_answer
+from .fact_grounding import ground_project_facts
 
 SCOPES = frozenset({"memory:read", "memory:write", "documents:read", "environment:read"})
 
@@ -37,7 +38,7 @@ class ChatApplication:
         self.multi_agent = multi_agent
 
     def chat(self, principal: Principal, user_id: str, question: str, *, session_id=None,
-             conversation_history=None, persona_snapshot=None, known_source_ids=()) -> dict:
+             conversation_history=None, persona_snapshot=None, known_source_ids=(), prior_environment=None) -> dict:
         self.store.authorizer.require(principal, user_id, "memory:read")
         if user_id not in PROFILES:
             raise ValueError("Unknown profile")
@@ -65,6 +66,7 @@ class ChatApplication:
         provider.session_mode = session_id is not None
         provider.question = question
         provider.known_source_ids = set(known_source_ids)
+        provider.prior_environment = prior_environment
         session_id = session_id or "persona-" + uuid.uuid4().hex
         agent = None
         role_handles = []
@@ -112,11 +114,18 @@ class ChatApplication:
         completion = {}
         if self.multi_agent:
             raw_answer, completion = provider.finish(raw_answer)
+        raw_answer, facts = ground_project_facts(provider, raw_answer)
+        if facts.get("applied") and not facts["grounded"]:
+            completion.update(complete=False, quality_review_required=True)
         answer, formatting = format_answer(raw_answer, provider.persona["format"])
+        history = [dict(m) for m in result.get("messages", [])]
+        if facts.get("applied") and history and history[-1].get("role") == "assistant" and not history[-1].get("tool_calls"):
+            # Only the just-generated final message is grounded before becoming session history.
+            history[-1]["content"] = answer
         return {"session_id": session_id, "persona": provider.persona,
                 "raw_answer": result["final_response"], "answer": answer, "format_validation": formatting,
                 "recall_events": provider.recall_trace, "tool_calls": provider.trace,
-                "history": result.get("messages", []),
+                "history": history, "fact_validation": facts,
                 "delegations": getattr(provider, "delegations", []),
                 "role_tool_calls": getattr(provider, "role_traces", []), "completion": completion,
                 "loop_error": bool(result.get("error") or result.get("failed") or result.get("partial")),
