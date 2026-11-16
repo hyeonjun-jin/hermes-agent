@@ -8,7 +8,7 @@ from persona_prototype.ui_output import render_answer
 st.set_page_config(page_title='개인화 기술조사',layout='wide')
 st.title('개인화 기술조사 Agent')
 st.caption('합성 업무 환경 기준일: 2026-10-01. 실제 현재 업무 정보가 아닙니다.')
-st.warning('개발 전용 사용자 선택입니다. 실제 SSO 인증이 아닙니다. 모든 자료는 SYNTHETIC입니다.')
+st.warning('개발 전용 사용자 선택입니다. 실제 SSO 인증이 아닙니다. 기본 정보원은 SYNTHETIC이며 공개 Connector 설정은 서버에서만 변경합니다.')
 
 
 @st.cache_resource
@@ -22,10 +22,18 @@ def application():
         from tech_research_agent.real import RealAdapter
         app.real_adapter=RealAdapter(settings['usage_path'],enabled=settings.get('enabled',False),
                                      exclusive_ledger_owner=settings.get('exclusive_ledger_owner',False))
+    try:
+        sources=st.secrets['technical_research_sources']
+    except (KeyError,FileNotFoundError):
+        sources={}
+    if sources.get('openalex_enabled',False):
+        from tech_research_agent.connectors.openalex import OpenAlexConnector
+        app.source_connectors={'openalex':OpenAlexConnector(enabled=True,api_key=sources.get('openalex_api_key'))}
     return app
 
 
 app=application()
+st.caption('정보원: PUBLIC OpenAlex + 나머지 합성 자료' if app.source_connectors else '정보원: Offline SYNTHETIC (외부 검색 없음)')
 user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:PROFILES[u]['department']+' / '+PROFILES[u]['job'])
 topic=st.sidebar.selectbox('현재 프로젝트',['H','B'],format_func=lambda t:'수소환원제철' if t=='H' else '이차전지 양극재')
 mode=st.sidebar.selectbox('현재 환경',['quick','deep','restricted'])
@@ -35,7 +43,9 @@ if execution_mode=='real':
     st.warning('Real은 GPT-4o mini의 실제 비용이 발생할 수 있습니다. PUBLIC 합성 요청만 허용합니다.')
     st.caption('현재 허용 요청: 수소환원제철을 비교 조사해주세요. / NCM LFP 양극재를 비교 조사해주세요.')
     consent=st.sidebar.checkbox('PUBLIC 합성 데이터 전송과 비용 발생 가능성을 확인했습니다')
-    real_ready=bool(consent and app.real_adapter and app.real_adapter.enabled)
+    real_ready=bool(consent and app.real_adapter and app.real_adapter.enabled and not app.source_connectors)
+    if app.source_connectors:
+        st.info("공개 Connector와 Real의 동시 사용은 반출 승인 전까지 차단됩니다.")
     if not app.real_adapter:
         st.info('서버에 기존 usage.json의 소유권과 Real 활성화 설정이 필요합니다. 새 예산은 생성하지 않습니다.')
 else:

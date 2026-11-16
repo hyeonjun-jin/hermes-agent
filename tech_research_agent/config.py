@@ -17,7 +17,7 @@ PROFILES = {
 SOURCES = {'openalex','kipris_plus','opendart','posco_ir','internal_mock'}
 
 
-def runtime(user_id, topic, mode):
+def runtime(user_id, topic, mode, *, connectors=None):
     if user_id not in PROFILES or topic not in ('H','B') or mode not in ('quick','deep','restricted'):
         raise ValueError('Unknown development identity/project/environment')
     corpus = json.loads((DATA/'corpus.json').read_text())
@@ -33,4 +33,9 @@ def runtime(user_id, topic, mode):
     ctx = ServerContext(user_id,environment['project_id'],{environment['project_id']},set(environment['allowed_sources']),
                         environment['classification'],environment['cutoff'],12,acl,
                         {'00000001' if topic=='H' else '00000002':topic})
-    return copy.deepcopy(PROFILES[user_id]), environment, OfflineAdapter(ctx,corpus,registry)
+    if connectors:
+        from .source_adapter import SourceAdapter
+        adapter = SourceAdapter(ctx, corpus, registry, connectors=connectors)
+    else:
+        adapter = OfflineAdapter(ctx, corpus, registry)
+    return copy.deepcopy(PROFILES[user_id]), environment, adapter

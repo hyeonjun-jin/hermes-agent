@@ -75,7 +75,7 @@ def respond(messages):
         if plan:
             return tool_calls(plan)
     items=ctx.get('evidence',[]) if role!='research' else [i for r in results for i in r.get('items',[])]
-    text=('SYNTHETIC / Mock — '+role+'\n판단 기준: '+ctx['profile']['criteria']+'\n')
+    text=(ctx.get('data_label','SYNTHETIC')+' / Mock — '+role+'\n판단 기준: '+ctx['profile']['criteria']+'\n')
     if role=='analysis':
         alternatives='유동층과 샤프트로' if ctx['environment']['topic']=='H' else '고니켈 NCM과 LFP'
         text+='비교 대상: '+alternatives+'. 실험 조건·공개 계획·연결 실적은 증거의 성격이 다르므로 직접적인 우열/수익성 결론을 보류합니다.\n'

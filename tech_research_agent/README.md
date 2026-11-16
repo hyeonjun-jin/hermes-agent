@@ -1,3 +1,8 @@
+> 현재 공개 정보원 연결: [OpenAlex Connector v1](OPENALEX_CONNECTOR.md).
+> 기본은 Offline SYNTHETIC이다. 서버 opt-in 시 OpenAlex만 공개 검색으로 전환되며
+> 공개 Connector와 Real 모델의 동시 사용은 별도 반출 승인 전까지 차단된다.
+> 아래 첫 버전 기록 이후 추가된 Real 실행·예산 정책은 기존 관련 문서를 함께 확인한다.
+
 # 개인화 기술조사 Agent — 첫 작동 버전
 
 현재 개발 목표는 포스코홀딩스 임직원을 위한 기술조사 애플리케이션이다.

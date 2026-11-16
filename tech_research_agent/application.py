@@ -20,8 +20,9 @@ SCOPES=frozenset({'memory:read','memory:write'})
 
 
 class ResearchApplication:
-    def __init__(self, root, *, real_adapter=None):
+    def __init__(self, root, *, real_adapter=None, source_connectors=None):
         self.real_adapter=real_adapter
+        self.source_connectors=dict(source_connectors or {})
         self.root=Path(root)
         self.store=MemoryStore(self.root/'memory.sqlite',OwnerOnly())
         self.lock=threading.RLock()
@@ -39,12 +40,14 @@ class ResearchApplication:
         with self.lock:
             if execution_mode not in ('mock','real'):
                 raise ValueError('Unknown model mode')
+            if execution_mode=='real' and self.source_connectors:
+                raise PermissionError('공개 Connector 자료의 외부 LLM 반출은 아직 승인되지 않았습니다. 기존 Real 합성 데이터 제한을 유지합니다.')
             if execution_mode=='real' and self.real_adapter is None:
                 raise RuntimeError('Real mode requires server configuration of the existing usage ledger')
             return self._ask(actor,user_id,question,topic,mode,execution_mode)
 
     def _ask(self, actor, user_id, question, topic, mode, execution_mode):
-        profile,environment,adapter=runtime(user_id,topic,mode)
+        profile,environment,adapter=runtime(user_id,topic,mode,connectors=self.source_connectors)
         opposite=('NCM','LFP','양극재','이차전지') if topic=='H' else ('수소환원','제철','샤프트로','유동층')
         if any(word in question for word in opposite):
             return {'mode':execution_mode,'persona':profile,'environment':environment,'stages':[], 'trace':[],
@@ -55,6 +58,10 @@ class ResearchApplication:
                  self.store.search(actor,user_id,question) if r['query'].startswith('[project='+environment['project_id']+']')
                  and all(sid in adapter.corpus and adapter.context.permits(adapter.corpus[sid])
                          for sid in re.findall(r'\[([HB]-[\w-]+)\]',r['response']))]
+        if self.source_connectors and (approved.get('data_policy') == 'PRIVATE' or
+                                       any(h['data_policy'] == 'PRIVATE' for h in history)):
+            raise PermissionError('공개 Connector 실행에는 비공개 Memory를 함께 사용할 수 없습니다.')
+        data_label = 'PUBLIC OpenAlex + SYNTHETIC fixtures' if self.source_connectors else 'SYNTHETIC'
         stages=[];evidence=[];requests=[]
         home=self.root/'homes'/user_id
         home.mkdir(parents=True,exist_ok=True)
@@ -67,7 +74,7 @@ class ResearchApplication:
             from run_agent import AIAgent
             with self._endpoint(execution_mode,adapter.corpus,observe) as endpoint:
                 for role in ('research','analysis','verification'):
-                    context={'role':role,'profile':profile,'environment':environment,'question':question,
+                    context={'data_label':data_label,'role':role,'profile':profile,'environment':environment,'question':question,
                              'approved_preferences':approved,'history':history,'evidence':evidence,
                              'previous_stages':stages,
                              'entity_catalog':[{'corp_code':code,'public_topic':value,'synthetic':True,'classification':'PUBLIC'} for code,value in adapter.context.entity_topics.items()],
@@ -111,13 +118,15 @@ class ResearchApplication:
         # Mechanical citation/number audit; semantic conclusions still require human review.
         checks={'original_ids':[i['source_id'] for i in evidence],
                 'policy_denials':[e['reason'] for e in adapter.trace if not e['executed']],
-                'human_review_required':True,'synthetic':True,
+                'human_review_required':True,'synthetic':not bool(self.source_connectors),
+                'data_label':data_label,
                 'analysis_audit':review(stages[1]['raw_answer'],evidence) if len(stages)>1 else {},
                 'verification_audit':review(stages[-1]['raw_answer'],evidence) if stages else {}}
         verification_read=any(e['plan']['id'].startswith('verification-') and e['plan']['api'].startswith('read_') and e['executed'] and e['result']['status']=='ok' for e in adapter.trace)
         checks['verification_read']=verification_read
-        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
-        answer='## 기술조사 보고서 (SYNTHETIC / '+execution_mode+')\n조사 목적: '+environment['purpose']+'\n기준일: '+environment['as_of']+' / 마감: '+environment['deadline']+' / 보고 대상: '+environment['audience']+'\n'+ '\n'.join('### '+s['role']+'\n'+(s['raw_answer'] if not s['error'] else '이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.') for s in stages)
+        checks['metadata_only_ids']=[i['source_id'] for i in evidence if i.get('evidence_coverage')=='metadata_only']
+        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['metadata_only_ids'] and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
+        answer='## 기술조사 보고서 ('+data_label+' / '+execution_mode+')\n조사 목적: '+environment['purpose']+'\n기준일: '+environment['as_of']+' / 마감: '+environment['deadline']+' / 보고 대상: '+environment['audience']+'\n'+ '\n'.join('### '+s['role']+'\n'+(s['raw_answer'] if not s['error'] else '이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.') for s in stages)
         if not complete:
             answer+='\n조사 미완료: 근거·실행 상태를 확인해 주세요.'
             if execution_mode=='real' and any(a.get('budget_blocked') for a in self.real_adapter.audit):
