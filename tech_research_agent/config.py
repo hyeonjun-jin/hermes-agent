@@ -50,6 +50,6 @@ def entity_catalog(adapter):
 
 
 def source_label(connectors):
-    names = {'openalex': 'OpenAlex', 'opendart': 'OpenDART'}
+    names = {'openalex': 'OpenAlex', 'opendart': 'OpenDART', 'kipris_plus': 'KIPRIS Plus'}
     return ('PUBLIC '+', '.join(names[key] for key in sorted(connectors))+' + SYNTHETIC fixtures'
             if connectors else 'SYNTHETIC')

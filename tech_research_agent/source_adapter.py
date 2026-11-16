@@ -33,6 +33,8 @@ class SourceAdapter(OfflineAdapter):
             params = {**call['rp'], **call['op']}
             if call['api'] == 'read_disclosure':
                 params['_document'] = copy.deepcopy(self.corpus[params['receipt_no']])
+            if call['api'] == 'read_patent':
+                params['_patent'] = copy.deepcopy(self.corpus[params['application_id']])
             result = connector.execute(call['api'], params, self.context.cutoff)
             attempted = bool(result['cost']['source_requests'])
             self.context.spent += int(attempted)
@@ -54,7 +56,7 @@ class SourceAdapter(OfflineAdapter):
                 result['rows'] = []
             return
         self.corpus.update(sources)
-        if api in {'search_works', 'list_disclosures'}:
+        if api in {'search_works', 'list_disclosures', 'search_patents'}:
             self.context.seen.update(sources)
 
     @staticmethod
@@ -62,7 +64,8 @@ class SourceAdapter(OfflineAdapter):
         return {'id': item['source_id'], 'app': item['origin_app'], 'title': item['title'],
                 'published_at': item['published_at'], 'classification': 'PUBLIC',
                 'project_id': None, 'locator': item['locator'], 'spans': copy.deepcopy(item['spans']),
-                'synthetic': False, 'topic': None, 'corp_code': item.get('corp_code')}
+                'synthetic': False, 'topic': None, 'corp_code': item.get('corp_code'),
+                'open_number': item.get('open_number')}
 
     def _company_permitted(self, call):
         code = call['rp'].get('corp_code')

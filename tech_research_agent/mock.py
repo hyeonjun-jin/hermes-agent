@@ -85,6 +85,8 @@ def respond(messages):
     if role=='analysis':
         alternatives='유동층과 샤프트로' if ctx['environment']['topic']=='H' else '고니켈 NCM과 LFP'
         text+='비교 대상: '+alternatives+'. 실험 조건·공개 계획·연결 실적은 증거의 성격이 다르므로 직접적인 우열/수익성 결론을 보류합니다.\n'
+    if any(i['origin_app']=='kipris_plus' and i.get('synthetic') is False for i in items):
+        text+='특허 기재와 청구항은 실험으로 검증된 성능과 구분합니다. 등록 여부만으로 현재 권리 유효성·상용화·FTO를 확정하지 않습니다.\n'
     if role=='verification':
         text+='원문 재조회 및 분석 초안 대조: '+json.dumps(ctx.get('verification_audit',{}),ensure_ascii=False)+'\n'
     text+='\n'.join('['+i['source_id']+'] '+' '.join(s['text'] for s in i['spans']) for i in items)

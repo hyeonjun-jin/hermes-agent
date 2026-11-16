@@ -33,6 +33,10 @@ def application():
         from tech_research_agent.connectors.opendart import OpenDARTConnector
         app.source_connectors['opendart']=OpenDARTConnector(enabled=True,api_key=sources.get('opendart_api_key'),
                                                          company_catalog=dict(sources.get('opendart_companies',{})))
+    if sources.get('kipris_enabled',False):
+        from tech_research_agent.connectors.kipris_plus import KIPRISPlusConnector
+        app.source_connectors['kipris_plus']=KIPRISPlusConnector(enabled=True,
+            service_approved=sources.get('kipris_service_approved',False),api_key=sources.get('kipris_api_key'))
     return app
 
 
