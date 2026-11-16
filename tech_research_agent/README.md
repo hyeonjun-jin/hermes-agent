@@ -1,6 +1,8 @@
 > 현재 공개 정보원 연결: [OpenAlex Connector v1](OPENALEX_CONNECTOR.md), [OpenDART Connector v1](OPENDART_CONNECTOR.md), [KIPRIS Plus v1](KIPRIS_PLUS_CONNECTOR.md), [POSCO IR v1](POSCO_IR_CONNECTOR.md).
 > 기본은 Offline SYNTHETIC이다. 서버 opt-in 시 지정한 Connector만 공개 조회로 전환되며
 > 공개 Connector와 Real 모델의 동시 사용은 별도 반출 승인 전까지 차단된다.
+> [승인 공개자료 처리 경로](APPROVED_PUBLIC_PROCESSING.md)는 별도 `approved_public` 모드다.
+> 기본 비활성·비용 상한 0이며 문서/Memory별 서버 승인이 필요하다. 기존 `real` 차단은 유지한다.
 > 아래 첫 버전 기록 이후 추가된 Real 실행·예산 정책은 기존 관련 문서를 함께 확인한다.
 
 # 개인화 기술조사 Agent — 첫 작동 버전

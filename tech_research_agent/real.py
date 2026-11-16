@@ -86,10 +86,13 @@ def public_context(context):
 class ReservedBudget(PersistentBudget):
     def _send(self, body):
         # A byte upper bound is conservative for token reservation; this is not actual billing.
-        upper_input=len(json.dumps(body,ensure_ascii=False).encode())
-        self.calls[-1]['reserved_usd_upper_bound']=(upper_input*0.15+512*0.60)/1_000_000
+        self.calls[-1]['reserved_usd_upper_bound']=reservation_upper_bound(body)
         self.calls[-1]['payload_sha256']=self.payload_hash
         return super()._send(body)  # Durable pending attempt before any upstream send.
+
+
+def reservation_upper_bound(body):
+    return (len(json.dumps(body,ensure_ascii=False).encode())*0.15+512*0.60)/1_000_000
 
 
 class RealAdapter:
@@ -134,7 +137,7 @@ class RealAdapter:
         self.preflight()
         with claim_usage_lock(self.path):
             self.preflight()
-            policy=PayloadPolicy(corpus)
+            policy=self._payload_policy(corpus)
             adapter=self
             class Guard:
                 def forward(self, body):
@@ -166,11 +169,15 @@ class RealAdapter:
                                           'raw_tool_calls':copy.deepcopy(payload.get('choices',[{}])[0].get('message',{}).get('tool_calls',[]))})
                     return status,payload
             def safe_send(body):
+                if hasattr(policy,'before_send'):
+                    policy.before_send(body)
                 status,payload=(self.transport or self._network_send)(body)
                 if status==200:
                     if not payload.get('choices') or not isinstance(payload['choices'][0].get('message'),dict):
                         raise RealBlocked('Invalid upstream response shape')
                     policy.check({'messages':[{'role':'assistant','content':json.dumps(payload,ensure_ascii=False)}]})
+                    if hasattr(policy,'remember_response'):
+                        policy.remember_response(payload)
                 return status,payload
             self.budget=self._make_budget(safe_send)
             self.budget.case='technical-'+uuid.uuid4().hex
@@ -186,6 +193,9 @@ class RealAdapter:
 
     def _make_budget(self, send):
         return ReservedBudget(send,self.path)
+
+    def _payload_policy(self, corpus):
+        return PayloadPolicy(corpus)
 
     def summary(self):
         return {'model':MODEL,'transport_mode':'stub' if self.transport is not None else 'openai','pricing':RATES,'audit':self.audit,

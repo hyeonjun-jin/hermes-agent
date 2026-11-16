@@ -15,6 +15,18 @@ class SourceAdapter(OfflineAdapter):
             context.entity_topics = {code: None for code in dart.company_catalog.entries
                                      if dart.company_catalog.permits(code, context)}
 
+    def execute(self, call):
+        with self.context.lock:
+            policy = getattr(self, 'outbound_policy', None)
+            if policy is not None and policy.failed:
+                result = {'status': 'denied', 'reason': 'external_processing_stopped', 'cost': {'mock_units': 0}}
+                self.trace.append({'index': len(self.trace), 'plan': copy.deepcopy(call), 'executed': False,
+                                   'execution_args': None, 'reason': result['reason'], 'result': copy.deepcopy(result),
+                                   'egress_policy': {'status': 'denied'}})
+                return result
+            result = self._execute(copy.deepcopy(call))
+            return policy.observe(call, result) if policy is not None else result
+
     def _execute(self, call):
         connector = self.connectors.get(call.get('app')) if isinstance(call, dict) else None
         if connector is None:
@@ -50,6 +62,11 @@ class SourceAdapter(OfflineAdapter):
         return copy.deepcopy(result)
 
     def _register(self, result, api):
+        if any(item.get('classification') != 'PUBLIC' or item.get('synthetic') is not False for item in result.get('items', [])):
+            result.update(status='denied', reason='unclassified_connector_data', items=[], warnings=[])
+            if 'rows' in result:
+                result['rows'] = []
+            return
         sources = {item['source_id']: self._source(item) for item in result.get('items', [])}
         if (self.context.classification != 'PUBLIC' or
                 self.context.project_id not in self.context.allowed_projects or

@@ -42,6 +42,16 @@ def test_real_ui_warns_and_remains_disabled_without_server_approval(tmp_path,mon
     assert any('실제 비용' in w.value for w in app.warning)
 
 
+def test_approved_public_ui_cannot_grant_processing_rights(tmp_path,monkeypatch):
+    monkeypatch.setattr(ResearchApplication,'__init__',_initializer(tmp_path))
+    app=AppTest.from_file(str(Path(__file__).resolve().parents[2]/'tech_research_agent/ui.py')).run()
+    app.sidebar.radio[0].set_value('approved_public').run()
+    assert not app.exception and app.chat_input[0].disabled
+    app.sidebar.checkbox[0].check().run()
+    assert not app.exception and app.chat_input[0].disabled
+    assert any('UI 동의' in caption.value for caption in app.caption)
+
+
 def test_public_connector_ui_labels_sources_and_blocks_real(tmp_path,monkeypatch):
     import httpx
     from tech_research_agent.connectors.openalex import OpenAlexConnector

@@ -44,6 +44,20 @@ def application():
         app.source_connectors['posco_ir']=POSCOIRConnector(enabled=True,catalog=entries,
             local_root=sources.get('posco_ir_local_root'),allow_downloads=sources.get('posco_ir_allow_downloads',False),
             pdf_python=sources.get('posco_ir_pdf_python'))
+    try:
+        processing=st.secrets['technical_research_public_processing']
+    except (KeyError,FileNotFoundError):
+        processing={}
+    if processing.get('enabled',False):
+        import json
+        from tech_research_agent.approvals import ApprovalRegistry
+        from tech_research_agent.approved_real import ApprovedPublicAdapter
+        grants=ApprovalRegistry(json.loads(Path(processing['approval_registry_path']).read_text()))
+        # The same existing ledger and lock as legacy Real; no separate paid budget is created.
+        app.public_real_adapter=ApprovedPublicAdapter(settings['usage_path'],approvals=grants,
+            public_processing_enabled=True,enabled=settings.get('enabled',False),
+            max_reserved_usd=processing.get('max_reserved_usd',0),
+            exclusive_ledger_owner=settings.get('exclusive_ledger_owner',False))
     return app
 
 
@@ -52,7 +66,7 @@ st.caption('정보원: '+source_label(app.source_connectors) if app.source_conne
 user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:PROFILES[u]['department']+' / '+PROFILES[u]['job'])
 topic=st.sidebar.selectbox('현재 프로젝트',['H','B'],format_func=lambda t:'수소환원제철' if t=='H' else '이차전지 양극재')
 mode=st.sidebar.selectbox('현재 환경',['quick','deep','restricted'])
-execution_mode=st.sidebar.radio('모델 실행 모드',['mock','real'],index=0)
+execution_mode=st.sidebar.radio('모델 실행 모드',['mock','real','approved_public'],index=0)
 real_ready=True
 if execution_mode=='real':
     st.warning('Real은 GPT-4o mini의 실제 비용이 발생할 수 있습니다. PUBLIC 합성 요청만 허용합니다.')
@@ -63,6 +77,15 @@ if execution_mode=='real':
         st.info("공개 Connector와 Real의 동시 사용은 반출 승인 전까지 차단됩니다.")
     if not app.real_adapter:
         st.info('서버에 기존 usage.json의 소유권과 Real 활성화 설정이 필요합니다. 새 예산은 생성하지 않습니다.')
+elif execution_mode=='approved_public':
+    st.warning('승인 공개자료 모드: 외부 모델 처리와 실제 비용이 발생할 수 있습니다. 문서·Memory 승인은 서버에서만 관리합니다.')
+    consent=st.sidebar.checkbox('서버 승인 범위의 외부 처리와 기존 비용 한도를 확인했습니다')
+    configured=app.public_real_adapter
+    real_ready=bool(consent and configured and configured.enabled and configured.public_processing_enabled and
+                    configured.max_reserved_usd>0 and configured.approvals.configured and app.source_connectors)
+    st.caption('기존 두 공개 합성 질문 제한을 유지합니다. UI 동의는 문서 반출 승인이나 예산 승인이 아닙니다.')
+    if not real_ready:
+        st.info('별도 관리자 opt-in·문서별 승인·기존 Real 원장 설정이 필요합니다. 현재 UI에서 이를 승인할 수 없습니다.')
 else:
     st.info('Mock 실행: 스크립트형 응답이며 실제 모델의 개인화 판단 검증이 아닙니다.')
 profile,env,_=runtime(user,topic,mode)
