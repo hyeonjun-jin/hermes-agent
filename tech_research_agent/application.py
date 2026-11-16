@@ -15,7 +15,7 @@ from .provider import ResearchProvider
 from .mock import respond
 from .audit import review
 from .progress import progress
-from .source_adapter import source_issues, source_limit_text
+from .source_adapter import source_issues, source_limit_text, is_original_evidence
 
 SCOPES=frozenset({'memory:read','memory:write'})
 
@@ -112,7 +112,7 @@ class ResearchApplication:
                     # Only successful original reads, not search snippets, become report evidence.
                     original={i['source_id']:i for e in adapter.trace if e['executed'] and
                               e['plan']['api'].startswith('read_') and e['result']['status'] in ('ok','partial')
-                              for i in e['result'].get('items',[]) if adapter.context.permits(adapter.corpus[i['source_id']])}
+                              for i in e['result'].get('items',[]) if adapter.context.permits(adapter.corpus[i['source_id']]) and is_original_evidence(i)}
                     evidence=list(original.values())
                     if error:
                         break
@@ -125,10 +125,11 @@ class ResearchApplication:
                 'verification_audit':review(stages[-1]['raw_answer'],evidence) if stages else {}}
         verification_read=any(e['plan']['id'].startswith('verification-') and e['plan']['api'].startswith('read_') and e['executed'] and e['result']['status']=='ok' for e in adapter.trace)
         checks['verification_read']=verification_read
+        checks['incomplete_reads']=[e['plan']['id'] for e in adapter.trace if e['plan']['api'].startswith('read_') and e['result']['status']=='partial']
         checks['source_failures']=[issue for issue in source_issues(adapter.trace) if issue['status'] in {'denied','unavailable'}]
         checks['metadata_only_ids']=[i['source_id'] for i in evidence if i.get('evidence_coverage')=='metadata_only']
         checks['unverified_original_ids']=[i['source_id'] for i in evidence if i.get('original_verified') is False]
-        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['source_failures'] and not checks['metadata_only_ids'] and not checks['unverified_original_ids'] and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
+        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['source_failures'] and not checks['incomplete_reads'] and not checks['metadata_only_ids'] and not checks['unverified_original_ids'] and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
         answer='## 기술조사 보고서 ('+data_label+' / '+execution_mode+')\n조사 목적: '+environment['purpose']+'\n기준일: '+environment['as_of']+' / 마감: '+environment['deadline']+' / 보고 대상: '+environment['audience']+'\n'+ '\n'.join('### '+s['role']+'\n'+(s['raw_answer'] if not s['error'] else '이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.') for s in stages)
         if source_issues(adapter.trace):
             answer+='\n조회 범위·실행 제한: '+source_limit_text(adapter.trace)

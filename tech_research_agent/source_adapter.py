@@ -35,9 +35,14 @@ class SourceAdapter(OfflineAdapter):
                 params['_document'] = copy.deepcopy(self.corpus[params['receipt_no']])
             if call['api'] == 'read_patent':
                 params['_patent'] = copy.deepcopy(self.corpus[params['application_id']])
+            if call['app'] == 'posco_ir':
+                params['_context'] = self.context
+                if call['api'] == 'read_material':
+                    params['_material'] = copy.deepcopy(self.corpus[params['material_id']])
             result = connector.execute(call['api'], params, self.context.cutoff)
-            attempted = bool(result['cost']['source_requests'])
-            self.context.spent += int(attempted)
+            units = result['cost'].get('tool_units', int(bool(result['cost']['source_requests'])))
+            attempted = bool(units)
+            self.context.spent += units
             event.update(executed=attempted, execution_args={'rp': call['rp'], 'op': call['op']} if attempted else None,
                          reason=result.get('reason'))
             self._register(result, call['api'])
@@ -56,7 +61,7 @@ class SourceAdapter(OfflineAdapter):
                 result['rows'] = []
             return
         self.corpus.update(sources)
-        if api in {'search_works', 'list_disclosures', 'search_patents'}:
+        if api in {'search_works', 'list_disclosures', 'search_patents', 'search_materials'}:
             self.context.seen.update(sources)
 
     @staticmethod
@@ -65,7 +70,7 @@ class SourceAdapter(OfflineAdapter):
                 'published_at': item['published_at'], 'classification': 'PUBLIC',
                 'project_id': None, 'locator': item['locator'], 'spans': copy.deepcopy(item['spans']),
                 'synthetic': False, 'topic': None, 'corp_code': item.get('corp_code'),
-                'open_number': item.get('open_number')}
+                'open_number': item.get('open_number'), 'catalog_binding': item.get('catalog_binding')}
 
     def _company_permitted(self, call):
         code = call['rp'].get('corp_code')
@@ -74,6 +79,8 @@ class SourceAdapter(OfflineAdapter):
         return self.connectors['opendart'].company_catalog.permits(code, self.context)
 
     def _source_company_permitted(self, source):
+        if source['app'] == 'posco_ir':
+            return self.connectors['posco_ir'].permits_material(source['id'], self.context, source)
         if source['app'] != 'opendart':
             return True
         return self.connectors['opendart'].company_catalog.permits(source.get('corp_code'), self.context)
@@ -93,3 +100,9 @@ def source_limit_text(trace):
     limits = sorted({names.get(issue['app'], issue['app'])+': '+statuses.get(issue['status'], '조회 제한')
                      for issue in source_issues(trace)})
     return '; '.join(limits)+'. 상세 사유는 실행 기록을 확인하세요.'
+
+
+def is_original_evidence(item):
+    if item['origin_app'] != 'posco_ir' or item.get('synthetic') is True:
+        return True
+    return item.get('evidence_coverage') == 'ir_pdf_text' and any(s['kind'] == 'ir_pdf_text' and s['text'] for s in item['spans'])

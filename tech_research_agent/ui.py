@@ -37,6 +37,13 @@ def application():
         from tech_research_agent.connectors.kipris_plus import KIPRISPlusConnector
         app.source_connectors['kipris_plus']=KIPRISPlusConnector(enabled=True,
             service_approved=sources.get('kipris_service_approved',False),api_key=sources.get('kipris_api_key'))
+    if sources.get('posco_ir_enabled',False):
+        import json
+        from tech_research_agent.connectors.posco_ir import POSCOIRConnector
+        entries=json.loads(Path(sources['posco_ir_catalog_path']).read_text())
+        app.source_connectors['posco_ir']=POSCOIRConnector(enabled=True,catalog=entries,
+            local_root=sources.get('posco_ir_local_root'),allow_downloads=sources.get('posco_ir_allow_downloads',False),
+            pdf_python=sources.get('posco_ir_pdf_python'))
     return app
 
 
