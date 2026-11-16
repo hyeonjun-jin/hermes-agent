@@ -39,3 +39,17 @@ def runtime(user_id, topic, mode, *, connectors=None):
     else:
         adapter = OfflineAdapter(ctx, corpus, registry)
     return copy.deepcopy(PROFILES[user_id]), environment, adapter
+
+
+def entity_catalog(adapter):
+    dart = getattr(adapter, 'connectors', {}).get('opendart')
+    if dart is not None:
+        return dart.company_catalog.public_entries(adapter.context)
+    return [{'corp_code': code, 'public_topic': value, 'synthetic': True, 'classification': 'PUBLIC'}
+            for code, value in adapter.context.entity_topics.items()]
+
+
+def source_label(connectors):
+    names = {'openalex': 'OpenAlex', 'opendart': 'OpenDART'}
+    return ('PUBLIC '+', '.join(names[key] for key in sorted(connectors))+' + SYNTHETIC fixtures'
+            if connectors else 'SYNTHETIC')

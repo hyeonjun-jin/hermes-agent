@@ -10,11 +10,12 @@ from persona_prototype.domain import OwnerOnly, Principal
 from persona_prototype.store import MemoryStore
 from persona_prototype.runtime_config import ensure_runtime_config
 from persona_prototype.mock_llm import mock_endpoint
-from .config import runtime, PROFILES
+from .config import runtime, PROFILES, entity_catalog, source_label
 from .provider import ResearchProvider
 from .mock import respond
 from .audit import review
 from .progress import progress
+from .source_adapter import source_issues, source_limit_text
 
 SCOPES=frozenset({'memory:read','memory:write'})
 
@@ -61,7 +62,7 @@ class ResearchApplication:
         if self.source_connectors and (approved.get('data_policy') == 'PRIVATE' or
                                        any(h['data_policy'] == 'PRIVATE' for h in history)):
             raise PermissionError('공개 Connector 실행에는 비공개 Memory를 함께 사용할 수 없습니다.')
-        data_label = 'PUBLIC OpenAlex + SYNTHETIC fixtures' if self.source_connectors else 'SYNTHETIC'
+        data_label = source_label(self.source_connectors)
         stages=[];evidence=[];requests=[]
         home=self.root/'homes'/user_id
         home.mkdir(parents=True,exist_ok=True)
@@ -76,8 +77,8 @@ class ResearchApplication:
                 for role in ('research','analysis','verification'):
                     context={'data_label':data_label,'role':role,'profile':profile,'environment':environment,'question':question,
                              'approved_preferences':approved,'history':history,'evidence':evidence,
-                             'previous_stages':stages,
-                             'entity_catalog':[{'corp_code':code,'public_topic':value,'synthetic':True,'classification':'PUBLIC'} for code,value in adapter.context.entity_topics.items()],
+                             'previous_stages':stages,'retrieval_limits':source_issues(adapter.trace),
+                             'entity_catalog':entity_catalog(adapter),
                              'verification_audit':review(stages[-1]['raw_answer'],evidence) if stages else {}}
                     if execution_mode=='real':
                         from .real import public_context
@@ -124,9 +125,13 @@ class ResearchApplication:
                 'verification_audit':review(stages[-1]['raw_answer'],evidence) if stages else {}}
         verification_read=any(e['plan']['id'].startswith('verification-') and e['plan']['api'].startswith('read_') and e['executed'] and e['result']['status']=='ok' for e in adapter.trace)
         checks['verification_read']=verification_read
+        checks['source_failures']=[issue for issue in source_issues(adapter.trace) if issue['status'] in {'denied','unavailable'}]
         checks['metadata_only_ids']=[i['source_id'] for i in evidence if i.get('evidence_coverage')=='metadata_only']
-        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['metadata_only_ids'] and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
+        checks['unverified_original_ids']=[i['source_id'] for i in evidence if i.get('original_verified') is False]
+        complete=(execution_mode!='real' or verification_read) and len(stages)==3 and not any(s['error'] for s in stages) and bool(evidence) and not checks['source_failures'] and not checks['metadata_only_ids'] and not checks['unverified_original_ids'] and not checks['policy_denials'] and not checks['analysis_audit'].get('unknown_citations') and not checks['analysis_audit'].get('unmatched_numeric_tokens') and not checks['verification_audit'].get('unknown_citations') and not checks['verification_audit'].get('unmatched_numeric_tokens')
         answer='## 기술조사 보고서 ('+data_label+' / '+execution_mode+')\n조사 목적: '+environment['purpose']+'\n기준일: '+environment['as_of']+' / 마감: '+environment['deadline']+' / 보고 대상: '+environment['audience']+'\n'+ '\n'.join('### '+s['role']+'\n'+(s['raw_answer'] if not s['error'] else '이 역할은 실행 한도·정책·통신 오류로 중단됐습니다. 원응답은 감사 기록에 보존하며 자동 재시도나 모델 전환을 하지 않습니다.') for s in stages)
+        if source_issues(adapter.trace):
+            answer+='\n조회 범위·실행 제한: '+source_limit_text(adapter.trace)
         if not complete:
             answer+='\n조사 미완료: 근거·실행 상태를 확인해 주세요.'
             if execution_mode=='real' and any(a.get('budget_blocked') for a in self.real_adapter.audit):

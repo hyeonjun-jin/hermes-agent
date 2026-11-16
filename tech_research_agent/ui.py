@@ -2,7 +2,7 @@
 from pathlib import Path
 import streamlit as st
 from tech_research_agent.application import ResearchApplication, principal
-from tech_research_agent.config import PROFILES, runtime
+from tech_research_agent.config import PROFILES, runtime, source_label, entity_catalog
 from persona_prototype.ui_output import render_answer
 
 st.set_page_config(page_title='개인화 기술조사',layout='wide')
@@ -29,11 +29,15 @@ def application():
     if sources.get('openalex_enabled',False):
         from tech_research_agent.connectors.openalex import OpenAlexConnector
         app.source_connectors={'openalex':OpenAlexConnector(enabled=True,api_key=sources.get('openalex_api_key'))}
+    if sources.get('opendart_enabled',False):
+        from tech_research_agent.connectors.opendart import OpenDARTConnector
+        app.source_connectors['opendart']=OpenDARTConnector(enabled=True,api_key=sources.get('opendart_api_key'),
+                                                         company_catalog=dict(sources.get('opendart_companies',{})))
     return app
 
 
 app=application()
-st.caption('정보원: PUBLIC OpenAlex + 나머지 합성 자료' if app.source_connectors else '정보원: Offline SYNTHETIC (외부 검색 없음)')
+st.caption('정보원: '+source_label(app.source_connectors) if app.source_connectors else '정보원: Offline SYNTHETIC (외부 검색 없음)')
 user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:PROFILES[u]['department']+' / '+PROFILES[u]['job'])
 topic=st.sidebar.selectbox('현재 프로젝트',['H','B'],format_func=lambda t:'수소환원제철' if t=='H' else '이차전지 양극재')
 mode=st.sidebar.selectbox('현재 환경',['quick','deep','restricted'])
@@ -55,6 +59,9 @@ with st.sidebar.expander('현재 Persona와 승인 선호',expanded=True):
     st.json({**profile,'approved_preferences':app.store.semantic(principal(user),user)})
 with st.sidebar.expander('현재 Environment'):
     st.json(env)
+if 'opendart' in app.source_connectors:
+    with st.sidebar.expander('서버가 허용한 회사 Catalog'):
+        st.json(entity_catalog(runtime(user,topic,mode,connectors=app.source_connectors)[2]))
 if 'research_threads' not in st.session_state:
     st.session_state.research_threads={}
 key=user+':'+topic+':'+mode+':'+execution_mode
