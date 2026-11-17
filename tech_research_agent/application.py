@@ -16,8 +16,11 @@ from .mock import respond
 from .audit import review
 from .progress import progress
 from .source_adapter import source_issues, source_limit_text, is_original_evidence
+from .persona_store import ResearchPersonaStore
+from .persona_alignment import ResearchPreferenceAligner
+from .persona_preferences import memory_record, combine, effective
 
-SCOPES=frozenset({'memory:read','memory:write'})
+SCOPES=frozenset({'memory:read','memory:write','persona:read','persona:propose','persona:approve','persona:rollback'})
 
 
 class ResearchApplication:
@@ -28,6 +31,14 @@ class ResearchApplication:
         self.root=Path(root)
         self.store=MemoryStore(self.root/'memory.sqlite',OwnerOnly())
         self.lock=threading.RLock()
+        self.personas=ResearchPersonaStore(self.store,self._project_access)
+        self.aligner=ResearchPreferenceAligner(self.personas)
+
+    def _project_access(self, actor, project):
+        if project not in {'proj-H','proj-B'}:
+            return False
+        _,_,adapter=runtime(actor.user_id,project[-1],'quick',connectors=self.source_connectors)
+        return project in adapter.context.allowed_projects
 
     def approve(self, actor, preference, *, public_synthetic=False):
         if actor.user_id not in PROFILES or preference not in ('science','strategy','finance','papers_only'):
@@ -52,6 +63,8 @@ class ResearchApplication:
 
     def _ask(self, actor, user_id, question, topic, mode, execution_mode):
         profile,environment,adapter=runtime(user_id,topic,mode,connectors=self.source_connectors)
+        persona_version=self.personas.current(actor,environment['project_id'])
+        persona_memory=memory_record(persona_version)
         real_adapter=self.public_real_adapter if execution_mode=='approved_public' else self.real_adapter
         is_real=execution_mode!='mock'
         public_policy=real_adapter.prepare(adapter) if execution_mode=='approved_public' else None
@@ -67,7 +80,10 @@ class ResearchApplication:
                          for sid in re.findall(r'\[([HB]-[\w-]+)\]',r['response']))]
         if public_policy is not None:
             from .approved_memory import load_memory
-            approved,history=load_memory(self.store,actor,user_id,question,environment,public_policy)
+            approved,history=load_memory(self.store,actor,user_id,question,environment,public_policy,
+                persona_record=persona_memory,persona_reader=lambda:memory_record(self.personas.current(actor,environment['project_id'])))
+        else:
+            approved=combine(approved,persona_memory)
         if public_policy is None and self.source_connectors and (approved.get('data_policy') == 'PRIVATE' or
                                        any(h['data_policy'] == 'PRIVATE' for h in history)):
             raise PermissionError('공개 Connector 실행에는 비공개 Memory를 함께 사용할 수 없습니다.')
@@ -85,6 +101,8 @@ class ResearchApplication:
             with self._endpoint(execution_mode,adapter.corpus,observe,real_adapter) as endpoint:
                 for role in ('research','analysis','verification'):
                     context={'data_label':data_label,'role':role,'profile':profile,'environment':environment,'question':question,
+                             'persona_revision':persona_version['revision'],
+                             'persona_guidance':effective(persona_version['preferences'],environment,question),
                              'approved_preferences':approved,'history':history,'evidence':evidence,
                              'previous_stages':stages,'retrieval_limits':source_issues(adapter.trace),
                              'entity_catalog':entity_catalog(adapter),
@@ -158,9 +176,14 @@ class ResearchApplication:
             answer+='\n현재 단계: '+str(execution_progress['stopped_role'] or 'verification')+' / 역할별 사용 호출: '+str(execution_progress['calls_by_role'])+'\n남은 작업: '+', '.join(execution_progress['remaining_work'])
         stored_answer=('[PUBLIC_SYNTHETIC_RESEARCH] ' if execution_mode=='real' and not any(a.get('status')=='egress_denied' for a in real_adapter.audit) else '')+answer
         self.store.append(actor,user_id,'technical-research','[project='+environment['project_id']+'] '+question,stored_answer)
-        return {'mode':execution_mode,'real_audit':real_adapter.summary() if is_real else None,'persona':{**profile,'approved_preferences':approved},'environment':environment,
-                'history_used':history,'input_snapshot':{'profile':profile,'environment':environment,'approved_preferences':approved,'history':history},'stages':stages,'trace':adapter.trace,'evidence':evidence,'answer':answer,
+        output={'mode':execution_mode,'real_audit':real_adapter.summary() if is_real else None,'persona':{**profile,'version':persona_version['revision'],'approved_preferences':approved},'environment':environment,
+                'question':question,'persona_revision':persona_version['revision'],
+                'history_used':history,'input_snapshot':{'profile':profile,'environment':environment,'approved_preferences':approved,'history':history,
+                    'persona_revision':persona_version['revision'],'persona_guidance':effective(persona_version['preferences'],environment,question)},
+                'stages':stages,'trace':adapter.trace,'evidence':evidence,'answer':answer,
                 'progress':execution_progress,'complete':complete,'checks':checks,'model_calls':real_adapter.summary()['this_run_attempts'] if is_real else len(requests),'tool_cost':adapter.context.spent}
+        output['alignment_turn_id']=self.personas.record_turn(actor,environment['project_id'],output)
+        return output
 
     @contextmanager
     def _endpoint(self, mode, corpus, observe, real_adapter=None):

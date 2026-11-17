@@ -9,6 +9,9 @@ def tool_calls(entries):
 
 
 def search_plan(context):
+    if context['approved_preferences'].get('research_persona',{}).get('preferences'):
+        from .persona_mock import search_plan as aligned_plan
+        return aligned_plan(context)
     env=context['environment'];topic=env['topic'];q='hydrogen 수소환원제철' if topic=='H' else 'NCM LFP 양극재'
     focus=context['profile']['focus']
     approved=context['approved_preferences'].get('source_focus')
@@ -93,4 +96,9 @@ def respond(messages):
         text+='원문 재조회 및 분석 초안 대조: '+json.dumps(ctx.get('verification_audit',{}),ensure_ascii=False)+'\n'
     text+='\n'.join('['+i['source_id']+'] '+' '.join(s['text'] for s in i['spans']) for i in items)
     text+='\n미확인: 실제 기술 우열·상업 성능·시장 규모·기술별 ROI는 확정하지 않습니다. 현재 Environment 기준 조사이며 이전 이력은 현재 사실의 근거가 아닙니다.'
+    if ctx['approved_preferences'].get('research_persona',{}).get('preferences'):
+        from .persona_mock import format_report
+        prefs=ctx['approved_preferences']['research_persona']['preferences']
+        text+='\n승인된 분석 관점: '+', '.join(prefs.get('criteria',[]))
+        text=format_report(text,prefs)
     return {'role':'assistant','content':text},'stop'

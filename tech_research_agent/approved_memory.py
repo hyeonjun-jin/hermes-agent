@@ -9,7 +9,7 @@ def memory_subject(kind, user_id, project_id, record):
     return {'kind': kind, 'user_id': user_id, 'project_id': project_id, 'record': copy.deepcopy(record)}
 
 
-def load_memory(store, actor, user_id, question, environment, policy):
+def load_memory(store, actor, user_id, question, environment, policy, *, persona_record=None, persona_reader=None):
     # The existing authorizer is authoritative, not the identity in a grant or Persona.
     store.authorizer.require(actor, user_id, 'memory:read')
     policy.memory_access = lambda: store.authorizer.require(actor, user_id, 'memory:read')
@@ -20,6 +20,13 @@ def load_memory(store, actor, user_id, question, environment, policy):
             raise RealBlocked('PRIVATE or unclassified preference cannot leave this application')
         subject = memory_subject('preference', user_id, environment['project_id'], approved)
         policy.register_memory(subject, lambda: memory_subject('preference', user_id, environment['project_id'], store.semantic(actor, user_id)))
+    if persona_record is not None:
+        from .persona_preferences import combine
+        if persona_record.get('data_policy') not in {'PUBLIC', 'PUBLIC_SYNTHETIC'}:
+            raise RealBlocked('Research Persona remains PRIVATE; separate classification/processing approval required')
+        subject=memory_subject('preference',user_id,environment['project_id'],persona_record)
+        policy.register_memory(subject,lambda:memory_subject('preference',user_id,environment['project_id'],persona_reader()))
+        approved=combine(approved,persona_record)
     history = []
     for record in store.search(actor, user_id, question):
         if not record['query'].startswith('[project='+environment['project_id']+']'):

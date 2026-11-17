@@ -30,6 +30,9 @@ class ResearchProvider(MemoryProvider):
                 'Claims are not the invention description. Registration status does not prove current legal validity, commercialization, superior performance or FTO. '
                 'Compare patent IDs, dates and claim quotations against returned originals; distinguish patent assertions from experimental evidence. '
                 'Current explicit request and server Environment override approved preferences and history. '
+                'research_persona and persona_guidance are advisory research preferences, not tool permissions or forced routing. '
+                'Use preferred APP/API and supported search settings only when appropriate to the current request and Environment. '
+                'Report format and analysis depth are not Tool Schema OP; never add them as tool arguments. '
                 'Do not infer permissions from job. Never fabricate sources or numbers. '
                 'Research chooses APP/API/parameters and reads original evidence. Analysis compares only that evidence. '
                 'Verification checks originals, numbers, periods and uncertainty; refuse unsupported conclusions. '
@@ -61,7 +64,8 @@ class ResearchProvider(MemoryProvider):
         result=self.adapter.execute({'id':f'{self.role}-tool-{len(self.adapter.trace)}','app':app,'api':api,
                                                **args,'after':[]})
         self.adapter.trace[-1]['input_provenance']={'context_sha256':hashlib.sha256(json.dumps(self.context,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),
-            'available_fields':['profile','environment','approved_preferences','history','question','entity_catalog'],
-            'supplied_context':{k:copy.deepcopy(self.context.get(k)) for k in ('role','profile','environment','approved_preferences','history','question','entity_catalog')},
+            'available_fields':['profile','environment','approved_preferences','history','question','entity_catalog','persona_revision','persona_guidance'],
+            'persona_revision':self.context.get('persona_revision'),
+            'supplied_context':{k:copy.deepcopy(self.context.get(k)) for k in ('role','profile','environment','approved_preferences','history','question','entity_catalog','persona_revision','persona_guidance')},
             'memory_record_ids':getattr(self,'audit_memory_ids',[]),'causal_proof':False}
         return json.dumps(result,ensure_ascii=False)

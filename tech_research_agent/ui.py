@@ -90,7 +90,8 @@ else:
     st.info('Mock 실행: 스크립트형 응답이며 실제 모델의 개인화 판단 검증이 아닙니다.')
 profile,env,_=runtime(user,topic,mode)
 with st.sidebar.expander('현재 Persona와 승인 선호',expanded=True):
-    st.json({**profile,'approved_preferences':app.store.semantic(principal(user),user)})
+    st.json({**profile,'version':app.personas.current(principal(user),env['project_id'])['revision'],
+             'approved_preferences':app.store.semantic(principal(user),user)})
 with st.sidebar.expander('현재 Environment'):
     st.json(env)
 if 'opendart' in app.source_connectors:
@@ -98,6 +99,8 @@ if 'opendart' in app.source_connectors:
         st.json(entity_catalog(runtime(user,topic,mode,connectors=app.source_connectors)[2]))
 if 'research_threads' not in st.session_state:
     st.session_state.research_threads={}
+from tech_research_agent.persona_ui import panel, feedback_form
+panel(app,principal(user),env['project_id'])
 key=user+':'+topic+':'+mode+':'+execution_mode
 turns=st.session_state.research_threads.setdefault(key,[])
 question=st.chat_input('기술조사 요청',disabled=not real_ready)
@@ -113,6 +116,7 @@ for i,turn in enumerate(turns):
         st.write(turn['question'])
     with st.chat_message('assistant'):
         result=turn['result']
+        st.caption('이 조사에 사용한 Persona v'+str(result.get('persona_revision',1)))
         render_answer({**result,'raw_answer':result['stages'][-1]['raw_answer'] if result['stages'] else result['answer']})
         if not result['complete']:
             st.warning('조사가 완료되지 않았습니다.')
@@ -127,12 +131,4 @@ for i,turn in enumerate(turns):
             st.json(result['stages'])
         with st.expander('원문 근거·출처·기억'):
             st.json({'evidence':result['evidence'],'history_used':result.get('history_used',[]),'applied_inputs':result.get('input_snapshot',{})})
-        with st.form('feedback-'+key+'-'+str(i)):
-            feedback=st.text_input('사용자 피드백')
-            public_preference=st.checkbox('이 선호는 PUBLIC 합성 테스트용임을 확인',key='public-'+key+'-'+str(i))
-            preference=st.selectbox('명시적으로 승인할 조사 선호',['science','strategy','finance','papers_only'])
-            if st.form_submit_button('피드백 저장 및 선호 승인'):
-                actor=principal(user)
-                app.store.append(actor,user,'feedback',turn['question'],feedback)
-                app.approve(actor,preference,public_synthetic=public_preference)
-                st.success('현재 사용자의 선호만 승인했습니다. 현재 요청·Environment·권한보다 우선하지 않습니다.')
+        feedback_form(app,principal(user),env['project_id'],result,key+'-'+str(i))
