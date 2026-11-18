@@ -5,6 +5,7 @@
 > 기본 비활성·비용 상한 0이며 문서/Memory별 서버 승인이 필요하다. 기존 `real` 차단은 유지한다.
 > [기술조사 Persona Alignment](PERSONA_ALIGNMENT_INTEGRATION.md): 구조화 피드백 → 후보/Offline Replay → 명시 승인 → 프로젝트별 버전 적용·롤백. 실제 모델의 개선 효과는 미검증이다.
 > [이력 검색·선호 우선순위·최소 공개 표현 승인](PREFERENCE_BOUNDARIES.md): PRIVATE 원본은 보존하며 approved_public의 관리자 승인으로 선정한 표현만 전달한다.
+> [실제 LLM 통제 실험 준비](CONTROLLED_REAL_EXPERIMENT.md): 현재 NO-GO 조건, R3/R2 호출·비용 계획과 Offline 비교 실행 방법.
 > 아래 첫 버전 기록 이후 추가된 Real 실행·예산 정책은 기존 관련 문서를 함께 확인한다.
 
 # 개인화 기술조사 Agent — 첫 작동 버전
