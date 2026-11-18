@@ -673,6 +673,35 @@ def test_ir_changed_bytes_version_and_withdrawal_invalidate_outbound_reuse(tmp_p
     connector.close()
 
 
+def test_comparison_public_budget_preserves_minimal_persona_boundary_for_both_conditions(tmp_path):
+    from tech_research_agent.comparison_budget import ComparisonPlan
+    from tech_research_agent.comparison_real import ComparisonPublicAdapter
+    first, existing, _, path, _ = public_app(tmp_path)
+    # Pre-campaign usage has no reservation fields; it remains historical, not zero-cost campaign usage.
+    old = [{'status': 200, 'usage': {'prompt_tokens': 10, 'completion_tokens': 5}} for _ in range(11)]
+    path.write_text(json.dumps({'calls': old, 'failed': False}))
+    plan = ComparisonPlan.capture(path, 'public-pair')
+    actor = principal('researcher')
+    _, _, tools = runtime(actor.user_id, 'H', 'quick', connectors=first.source_connectors)
+    documents = existing.approvals.eligible_documents(tools.context)
+    for condition in ('v1', 'v2'):
+        app = first if condition == 'v1' else ResearchApplication(tmp_path/'second', source_connectors=first.source_connectors)
+        source = private_persona(app)
+        subject = public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])
+        sender = PublicSender()
+        real = ComparisonPublicAdapter(path, comparison_plan=plan, condition=condition,
+            approvals=registry(documents+[grant(subject, 'minimal-expression')]), public_processing_enabled=True,
+            enabled=True, exclusive_ledger_owner=True, max_reserved_usd=1, transport=sender)
+        app.public_real_adapter = real
+        output = app.ask(actor, actor.user_id, QUESTION, execution_mode='approved_public')
+        assert output['complete'] and output['model_calls'] == 6
+        wire = json.dumps(sender.requests)
+        assert 'CONFIDENTIAL_FEEDBACK_ONLY' not in wire and 'financial_risk' not in wire
+        assert app.personas.current(actor, 'proj-H')['data_policy'] == 'PRIVATE'
+    saved = json.loads(path.read_text())
+    assert len(saved['calls']) == 23 and saved['calls'][:11] == old and not saved['failed']
+
+
 def test_dart_company_metadata_and_rows_require_separate_grants_and_fit_legacy_caps(tmp_path):
     from tech_research_agent.config import entity_catalog
     from tech_research_agent.connectors.opendart import OpenDARTConnector

@@ -111,14 +111,20 @@ class RealAdapter:
         if not self.enabled or not self.exclusive or self.path.name!='usage.json' or not self.path.is_file():
             raise RealBlocked('Explicit Real enablement and exclusive ownership of the EXISTING usage.json are required')
         saved=json.loads(self.path.read_text())
-        if saved.get('failed',True) or len(saved.get('calls',[]))>4:
-            raise RealBlocked('Existing budget cannot reserve the 8-call workflow envelope; separate budget approval required')
-        if any(c.get('status')=='pending' for c in saved['calls']):
-            raise RealBlocked('Unresolved pending usage; manual reconciliation required, no budget reset')
+        self._check_saved_usage(saved)
         if self.transport is None:
             if not os.environ.get('PERSONA_API_KEY','').strip():
                 raise RealBlocked('Server API key not configured; no attempt reserved')
             check_real_network(os.environ)
+
+    def _check_saved_usage(self, saved):
+        if saved.get('failed',True) or len(saved.get('calls',[]))>4:
+            raise RealBlocked('Existing budget cannot reserve the 8-call workflow envelope; separate budget approval required')
+        if any(c.get('status')=='pending' for c in saved['calls']):
+            raise RealBlocked('Unresolved pending usage; manual reconciliation required, no budget reset')
+
+    def _budget_case(self):
+        return 'technical-'+uuid.uuid4().hex
 
     def _network_send(self, body):
         import httpx
@@ -180,7 +186,7 @@ class RealAdapter:
                         policy.remember_response(payload)
                 return status,payload
             self.budget=self._make_budget(safe_send)
-            self.budget.case='technical-'+uuid.uuid4().hex
+            self.budget.case=self._budget_case()
             self.start_attempts=len(self.budget.calls)
             self.audit=[]
             # Reconstruct persisted per-role accounting; fresh instance cannot reset role limits.

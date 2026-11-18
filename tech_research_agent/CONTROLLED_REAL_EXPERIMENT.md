@@ -4,6 +4,10 @@
 API 호출은 각각 **0회**다. 운영 원장·한도·Hermes 코어는 변경하지 않는다.
 현재 결론은 **실제 실험 NO-GO**다. 실행 권한이나 예산을 부여하는 문서가 아니다.
 
+후속 승인으로 [비교 전용 신규 12회 경로](PAIRED_CALL_ALLOWANCE.md)를 구현했다. 아래의
+calls<=4/역할당 2회 설명은 기존 일반 Real 경로에 해당한다. 새 경로는 Research 3회와
+조건별 사전 검사를 제공하지만, 실제 API 실행·반출·비용 설정은 여전히 별도 승인 대상이다.
+
 ## 현재 Real 실행 조건과 한도
 
 ResearchApplication은 기존 세 Hermes Agent Loop를 순서대로 실행한다. 별도 Main/
