@@ -3,6 +3,7 @@ import re
 from datetime import date, datetime
 
 from .persona_preferences import preferences
+from .interests import contains, facets, interest_score
 
 CONCEPTS = {
     '실험 조건': ('experiment', 'controlled conditions', '실험', '시험 조건'),
@@ -37,6 +38,12 @@ def score_paper(paper, profile, approved, environment, question):
     found = concepts(text)
     expertise = concepts(' '.join(str(profile.get(k, '')) for k in ('expertise', 'job', 'criteria')))
     matched = sorted(found & expertise)
+    job_matches = sorted(found & concepts(profile.get('department', '')+' '+profile.get('job', '')))
+    unit = profile.get('business_unit', '')
+    unit_terms = TOPICS['H'] if '철강' in unit else TOPICS['B'] if '이차전지' in unit else ()
+    unit_matches = [word for word in unit_terms if contains(text, word)]
+    interest_points, interest_basis = interest_score(text, profile, environment, question)
+    current_focus_match = bool(set(interest_basis['explicit_focus']) & facets(text))
     prefs = approved_preferences(approved)
     criteria = [key for key in prefs.get('criteria', []) if found & CRITERIA[key]]
     topic_match = any(bool(re.search(r'\b'+re.escape(word)+r'\b', text)) if word.isascii() else word in text
@@ -52,24 +59,33 @@ def score_paper(paper, profile, approved, environment, question):
     completeness = (2+int(bool(paper.get('publication_year')))+int(bool(paper.get('doi')))
                     +3*int(paper['abstract_checked']))
     components = {
-        'project_relevance': float(6+min(2, lexical)+2*min(2, len(purpose))) if topic_match else 0.0,
+        'project_relevance': float(6+min(2, lexical)+2*min(2, len(purpose))+32*current_focus_match) if topic_match else 0.0,
         'profile_expertise': float(2*min(5, len(matched))),
+        'profile_business_unit': float(2*bool(unit_matches)),
+        'profile_job': float(min(2, len(job_matches))),
+        'personal_interests': float(interest_points),
         'persona_criteria': float(5*min(3, len(criteria))+int('openalex' in prefs.get('preferred_apps', []))),
         'recency': round(4*max(0, 1-(as_of-published).days/(365*3))*(1.25 if urgent else 1), 3),
         'metadata_completeness': completeness*(1+0.5*detailed+0.5*(urgent or environment['depth'] == 'quick')),
     }
     reasons = ['프로젝트 주제 일치' if topic_match else '질문·조사 목적의 검색어 일치',
+               '현재 질문·업무 목적의 명시 관점 일치: '+('확인 (+32)' if current_focus_match else '명시적 일치 없음'),
                'Profile 일치: '+(', '.join(matched) or '추가 전문성 일치 없음'),
+               '사업부서 관련성: '+(unit if unit_matches else '명시적 일치 없음'),
+               '직무·부서 일치: '+(', '.join(job_matches) or '명시적 일치 없음'),
+               '개인 관심사 일치: '+(', '.join(interest_basis['matched_facets']+interest_basis['matched_keywords']) or '명시적 일치 없음'),
                '승인 Persona 기준: '+(', '.join(criteria) or '해당 기준의 명시적 일치 없음'),
                '기준일 대비 '+str((as_of-published).days)+'일 경과',
                '초록 확인' if paper['abstract_checked'] else '메타데이터만 확인: 초록 미확인']
     return {**paper, 'score': round(sum(components.values()), 3), 'score_components': components, 'reasons': reasons,
             'matched_profile_concepts': matched, 'matched_persona_criteria': criteria,
+            'profile_basis': {'business_unit': unit, 'job': profile.get('job'), 'interests': profile.get('interests', []),
+                              'job_matches': job_matches}, 'interest_basis': interest_basis,
             'environment_basis': {'project_id': environment['project_id'], 'purpose_concepts': purpose,
                 'as_of': environment['as_of'], 'cutoff': environment['cutoff'], 'deadline': environment['deadline'],
                 'depth': environment['depth'], 'urgent_deadline': urgent},
             'persona_basis': {'criteria': prefs.get('criteria', []), 'detailed_metadata_preference': detailed},
-            'full_text_read': False, 'method': 'deterministic_heuristic_v1', 'learning_effect_established': False}
+            'full_text_read': False, 'method': 'deterministic_heuristic_v2', 'learning_effect_established': False}
 
 
 def rank_papers(papers, profile, approved, environment, question, *, limit=3):

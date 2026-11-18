@@ -64,7 +64,7 @@ def application():
 
 app=application()
 st.caption('정보원: '+source_label(app.source_connectors) if app.source_connectors else '정보원: Offline SYNTHETIC (외부 검색 없음)')
-user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:PROFILES[u]['department']+' / '+PROFILES[u]['job'])
+user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:u+' / '+app.profile(principal(u),u)['business_unit']+' / '+app.profile(principal(u),u)['job'])
 topic=st.sidebar.selectbox('현재 프로젝트',['H','B'],format_func=lambda t:'수소환원제철' if t=='H' else '이차전지 양극재')
 mode=st.sidebar.selectbox('현재 환경',['quick','deep','restricted'])
 execution_mode=st.sidebar.radio('모델 실행 모드',['mock','real','approved_public'],index=0)
@@ -90,6 +90,9 @@ elif execution_mode=='approved_public':
 else:
     st.info('Mock 실행: 스크립트형 응답이며 실제 모델의 개인화 판단 검증이 아닙니다.')
 profile,env,_=runtime(user,topic,mode)
+from tech_research_agent.profile_ui import panel as profile_panel
+profile_panel(app,principal(user))
+profile=app.profile(principal(user),user)
 with st.sidebar.expander('현재 Profile'):
     st.json(profile)
 with st.sidebar.expander('현재 Persona와 승인 선호',expanded=True):

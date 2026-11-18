@@ -21,6 +21,7 @@ from .persona_alignment import ResearchPreferenceAligner
 from .persona_preferences import memory_record, combine, resolve
 from .paper_fixtures import paper_request, fixture_adapter
 from .paper_recommendations import recommend_from_trace
+from .profiles import ProfileDirectory
 
 SCOPES=frozenset({'memory:read','memory:write','persona:read','persona:propose','persona:approve','persona:rollback'})
 
@@ -33,8 +34,24 @@ class ResearchApplication:
         self.root=Path(root)
         self.store=MemoryStore(self.root/'memory.sqlite',OwnerOnly())
         self.lock=threading.RLock()
+        self.profiles=ProfileDirectory(PROFILES)
         self.personas=ResearchPersonaStore(self.store,self._project_access)
         self.aligner=ResearchPreferenceAligner(self.personas)
+
+    def profile(self, actor, user_id):
+        self.store.authorizer.require(actor,user_id,'memory:read')
+        with self.lock:
+            return self.profiles.get(user_id)
+
+    def update_profile(self, actor, user_id, changes):
+        self.store.authorizer.require(actor,user_id,'memory:write')
+        with self.lock:
+            return self.profiles.update(user_id,changes)
+
+    def reset_profile(self, actor, user_id):
+        self.store.authorizer.require(actor,user_id,'memory:write')
+        with self.lock:
+            self.profiles.reset(user_id)
 
     def _project_access(self, actor, project):
         if project not in {'proj-H','proj-B'}:
@@ -55,6 +72,8 @@ class ResearchApplication:
         with self.lock:
             if execution_mode not in ('mock','real','approved_public'):
                 raise ValueError('Unknown model mode')
+            if not self.profiles.is_default(user_id) and (execution_mode!='mock' or self.source_connectors):
+                raise PermissionError('수정 Profile은 PRIVATE 개발 데이터입니다. 별도 Profile 반출 승인 경로가 준비되기 전에는 외부 Connector 없는 Mock만 허용합니다.')
             if execution_mode=='real' and self.source_connectors:
                 raise PermissionError('공개 Connector 자료의 외부 LLM 반출은 아직 승인되지 않았습니다. 기존 Real 합성 데이터 제한을 유지합니다.')
             if execution_mode=='real' and self.real_adapter is None:
@@ -65,6 +84,7 @@ class ResearchApplication:
 
     def _ask(self, actor, user_id, question, topic, mode, execution_mode):
         profile,environment,adapter=runtime(user_id,topic,mode,connectors=self.source_connectors)
+        profile=self.profile(actor,user_id)
         if execution_mode == 'mock' and not self.source_connectors and paper_request(question):
             adapter = fixture_adapter(adapter, environment)
         persona_version=self.personas.current(actor,environment['project_id'])

@@ -1,5 +1,6 @@
 """Scripted model fixture. Decisions here are not evidence of learned personalization."""
 import json
+from .interests import search_hint, interest_view
 
 
 def tool_calls(entries):
@@ -15,11 +16,15 @@ def search_plan(context):
         if 'openalex' not in env['allowed_sources']:
             return []
         query = 'hydrogen 수소환원제철' if env['topic'] == 'H' else 'NCM LFP 양극재'
+        hint=search_hint(context['profile'], env, context['question']).strip()
+        if hint: query += ' '+hint
         return [('openalex__search_works', {'rp': {'query': query}, 'op': {'limit': 4, 'sort': 'date_desc', 'to_date': env['cutoff']}})]
     if context['approved_preferences'].get('research_persona',{}).get('preferences'):
         from .persona_mock import search_plan as aligned_plan
         return aligned_plan(context)
     env=context['environment'];topic=env['topic'];q='hydrogen 수소환원제철' if topic=='H' else 'NCM LFP 양극재'
+    hint=search_hint(context['profile'],env,context['question']).strip()
+    if hint: q+=' '+hint
     focus=context['profile']['focus']
     approved=context['approved_preferences'].get('source_focus')
     if approved:
@@ -98,6 +103,9 @@ def respond(messages):
     items=ctx.get('evidence',[]) if role!='research' else [i for r in results for i in r.get('items',[])]
     text=(ctx.get('data_label','SYNTHETIC')+' / Mock — '+role+'\n판단 기준: '+ctx['profile']['criteria']+'\n')
     if role=='analysis':
+        lenses=interest_view(ctx['profile'],ctx['environment'],ctx['question'])['analysis_lenses']
+        if lenses:
+            text+='관심사 기반 검토 관점: '+', '.join(lenses)+'. 이는 분석 질문이며 성능 사실이 아닙니다. 관련 수치·결론은 제공된 Evidence에서만 확인하고 부족하면 미확인으로 표시합니다.\n'
         alternatives='유동층과 샤프트로' if ctx['environment']['topic']=='H' else '고니켈 NCM과 LFP'
         text+='비교 대상: '+alternatives+'. 실험 조건·공개 계획·연결 실적은 증거의 성격이 다르므로 직접적인 우열/수익성 결론을 보류합니다.\n'
     if any(i['origin_app']=='kipris_plus' and i.get('synthetic') is False for i in items):

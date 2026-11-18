@@ -19,6 +19,7 @@ from .live_execution import LiveExecutionApproval, validate_live_arms
 
 def input_snapshot(app, actor, topic, mode, question):
     profile, environment, adapter = runtime(actor.user_id, topic, mode, connectors=app.source_connectors)
+    profile = app.profile(actor, actor.user_id)
     app.personas.require(actor, environment['project_id'])
     persona = app.personas.current(actor, environment['project_id'])
     prefix = '[project='+environment['project_id']+'] '

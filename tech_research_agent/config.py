@@ -8,11 +8,11 @@ from .environment_resources import source_resources
 
 DATA = Path(__file__).resolve().parents[1] / 'tech_research_benchmark' / 'data'
 PROFILES = {
-    'researcher': {'department':'연구소','job':'박사 연구원','expertise':'공정·소재',
+    'researcher': {'business_unit':'철강','department':'연구소','job':'박사 연구원','expertise':'공정·소재',
                    'interests':['수소환원제철','이차전지 양극재'],'criteria':'원리·실험 조건·재현성·청구항', 'focus':'science'},
-    'strategy': {'department':'전략실','job':'임원','expertise':'사업 전략',
+    'strategy': {'business_unit':'철강','department':'전략실','job':'임원','expertise':'사업 전략',
                  'interests':['수소환원제철','이차전지 양극재'],'criteria':'경쟁 대안·사업화·시장 근거의 한계','focus':'strategy'},
-    'finance': {'department':'재무팀','job':'재무 분석','expertise':'투자·현금흐름',
+    'finance': {'business_unit':'이차전지소재','department':'재무팀','job':'재무 분석','expertise':'투자·현금흐름',
                 'interests':['수소환원제철','이차전지 양극재'],'criteria':'투자 규모·재무 건전성·위험','focus':'finance'},
 }
 SOURCES = {'openalex','kipris_plus','opendart','posco_ir','internal_mock'}

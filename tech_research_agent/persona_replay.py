@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .config import runtime
 from .persona_preferences import preferences
+from .profiles import FIELDS, updated_profile
 
 
 class TechnicalMockReplay:
@@ -15,7 +16,12 @@ class TechnicalMockReplay:
         from .application import ResearchApplication, principal
         environment = turn['environment']
         profile, current, _ = runtime(user, environment['topic'], environment['depth'])
-        if current != environment or profile != turn['input_snapshot']['profile']:
+        recorded = turn['input_snapshot']['profile']
+        try:
+            restored = updated_profile(profile, {key: value for key, value in recorded.items() if key in FIELDS})
+        except ValueError:
+            return {'mode': 'mock', 'functional_check': False, 'reason': 'Invalid historical development Profile'}
+        if current != environment or restored != recorded:
             return {'mode': 'mock', 'functional_check': False, 'reason': 'Historical server fixture changed'}
         outcomes = {}
         with tempfile.TemporaryDirectory(prefix='technical-persona-replay-') as directory:
@@ -28,6 +34,7 @@ class TechnicalMockReplay:
                     value['revision'] = fixed_revision
                 app = ResearchApplication(Path(directory)/label)
                 actor = principal(user)
+                app.update_profile(actor, user, {key: value for key, value in restored.items() if key in FIELDS})
                 app.store.save_semantic(actor, user, copy.deepcopy(semantic))
                 with app.store.connect() as db:
                     for episode in initial_episodes:

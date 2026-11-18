@@ -13,6 +13,10 @@ def render_recommendations(result):
         st.text(str(paper['rank'])+'. '+paper['title'])
         st.caption('발행 연도: '+str(paper['publication_year'])+' / 적합도: '+str(paper['score'])+
                    ' / 초록: '+('확인' if paper['abstract_checked'] else '미확인 — 메타데이터만 확인'))
+        scores=paper['score_components']
+        st.caption('사업부서 '+str(scores.get('profile_business_unit',0))+' · 직무 '+str(scores.get('profile_job',0))+
+                   ' · 전문성 '+str(scores.get('profile_expertise',0))+' · 관심사 '+str(scores.get('personal_interests',0))+
+                   ' · 승인 Persona '+str(scores.get('persona_criteria',0)))
         if paper['synthetic']:
             st.caption('SYNTHETIC 가상 논문 — 실제 DOI/원문 링크 없음')
         for label, field in (('DOI (OpenAlex 제공)', 'doi'), ('OpenAlex 메타데이터', 'openalex_link'), ('원문 위치 (본문 미열람)', 'source_link')):
@@ -20,4 +24,5 @@ def render_recommendations(result):
         for reason in paper['reasons']: st.text('• '+reason)
         with st.expander('추천 점수·Persona·Environment 근거 #'+str(paper['rank'])):
             st.json({'components': paper['score_components'], 'persona': paper['persona_basis'],
+                     'profile': paper.get('profile_basis',{}), 'interests': paper.get('interest_basis',{}),
                      'environment': paper['environment_basis'], 'source_basis': paper['source_basis']})

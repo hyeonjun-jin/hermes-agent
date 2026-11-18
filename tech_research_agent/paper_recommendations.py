@@ -65,6 +65,6 @@ def recommend_from_trace(adapter, profile, approved, environment, question):
             continue
         candidates.append(paper_record(item, source))
     ranked = rank_papers(candidates, profile, approved, environment, question)
-    return {'method': 'deterministic_heuristic_v1', 'candidate_ids': sorted(p['source_id'] for p in candidates),
+    return {'method': 'deterministic_heuristic_v2', 'candidate_ids': sorted(p['source_id'] for p in candidates),
             'items': ranked, 'additional_model_calls': 0, 'additional_source_calls': 0,
             'limitation': 'Observed candidate set only; not an exhaustive paper search. No PDF/full text read or ML learning claim.'}
