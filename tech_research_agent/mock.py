@@ -9,6 +9,13 @@ def tool_calls(entries):
 
 
 def search_plan(context):
+    from .paper_fixtures import paper_request
+    if paper_request(context['question']):
+        env = context['environment']
+        if 'openalex' not in env['allowed_sources']:
+            return []
+        query = 'hydrogen 수소환원제철' if env['topic'] == 'H' else 'NCM LFP 양극재'
+        return [('openalex__search_works', {'rp': {'query': query}, 'op': {'limit': 4, 'sort': 'date_desc', 'to_date': env['cutoff']}})]
     if context['approved_preferences'].get('research_persona',{}).get('preferences'):
         from .persona_mock import search_plan as aligned_plan
         return aligned_plan(context)
@@ -78,7 +85,10 @@ def respond(messages):
         if plan:
             return tool_calls(plan)
     if role=='research' and results and not any('__read_' in t['function']['name'] for m in messages if m['role']=='assistant' for t in m.get('tool_calls',[]) if t['function']['name']!='opendart__read_financials'):
-        plan=reads([r['items'][0] for r in results if r.get('items') and not r['items'][0].get('financial_request')])
+        from .paper_fixtures import paper_request
+        selected = ([i for r in results for i in r.get('items', [])][:4] if paper_request(ctx['question']) else
+                    [r['items'][0] for r in results if r.get('items') and not r['items'][0].get('financial_request')])
+        plan=reads(selected)
         if plan:
             return tool_calls(plan)
     if role=='verification' and not results:

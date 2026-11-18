@@ -19,6 +19,8 @@ from .source_adapter import source_issues, source_limit_text, is_original_eviden
 from .persona_store import ResearchPersonaStore
 from .persona_alignment import ResearchPreferenceAligner
 from .persona_preferences import memory_record, combine, resolve
+from .paper_fixtures import paper_request, fixture_adapter
+from .paper_recommendations import recommend_from_trace
 
 SCOPES=frozenset({'memory:read','memory:write','persona:read','persona:propose','persona:approve','persona:rollback'})
 
@@ -63,6 +65,8 @@ class ResearchApplication:
 
     def _ask(self, actor, user_id, question, topic, mode, execution_mode):
         profile,environment,adapter=runtime(user_id,topic,mode,connectors=self.source_connectors)
+        if execution_mode == 'mock' and not self.source_connectors and paper_request(question):
+            adapter = fixture_adapter(adapter, environment)
         persona_version=self.personas.current(actor,environment['project_id'])
         persona_memory=memory_record(persona_version)
         real_adapter=self.public_real_adapter if execution_mode=='approved_public' else self.real_adapter
@@ -183,6 +187,8 @@ class ResearchApplication:
                     'persona_revision':persona_version['revision'],'persona_guidance':guidance},
                 'stages':stages,'trace':adapter.trace,'evidence':evidence,'answer':answer,
                 'progress':execution_progress,'complete':complete,'checks':checks,'model_calls':real_adapter.summary()['this_run_attempts'] if is_real else len(requests),'tool_cost':adapter.context.spent}
+        # Ranking uses approved PRIVATE preferences locally, after all model exchanges; never add them to wire context.
+        output['paper_recommendations'] = recommend_from_trace(adapter, profile, combine({}, persona_memory), environment, question)
         output['alignment_turn_id']=self.personas.record_turn(actor,environment['project_id'],output)
         return output
 

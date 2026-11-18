@@ -104,6 +104,8 @@ panel(app,principal(user),env['project_id'])
 key=user+':'+topic+':'+mode+':'+execution_mode
 turns=st.session_state.research_threads.setdefault(key,[])
 question=st.chat_input('기술조사 요청',disabled=not real_ready)
+if st.button('맞춤 논문 추천 요청 (Mock)', disabled=execution_mode!='mock' or bool(app.source_connectors) or mode=='restricted'):
+    question = ('수소환원제철' if topic=='H' else 'NCM LFP 양극재')+' 관련 논문 추천과 근거를 알려주세요.'
 if question:
     with st.spinner('Research → Analysis → Verification ('+execution_mode+')'):
         try:
@@ -118,6 +120,8 @@ for i,turn in enumerate(turns):
         result=turn['result']
         st.caption('이 조사에 사용한 Persona v'+str(result.get('persona_revision',1)))
         render_answer({**result,'raw_answer':result['stages'][-1]['raw_answer'] if result['stages'] else result['answer']})
+        from tech_research_agent.paper_ui import render_recommendations
+        render_recommendations(result)
         if not result['complete']:
             st.warning('조사가 완료되지 않았습니다.')
             st.json(result.get('progress',{}))
