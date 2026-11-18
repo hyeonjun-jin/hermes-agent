@@ -22,6 +22,14 @@ def test_ui_request_details_and_identity_isolation(tmp_path,monkeypatch):
     assert not app.exception
     assert any('SYNTHETIC' in m.value for m in app.markdown)
     assert any(e.label=='정보원·검색 조건·실행 결과' for e in app.expander)
+    assert any(e.label=='현재 Profile' for e in app.sidebar.expander)
+    assert any(e.label=='Environment · 정보 자원' for e in app.expander)
+    assert any(e.label=='Evidence · Tool Calling으로 확보한 자료' for e in app.expander)
+    resources=next(t.value for t in app.table if '연결 확인' in t.value.columns)
+    assert all('미확인' in value for value in resources['연결 확인'])
+    evidence=next(t.value for t in app.table if '문서 ID' in t.value.columns)
+    assert all(value=='SYNTHETIC' for value in evidence['자료 구분'])
+    assert all('research-tool-' in value for value in evidence['조회 근거'])
     app.sidebar.selectbox[0].select('finance').run()
     assert not app.exception
     assert not app.chat_message

@@ -90,8 +90,11 @@ elif execution_mode=='approved_public':
 else:
     st.info('Mock 실행: 스크립트형 응답이며 실제 모델의 개인화 판단 검증이 아닙니다.')
 profile,env,_=runtime(user,topic,mode)
+with st.sidebar.expander('현재 Profile'):
+    st.json(profile)
 with st.sidebar.expander('현재 Persona와 승인 선호',expanded=True):
-    st.json({**profile,'version':app.personas.current(principal(user),env['project_id'])['revision'],
+    current_persona=app.personas.current(principal(user),env['project_id'])
+    st.json({'version':current_persona['revision'], 'research_preferences':current_persona['preferences'],
              'approved_preferences':app.store.semantic(principal(user),user)})
 with st.sidebar.expander('현재 Environment'):
     st.caption('현재 업무 조건 및 정책상 허용 정보원입니다. 실제 IR·공시·논문 원문은 포함하지 않습니다.')
@@ -99,6 +102,7 @@ with st.sidebar.expander('현재 Environment'):
 with st.expander('Environment · 정보 자원', expanded=True):
     st.caption('Environment는 업무 맥락과 이용 가능한 정보원의 범위를 나타냅니다. 실제 자료는 Tool Calling 이후 Evidence로 구분합니다.')
     st.table(environment_source_overview(env, app.source_connectors))
+    st.caption('연결 확인은 자동 수행하지 않습니다. 설정/활성 여부와 실제 조회 성공은 다르며, 각 조사 Trace의 상태가 해당 호출의 결과입니다.')
     if not app.source_connectors:
         st.caption('현재 실제 외부 Connector는 구성되지 않았습니다. 기본 조사 자료는 SYNTHETIC이며, 위 목록은 실제 IR·공시·논문을 조회했다는 뜻이 아닙니다.')
     else:
@@ -131,6 +135,8 @@ for i,turn in enumerate(turns):
         render_answer({**result,'raw_answer':result['stages'][-1]['raw_answer'] if result['stages'] else result['answer']})
         from tech_research_agent.paper_ui import render_recommendations
         render_recommendations(result)
+        from tech_research_agent.evidence_ui import render_evidence
+        render_evidence(result)
         if not result['complete']:
             st.warning('조사가 완료되지 않았습니다.')
             st.json(result.get('progress',{}))

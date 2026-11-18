@@ -55,9 +55,49 @@ UI 대화 탭은 브라우저 세션 동안 유지되고, 서버의 조사 이�
 Streamlit의 **Environment · 정보 자원** 표는 이 둘을 구분하여 *정책상 허용 여부*와
 *실제 외부 Connector 구성 여부*를 보여준다. 연결 상태는 자료 접근 성공이나
 Evidence 확보를 보장하지 않는다. 실제 조회 내역은 조사별 Trace/Evidence 패널에서
-확인한다. 기존 `runtime()`의 Environment 스키마·ACL·사용 원장·Persona·외부 반출 승인
-절차는 변경하지 않았다. 이 표시는 실제 OpenAlex·POSCO IR·OpenDART Connector를
-자동 활성화하지 않는다.
+확인한다. `runtime()`은 기존 필드를 유지하고 `information_resources`에 허용 정보원의
+이름·자료 종류·접근 조건 설명을 추가한다. 문서 원문, 검색 결과, 연결 자격증명이나
+관리자 승인 기록을 이 필드에 넣지 않는다. 실제 권한은 기존 `ServerContext`의
+`allowed_sources`·프로젝트 ACL·분류·cutoff와 Connector별 이용 조건이 결정한다.
+설명 메타데이터를 변경해도 권한은 확대되지 않는다. 사용 원장·Persona·외부 반출 승인
+절차는 변경하지 않았다. 이 표시는 Connector를 자동 활성화하지 않는다.
+
+| 구분 | 주요 필드 / 관리 위치 |
+|---|---|
+| Profile | `department`, `job`, `expertise`, `interests`, `criteria` |
+| 승인 Persona | 기존 사용자·프로젝트별 Persona 버전 및 `preferences`; 기존 승인 절차 유지 |
+| Environment | `project_id`, `topic`, `purpose`, `deadline`, `as_of`, `cutoff`, `classification`, `audience`, `depth`, `allowed_sources`, `information_resources` |
+| 정보 자원 설명 | `source`, `name`, `material_type`, `access_conditions` |
+| Connector | 서버 전용 설정 및 Connector 인스턴스; Environment와 분리 |
+| Evidence | 조사 결과의 `evidence`; 실제 Read 결과의 ID·span·열람 범위·출처 |
+
+`access_conditions`는 서버 프로젝트 ACL, cutoff 이전 게시일, PUBLIC 외부 조회 환경,
+Connector 이용 조건, 별도 외부 모델 처리 승인을 설명한다. restricted의 `internal_mock`는
+합성 내부 자료 및 기존 분류/ACL 조건으로 표시한다. 실제 외부 API는 PUBLIC 환경만
+허용하므로 deep의 정보원 목록이 곧 외부 호출 허가를 뜻하지 않는다.
+
+```mermaid
+flowchart LR
+    P[Profile + 승인 Persona + Environment] --> R[Hermes Research]
+    R --> T[MemoryProvider Tool Calling]
+    T --> S[SourceAdapter + 서버 정책 + Connector]
+    S --> E[Read Evidence + Trace]
+    E --> A[Hermes Analysis]
+    A --> V[Hermes Verification]
+    V --> T
+    V --> O[보고서 + 로컬 논문 추천 + Evidence UI]
+```
+
+Research 프롬프트에는 세 입력의 역할과 정보 자원이 Evidence가 아니라는 점을 명시한다.
+APP/API/RP/OP 선택은 기존 Tool Calling 경로를 사용하며 별도 Orchestrator를 추가하지 않는다.
+Analysis는 근거를 분석하고 Verification은 허용된 Read 도구로 재확인한다.
+
+UI의 **활성 설정**은 서버 설정값이며 **연결 확인**은 자동 상태 조회 없이 미확인으로
+표시한다. 실제 성공·거절·실패는 해당 조사 Trace에서 확인한다. **Evidence · Tool Calling으로
+확보한 자료** 표는 문서 ID, 정보원, SYNTHETIC/공개 Connector 구분, 열람 범위와 일치하는
+Read 호출 ID를 표시한다. 검색 결과만 있거나 Read 기록이 일치하지 않으면 조회 근거를
+확인했다고 표시하지 않는다. OpenAlex 초록은 PDF 전문이 아니며, Mock의 역할별 선택은
+스크립트 동작으로 실제 LLM의 자율 판단 성능을 입증하지 않는다.
 
 ## Hermes 연결
 

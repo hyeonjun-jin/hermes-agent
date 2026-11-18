@@ -180,6 +180,11 @@ def test_hermes_mock_workflow_delivers_untrusted_abstract_to_roles(tmp_path, wor
     assert result['checks']['data_label'] == 'PUBLIC OpenAlex + SYNTHETIC fixtures'
     assert not result['checks']['synthetic'] and 'SYNTHETIC / mock' not in result['answer']
     assert len(requests) == 3  # No publisher/PDF or attacker-selected tool was invoked.
+    from tech_research_agent.evidence_ui import evidence_overview
+    row = evidence_overview(result)[0]
+    assert row['자료 구분'] == '공개 Connector' and row['열람 범위'] == 'abstract'
+    assert 'research-tool-' in row['조회 근거'] and 'verification-tool-' in row['조회 근거']
+    assert 'abstract' not in json.dumps(result['environment'])
 
 
 def test_real_and_private_memory_block_before_model_or_source(tmp_path, work):

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from tech_research_benchmark.policy import ServerContext
 from tech_research_benchmark.adapter import OfflineAdapter
+from .environment_resources import source_resources
 
 DATA = Path(__file__).resolve().parents[1] / 'tech_research_benchmark' / 'data'
 PROFILES = {
@@ -28,6 +29,7 @@ def runtime(user_id, topic, mode, *, connectors=None):
                    'audience':'내부 프로젝트 위원회' if mode=='restricted' else '프로젝트 책임자',
                    'as_of':'2026-10-01','cutoff':'2026-09-30','depth':mode,
                    'allowed_sources':sorted({'internal_mock'} if mode=='restricted' else SOURCES if mode=='deep' else SOURCES-{'internal_mock'})}
+    environment['information_resources'] = source_resources(environment)
     # Identical permissions for all three jobs. No role-derived authorization.
     acl = {sid:{user_id} for sid,s in corpus.items() if s['project_id']==environment['project_id']}
     ctx = ServerContext(user_id,environment['project_id'],{environment['project_id']},set(environment['allowed_sources']),
