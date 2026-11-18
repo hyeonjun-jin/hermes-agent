@@ -26,11 +26,12 @@ class ApprovedPublicBudget(ReservedBudget):
 
 
 class ApprovedPublicAdapter(RealAdapter):
-    def __init__(self, usage_path, *, approvals, public_processing_enabled=False, max_reserved_usd=0, **kwargs):
+    def __init__(self, usage_path, *, approvals, public_processing_enabled=False, max_reserved_usd=0, response_models=None, **kwargs):
         super().__init__(usage_path, **kwargs)
         self.approvals = approvals
         self.public_processing_enabled = public_processing_enabled
         self.public_policy = None
+        self.response_models = response_models
         if type(max_reserved_usd) not in (int, float) or not math.isfinite(max_reserved_usd) or max_reserved_usd < 0:
             raise ValueError('Invalid server cost ceiling')
         self.max_reserved_usd = max_reserved_usd
@@ -38,7 +39,7 @@ class ApprovedPublicAdapter(RealAdapter):
     def prepare(self, adapter):
         if self.public_processing_enabled is not True or not self.approvals.configured:
             raise RealBlocked('Separate administrator public-processing opt-in and grants required')
-        self.public_policy = ApprovedPayloadPolicy(self.approvals, adapter)
+        self.public_policy = ApprovedPayloadPolicy(self.approvals, adapter, response_models=self.response_models)
         eligible = self.approvals.eligible_documents(adapter.context)
         if not eligible:
             raise RealBlocked('No current document processing approval for this user/project')

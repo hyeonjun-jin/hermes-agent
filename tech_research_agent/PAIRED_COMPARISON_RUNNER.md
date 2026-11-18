@@ -1,5 +1,8 @@
 # 서로 다른 Persona의 승인 경로 Stub 통제 비교
 
+후속 [실제 모델 비교 경로](LIVE_PAIRED_COMPARISON.md)가 추가됐다. 아래 설명은 기본 Stub
+모드에 해당한다. Live는 별도 관리자 승인과 명시적 활성화가 필요하며 이번에는 실행하지 않았다.
+
 기준 `63ec0ca6aa`. ResearchApplication의 approved_public → Hermes 3역할 →
 ComparisonPublicAdapter 경로를 두 번 실행하는 비교 실행기를 추가했다. 단순 Adapter
 테스트와 달리 서로 다른 승인 표현을 사용한다. 이번 전송은 **Stub 전용**이며 실제 API
@@ -9,7 +12,7 @@ ComparisonPublicAdapter 경로를 두 번 실행하는 비교 실행기를 추�
 
 `PairedPublicComparison(factory).run(actor, question)`는 기본 enabled=False이며
 factory도 실행하지 않는다. enabled=True는 Stub rehearsal 허용이다. live=true,
-실제 네트워크 모델·정보원은 거부한다. 기존 WorkflowStub 계열과 OpenAlexConnector의
+기본 Stub 모드에서는 실제 네트워크 모델·정보원을 거부한다. 기존 WorkflowStub 계열과 OpenAlexConnector의
 httpx.MockTransport만 받는다. 다른 Connector와 기존 일반 UI는 변경하지 않았다.
 
 factory(root)는 이미 준비된 v1/v2 ResearchApplication과 승인 Registry를 제공한다.
@@ -101,8 +104,8 @@ gpt-4o-mini-2024-07-18, 임의 suffix, 다른 모델은 차단한다. 실제 공
 확인하지 않았으므로 날짜형 식별자를 자동 허용하지 않는다. 실제 확인 뒤 정확한 식별자와
 승인 모델 정책의 관계를 검토해야 한다. startswith 허용은 하지 않는다.
 
-완료 범위는 서로 다른 Persona의 Stub 통제 비교다. 실제 유료 전송은 이번 실행기에
-지원하지 않는다. 향후 실제 실행 승인·지원 확장, 비용 ceiling 확정, canonical 원장과
+이 문서의 완료 범위는 서로 다른 Persona의 Stub 통제 비교다. 후속 Live 분기는
+LIVE_PAIRED_COMPARISON.md에 설명한다. 실제 실행 승인·비용 ceiling 확정, canonical 원장과
 고정 plan 검수, 문서·Catalog·Persona 최소 표현·Memory 재전송 승인, 네트워크·정확한
 응답 모델·생성 기본값 확인이 필요하다. 실제 모델 품질·확률적 호출 수는 미검증이다.
 운영 비용·live 설정·원장·일반 UI 한도·Hermes 코어는 변경하지 않았다.

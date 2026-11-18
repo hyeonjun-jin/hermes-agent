@@ -8,10 +8,15 @@ from urllib.parse import urlsplit
 
 from .approvals import digest, document_subject
 from .real import PayloadPolicy, RealBlocked, PUBLIC_QUESTIONS, inspect_labels
+from .response_models import ResponseModels
 
 
 class ApprovedPayloadPolicy:
-    def __init__(self, registry, adapter):
+    def __init__(self, registry, adapter, *, response_models=None):
+        if response_models is not None and not isinstance(response_models, ResponseModels):
+            raise ValueError('Response identities require a server-reviewed exact allowlist')
+        self.response_models = response_models.identifiers if response_models is not None else ('gpt-4o-mini',)
+        self.observed_response_model = None
         self.registry, self.adapter = registry, adapter
         self.legacy = PayloadPolicy(adapter.corpus)
         self.documents = {}
@@ -201,12 +206,15 @@ class ApprovedPayloadPolicy:
         return digest(value)
 
     def remember_response(self, payload):
-        if payload.get('model') != 'gpt-4o-mini':
+        if payload.get('model') not in self.response_models:
             raise RealBlocked('Unapproved response model')
+        if self.observed_response_model is not None and payload['model'] != self.observed_response_model:
+            raise RealBlocked('Response model identity changed within condition')
+        self.observed_response_model = payload['model']
         message = payload['choices'][0]['message']
         self.responses.add(self.assistant_signature(message))
         self.response_tool_ids.update(call['id'] for call in message.get('tool_calls', []))
-        self.audit.append({'status': 'response_approved', 'response_sha256': digest(payload)})
+        self.audit.append({'status': 'response_approved', 'response_sha256': digest(payload), 'response_model': payload['model']})
 
     def _wire_messages(self, payload):
         if self.expected_context is None:

@@ -96,11 +96,12 @@ def reservation_upper_bound(body):
 
 
 class RealAdapter:
-    def __init__(self, usage_path, *, enabled=False, exclusive_ledger_owner=False, transport=None):
+    def __init__(self, usage_path, *, enabled=False, exclusive_ledger_owner=False, transport=None, request_observer=None):
         self.path=Path(usage_path).resolve()
         self.enabled=enabled
         self.exclusive=exclusive_ledger_owner
         self.transport=transport
+        self.request_observer=request_observer
         self.role='research'
         self.system_prompt=None
         self.audit=[]
@@ -177,8 +178,23 @@ class RealAdapter:
             def safe_send(body):
                 if hasattr(policy,'before_send'):
                     policy.before_send(body)
+                if self.request_observer is not None:
+                    self.request_observer(copy.deepcopy(body))
+                    if hasattr(policy,'before_send'):
+                        policy.before_send(body)
+                self.budget.calls[-1]['transport_invoked'] = True
+                self.budget.persist()
                 status,payload=(self.transport or self._network_send)(body)
+                self.budget.calls[-1]['upstream_http_status'] = status
                 if status==200:
+                    usage = payload.get('usage')
+                    known = isinstance(usage, dict) and all(type(usage.get(k)) is int and usage[k] >= 0
+                                                           for k in ('prompt_tokens', 'completion_tokens'))
+                    if known:
+                        # Preserve billing observations even if response content/model is subsequently denied.
+                        self.budget.calls[-1]['usage'] = {k: usage[k] for k in ('prompt_tokens', 'completion_tokens')}
+                    elif getattr(self, 'live_execution_approved', False) is True:
+                        raise RealBlocked('Live response usage is missing or malformed')
                     if not payload.get('choices') or not isinstance(payload['choices'][0].get('message'),dict):
                         raise RealBlocked('Invalid upstream response shape')
                     policy.check({'messages':[{'role':'assistant','content':json.dumps(payload,ensure_ascii=False)}]})

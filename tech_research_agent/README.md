@@ -8,6 +8,7 @@
 > [실제 LLM 통제 실험 준비](CONTROLLED_REAL_EXPERIMENT.md): 현재 NO-GO 조건, R3/R2 호출·비용 계획과 Offline 비교 실행 방법.
 > [승인된 비교 전용 신규 12회 경로](PAIRED_CALL_ALLOWANCE.md): 기존 원장을 보존하며 Research 3회·조건당 6회, 실제 실행은 별도 승인 전까지 차단한다.
 > [서로 다른 Persona의 Wire 통제 비교](PAIRED_COMPARISON_RUNNER.md): 기본 비활성 Stub 실행기, 입력 격리·전체 JSON body 차이·redacted 기록. 실제 유료 실행은 활성화하지 않는다.
+> [실제 GPT-4o mini 비교 경로](LIVE_PAIRED_COMPARISON.md): 정확한 관리자 실행 승인·입력/옵션 해시·모델 응답 allowlist에 묶인 Live 분기. 기본 비활성이며 운영 설정은 변경하지 않는다.
 > 아래 첫 버전 기록 이후 추가된 Real 실행·예산 정책은 기존 관련 문서를 함께 확인한다.
 
 # 개인화 기술조사 Agent — 첫 작동 버전

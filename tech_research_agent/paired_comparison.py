@@ -1,4 +1,4 @@
-"""Two real Hermes/approved-public workflows, disabled by default and Stub-only in this release."""
+"""Paired Hermes/approved-public workflows; Stub by default, live only with exact server approval."""
 import copy
 import tempfile
 from dataclasses import asdict
@@ -13,7 +13,8 @@ from .provider import ResearchProvider
 from .real import RealBlocked
 from .stub_workflow import WorkflowStub
 from .wire_comparison import WireComparison, opaque
-from .paired_records import result_record
+from .paired_records import result_record, live_summary
+from .live_execution import LiveExecutionApproval, validate_live_arms
 
 
 def input_snapshot(app, actor, topic, mode, question):
@@ -53,20 +54,32 @@ def validate_arms(apps, root):
 
 
 class PairedPublicComparison:
-    def __init__(self, factory):
+    def __init__(self, factory, *, execution_approval=None):
         """factory(root) supplies prepared apps and approvals; this runner creates neither approvals nor Personas."""
         self.factory = factory
+        self.execution_approval = execution_approval
 
-    def run(self, actor, question, *, enabled=False, topic='H', mode='quick'):
-        base = {'mode': 'stub', 'live_execution_approved': False, 'paid_calls': 0, 'external_source_calls': 0,
+    def run(self, actor, question, *, enabled=False, topic='H', mode='quick', execution_mode='stub', live_enabled=False):
+        if execution_mode not in ('stub', 'live'):
+            raise ValueError('Unknown paired execution mode')
+        live = execution_mode == 'live'
+        base = {'mode': execution_mode, 'live_execution_approved': False, 'paid_calls': 0, 'external_source_calls': 0 if not live else None,
                 'performance_verdict': 'not_evaluated', 'actual_execution_go': False, 'conditions': {}}
-        if not enabled:
+        if enabled is not True:
             return {**base, 'status': 'disabled'}
+        if live:
+            if live_enabled is not True or not isinstance(self.execution_approval, LiveExecutionApproval):
+                raise RealBlocked('Explicit live enablement and a separate administrator execution approval are required')
+            self.execution_approval.check_request(actor, question, topic, mode)
+            base['live_execution_approved'] = True
         audit = WireComparison()
         with tempfile.TemporaryDirectory(prefix='persona-public-pair-') as directory:
             apps = self.factory(Path(directory))
             try:
-                validate_arms(apps, Path(directory).resolve())
+                if live:
+                    validate_live_arms(apps, Path(directory).resolve(), self.execution_approval)
+                else:
+                    validate_arms(apps, Path(directory).resolve())
                 return self._run(apps, actor, question, topic, mode, base, audit)
             finally:
                 audit.discard_values()
@@ -75,6 +88,8 @@ class PairedPublicComparison:
 
     def _run(self, apps, actor, question, topic, mode, report, audit):
         snapshots = {label: input_snapshot(app, actor, topic, mode, question) for label, app in apps.items()}
+        if report['mode'] == 'live':
+            self.execution_approval.check_inputs(snapshots)
         fixed = {label: values[0] for label, values in snapshots.items()}
         report['fixed_inputs'] = {label: {k: opaque(v) for k, v in values.items()} for label, values in fixed.items()}
         if fixed['v1'] != fixed['v2']:
@@ -89,38 +104,49 @@ class PairedPublicComparison:
         tools = {schema['name'] for schemas in fixed['v1']['schemas'].values() for schema in schemas}
         for label in ('v1', 'v2'):
             app = apps[label]
-            # v1 execution must not affect v2 initial Memory or its active approved Persona.
-            current = input_snapshot(app, actor, topic, mode, question)
-            if current != snapshots[label]:
-                report['status'] = 'blocked_state_drift'
-                break
-            adapter, original = app.public_real_adapter, app.public_real_adapter.transport
-            def capture(body, *, condition=label, sender=original):
+            adapter = app.public_real_adapter
+            original = adapter.request_observer
+            def capture(body, *, condition=label, previous=original, current_adapter=adapter):
+                if report['mode'] == 'live':
+                    self.execution_approval.check_dispatch(current_adapter, body)
                 audit.capture(condition, body)  # RealAdapter already called policy.before_send here.
-                return sender(body)
-            adapter.transport = capture
+                if previous is not None:
+                    previous(copy.deepcopy(body))
+                    if report['mode'] == 'live':
+                        self.execution_approval.check_dispatch(current_adapter, body)
+            adapter.request_observer = capture
             try:
+                # v1 must not affect v2 Memory; preserve partial accounting if access was revoked meanwhile.
+                current = input_snapshot(app, actor, topic, mode, question)
+                if current != snapshots[label]:
+                    report['status'] = 'blocked_state_drift'
+                    break
+                if report['mode'] == 'live':
+                    self.execution_approval.check_adapter(adapter)
                 output = app.ask(actor, actor.user_id, question, topic=topic, mode=mode, execution_mode='approved_public')
                 report['conditions'][label] = result_record(output, output.get('persona_revision'), tools,
-                    adapter.budget.calls[adapter.start_attempts:] if adapter.budget else [])
+                    adapter.budget.calls[adapter.start_attempts:] if adapter.budget else [], execution_mode=report['mode'])
                 report['conditions'][label]['persona_source_unchanged'] = app.personas.current(
                     actor, fixed[label]['environment']['project_id']) == snapshots[label][1]
                 if not report['conditions'][label]['persona_source_unchanged']:
                     report['status'] = 'blocked_persona_drift'
                     break
             except (RealBlocked, PermissionError, RuntimeError, ValueError) as exc:
-                report['conditions'][label].update(status='stopped', exception_type=type(exc).__name__,
-                    model_attempts=len(adapter.budget.calls)-adapter.start_attempts if adapter.budget else 0)
+                calls = adapter.budget.calls[adapter.start_attempts:] if adapter.budget else []
+                report['conditions'][label] = result_record({}, snapshots[label][1]['revision'], tools, calls,
+                                                            execution_mode=report['mode'])
+                report['conditions'][label].update(status='stopped', exception_type=type(exc).__name__, model_attempts=len(calls))
                 report['status'] = 'stopped'
                 break
             finally:
-                adapter.transport = original
+                adapter.request_observer = original
             if not output['complete'] or not all(not row['error'] for row in output['stages']):
                 report['status'] = 'stopped'
                 break
         report['wire'] = audit.report()
         report.setdefault('status', 'completed' if all(row['complete'] for row in report['conditions'].values()) and
                           report['wire']['initial_control_passed'] and not report['wire']['has_unexpected_differences'] else 'control_failed')
+        live_summary(report)
         report['confounders'] = ['Actual approved Persona version metadata is preserved, not normalized.',
             'Several preference fields may differ together; no individual causal/quality claim.',
             'Downstream evidence, tool IDs and responses may differ because preceding results differ.',
