@@ -59,6 +59,19 @@ class ApprovalRegistry:
                 continue
         return result
 
+    def eligible_persona_projections(self, context):
+        """Server-configured grants only; this does not create or classify a Persona."""
+        with self._lock:
+            identifiers = [key for key, row in self._records.items()
+                           if row['subject']['kind'] == 'preference' and 'persona_binding' in row['subject']]
+        result = []
+        for identifier in identifiers:
+            try:
+                result.append(self.require_id(identifier, context))
+            except RealBlocked:
+                continue
+        return result
+
     @staticmethod
     def _dates(record):
         start = datetime.fromisoformat(record['approved_at'])

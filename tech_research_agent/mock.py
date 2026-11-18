@@ -17,6 +17,8 @@ def search_plan(context):
     approved=context['approved_preferences'].get('source_focus')
     if approved:
         focus=approved
+    if context.get('persona_guidance', {}).get('source_focus'):
+        focus=context['persona_guidance']['source_focus']
     if '논문만' in context['question']:
         focus='papers_only'
     elif '재무 중심' in context['question']:

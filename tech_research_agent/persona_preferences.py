@@ -86,5 +86,30 @@ def effective(value, environment, question):
             floor = date(2022, 1, 1)
         prefs['search_from_date'] = max(start, floor).isoformat()
     return {'preferences': prefs, 'overrides': notes,
-            'priority': ['server_policy', 'current_environment_and_request', 'approved_persona', 'history'],
+            'priority': ['server_policy', 'current_environment_and_request', 'approved_persona', 'legacy_preferences', 'history'],
             'report_is_not_tool_op': True, 'causal_proof': False}
+
+
+def resolve(approved, environment, question, profile):
+    """Canonical advisory view only; never mutate stored Memory or rewrite model Tool Calls."""
+    result = copy.deepcopy(approved)
+    persona = result.get('research_persona', {}).get('preferences', {})
+    guidance = effective(persona, environment, question)
+    explicit = bool(guidance['overrides'])
+    source_choice = explicit or bool(set(persona) & {'preferred_apps', 'preferred_apis'})
+    legacy = result.get('source_focus')
+    if source_choice:
+        result.pop('source_focus', None)  # Keep conflicting Legacy preference in storage, not in the model view.
+    elif legacy not in {'science', 'strategy', 'finance', 'papers_only'}:
+        result.pop('source_focus', None)
+    guidance['source_focus'] = ('papers_only' if 'current_request_papers_only' in guidance['overrides'] else
+                              'finance' if 'current_request_finance' in guidance['overrides'] else
+                              None if source_choice else result.get('source_focus', profile['focus']))
+    guidance['field_sources'] = {key: 'approved_persona' for key in guidance['preferences']}
+    for key in ('preferred_apps', 'preferred_apis', 'result_limit', 'search_from_date'):
+        if key in guidance['preferences'] and guidance['preferences'].get(key) != persona.get(key):
+            guidance['field_sources'][key] = 'current_environment_and_request'
+    guidance['field_sources']['source_focus'] = ('current_environment_and_request' if explicit else
+        'approved_persona' if source_choice else 'legacy_preferences' if 'source_focus' in result else 'profile_default')
+    guidance['history_usage'] = 'Past observations only; no implicit preference extraction and no override of resolved preferences'
+    return result, guidance

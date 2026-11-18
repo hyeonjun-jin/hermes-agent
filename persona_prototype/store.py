@@ -51,14 +51,19 @@ class MemoryStore:
                        (user_id, session_id, query, response, int(confirmed),
                         datetime.now(UTC).isoformat()))
 
-    def search(self, actor: Principal, user_id: str, query: str, k: int = 4, *, confirmed_only=False) -> list[dict]:
+    def search(self, actor: Principal, user_id: str, query: str, k: int = 4, *, confirmed_only=False,
+               project_id=None) -> list[dict]:
         self.authorizer.require(actor, user_id, "memory:read")
         if not 1 <= k <= 10:
             raise ValueError("k must be between 1 and 10")
         query_terms = terms(query)
         with self.connect() as db:
+            # This is a candidate filter, not project authorization; callers enforce current project access.
+            project_clause = " AND substr(query,1,length(?))=?" if project_id is not None else ""
+            prefix = "[project=" + project_id + "] " if project_id is not None else ""
             rows = db.execute("SELECT id,session_id,query,response,confirmed,created_at FROM episodes "
-                              "WHERE user_id=? ORDER BY id DESC", (user_id,)).fetchall()
+                              "WHERE user_id=?" + project_clause + " ORDER BY id DESC",
+                              (user_id, prefix, prefix) if project_id is not None else (user_id,)).fetchall()
         ranked = []
         for row in rows:
             if confirmed_only and not row[4]:

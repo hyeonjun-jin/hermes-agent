@@ -16,6 +16,9 @@ from tech_research_agent.config import runtime
 from tech_research_agent.connectors.openalex import OpenAlexConnector
 from tech_research_agent.real import RealAdapter, RealBlocked, PayloadPolicy
 from tech_research_agent.stub_workflow import StubBudget
+from tech_research_agent.persona_preferences import memory_record, DIMENSIONS
+from tech_research_agent.persona_projection import public_persona_subject
+from tech_research_agent.persona_alignment import ResearchPreferenceAligner
 
 QUESTION = '수소환원제철을 비교 조사해주세요.'
 NOW = datetime(2026, 11, 17, tzinfo=UTC)
@@ -77,6 +80,25 @@ def policy_setup():
     policy = ApprovedPayloadPolicy(registry(records), adapter)
     adapter.outbound_policy = policy
     return policy, adapter, records, metadata, original
+
+
+def private_persona(app):
+    """Transaction fixture; full native feedback/replay integration remains in test_persona_alignment."""
+    actor = principal('researcher')
+    profile, env, _ = runtime(actor.user_id, 'H', 'quick')
+    prefs = {'preferred_apps': ['kipris_plus'], 'criteria': ['financial_risk'],
+             'financial_detail': 'detailed', 'report_format': 'table'}
+    for _ in range(4):
+        turn = app.personas.record_turn(actor, 'proj-H', {'question': QUESTION, 'complete': True, 'environment': env,
+            'input_snapshot': {'profile': profile}, 'trace': [], 'stages': []})
+        app.personas.feedback(actor, 'proj-H', turn, dict.fromkeys(DIMENSIONS, 'needs_change'), prefs,
+                              'CONFIDENTIAL_FEEDBACK_ONLY', confirmed=True, consent=True)
+    class UnitReplay:
+        mode = 'mock'
+        def compare(self, *args):
+            return {'mode': 'mock', 'functional_check': True}
+    proposal = ResearchPreferenceAligner(app.personas, UnitReplay()).propose(actor)
+    return memory_record(app.personas.activate(actor, 'proj-H', proposal_id=proposal['proposal_id']))
 
 
 def test_observed_approved_tool_result_and_exact_spans():
@@ -155,6 +177,132 @@ def test_legacy_real_still_rejects_approved_public_documents():
     _, adapter, _, _, _, original, _ = source_setup()
     with pytest.raises(RealBlocked):
         PayloadPolicy(adapter.corpus).check({'messages': [{'role': 'tool', 'content': json.dumps({'items': [original]})}]})
+
+
+def test_approved_history_is_project_scoped_before_ranking(tmp_path):
+    policy, _, records, _, _ = policy_setup()
+    app = ResearchApplication(tmp_path); actor = principal('researcher')
+    for project in ('proj-H', 'proj-B'):
+        for _ in range(6):
+            app.store.append(actor, actor.user_id, 'fixture', '[project='+project+'] '+QUESTION, 'STUB '+project)
+    _, env, _ = runtime(actor.user_id, 'H', 'quick')
+    rows = app.store.search(actor, actor.user_id, QUESTION, project_id='proj-H')
+    policy.registry = registry(records + [grant(memory_subject('history', actor.user_id, 'proj-H', row),
+                              'history-'+str(row['id']), document_approvals=['original']) for row in rows])
+    _, history = load_memory(app.store, actor, actor.user_id, QUESTION, env, policy)
+    assert len(history) == 4 and all(row['summary'] == 'STUB proj-H' for row in history)
+
+
+def test_private_persona_projection_is_minimal_exact_and_never_relabels_source(tmp_path):
+    policy, _, records, _, _ = policy_setup()
+    app = ResearchApplication(tmp_path); actor = principal('researcher')
+    source = private_persona(app)
+    original = copy.deepcopy(app.personas.inspect(actor, 'proj-H'))
+    def reader():
+        return memory_record(app.personas.current(actor, 'proj-H'))
+    _, env, _ = runtime(actor.user_id, 'H', 'quick')
+    subject = public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])
+    with pytest.raises(RealBlocked):
+        load_memory(app.store, actor, actor.user_id, QUESTION, env, policy, persona_record=source, persona_reader=reader)
+    policy.registry = registry(records+[grant(subject, 'minimal-persona')])
+    approved, _ = load_memory(app.store, actor, actor.user_id, QUESTION, env, policy,
+                              persona_record=source, persona_reader=reader)
+    assert approved['research_persona'] == {'version': 2, 'preferences': {'report_format': 'table'}}
+    assert approved['data_policy'] == 'PUBLIC' and source['data_policy'] == 'PRIVATE'
+    assert app.personas.inspect(actor, 'proj-H') == original
+    assert 'CONFIDENTIAL_FEEDBACK_ONLY' in json.dumps(original)
+    assert 'financial_risk' not in json.dumps(approved) and 'persona_binding' not in approved
+    policy.check({'messages': []})
+    policy.registry.revoke('minimal-persona')
+    with pytest.raises(RealBlocked):
+        policy.before_send({'messages': []})
+
+
+@pytest.mark.parametrize('mutation', ['value', 'extra', 'binding', 'version', 'user', 'project', 'private', 'expired', 'wrong_scope', 'no_terms'])
+def test_invalid_or_unapproved_projection_never_enters_context(tmp_path, mutation):
+    policy, _, records, _, _ = policy_setup()
+    app = ResearchApplication(tmp_path); actor = principal('researcher')
+    source = private_persona(app)
+    subject = public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])
+    mutations = {
+        'value': (subject['record']['research_persona']['preferences'], 'report_format', 'bullets'),
+        'extra': (subject['record'], 'private_comment', 'CONFIDENTIAL_FEEDBACK_ONLY'),
+        'binding': (subject['persona_binding'], 'content_sha256', '0'*64),
+        'version': (subject['record']['research_persona'], 'version', 1),
+        'user': (subject, 'user_id', 'finance'),
+        'project': (subject, 'project_id', 'proj-B'),
+        'private': (subject['record'], 'data_policy', 'PRIVATE'),
+    }
+    if mutation in mutations:
+        target, key, value = mutations[mutation]
+        target[key] = value
+    updates = {'expires_at': '2026-11-16T12:00:00+00:00'} if mutation == 'expired' else {'users': ['finance']} if mutation == 'wrong_scope' else {}
+    entry = grant(subject, 'projection', **updates)
+    if mutation == 'no_terms':
+        entry['terms_approved'] = False
+        with pytest.raises(ValueError):
+            registry(records+[entry])
+        return
+    policy.registry = registry(records+[entry])
+    _, env, _ = runtime(actor.user_id, 'H', 'quick')
+    with pytest.raises(RealBlocked):
+        load_memory(app.store, actor, actor.user_id, QUESTION, env, policy, persona_record=source,
+                    persona_reader=lambda: memory_record(app.personas.current(actor, 'proj-H')))
+    assert not policy.memories
+    assert app.personas.current(actor, 'proj-H')['data_policy'] == 'PRIVATE'
+
+
+def test_projection_rechecks_unpublished_fields_rollback_and_project_access(tmp_path):
+    policy, _, records, _, _ = policy_setup()
+    app = ResearchApplication(tmp_path); actor = principal('researcher')
+    source = private_persona(app)
+    subject = public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])
+    policy.registry = registry(records+[grant(subject, 'projection')])
+    _, env, _ = runtime(actor.user_id, 'H', 'quick')
+    def reader():
+        return memory_record(app.personas.current(actor, 'proj-H'))
+    load_memory(app.store, actor, actor.user_id, QUESTION, env, policy, persona_record=source, persona_reader=reader)
+    policy.before_send({'messages': []})
+    with app.store.connect() as db:
+        original = db.execute('SELECT payload FROM tr_personas WHERE owner=? AND project=? AND revision=2',
+                              (actor.user_id, 'proj-H')).fetchone()[0]
+        changed = json.loads(original)
+        changed['preferences']['financial_detail'] = 'brief'  # Even unpublished source fields are bound.
+        db.execute('UPDATE tr_personas SET payload=? WHERE owner=? AND project=? AND revision=2',
+                   (json.dumps(changed), actor.user_id, 'proj-H'))
+    with pytest.raises(RealBlocked):
+        policy.before_send({'messages': []})
+
+    with app.store.connect() as db:
+        db.execute('UPDATE tr_personas SET payload=? WHERE owner=? AND project=? AND revision=2',
+                   (original, actor.user_id, 'proj-H'))
+    app.personas.activate(actor, 'proj-H', rollback_revision=2)  # Same values, new PRIVATE version.
+    with pytest.raises(RealBlocked):
+        policy.before_send({'messages': []})
+    source = reader()
+    subject = public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])
+    policy, _, records, _, _ = policy_setup()
+    policy.registry = registry(records+[grant(subject, 'fresh-projection')])
+    load_memory(app.store, actor, actor.user_id, QUESTION, env, policy, persona_record=source, persona_reader=reader)
+    app.personas.project_access = lambda *args: False
+    with pytest.raises(RealBlocked):
+        policy.before_send({'messages': []})
+
+
+@pytest.mark.parametrize('condition', ['missing_reader', 'ambiguous'])
+def test_projection_needs_live_reader_and_unambiguous_server_selection(tmp_path, condition):
+    policy, _, records, _, _ = policy_setup()
+    app = ResearchApplication(tmp_path); actor = principal('researcher')
+    source = private_persona(app)
+    subjects = [public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])]
+    if condition == 'ambiguous':
+        subjects.append(public_persona_subject(actor.user_id, 'proj-H', source, ['financial_detail']))
+    policy.registry = registry(records+[grant(subject, 'expression-'+str(i)) for i, subject in enumerate(subjects)])
+    _, env, _ = runtime(actor.user_id, 'H', 'quick')
+    with pytest.raises(RealBlocked):
+        load_memory(app.store, actor, actor.user_id, QUESTION, env, policy, persona_record=source,
+                    persona_reader=None if condition == 'missing_reader' else lambda: source)
+    assert not policy.memories
 
 
 def test_memory_requires_separate_exact_grants_and_current_owner(tmp_path):
@@ -247,6 +395,42 @@ def public_app(tmp_path, *, expanded=True, injection=False, ceiling=0.11, record
                                   exclusive_ledger_owner=True, max_reserved_usd=0.11, transport=sender))
     app = ResearchApplication(tmp_path/'app', public_real_adapter=real, source_connectors={'openalex': connector})
     return app, real, sender, path, source_requests
+
+
+def test_full_stub_sends_only_reviewed_expression_of_private_persona(tmp_path):
+    app, real, sender, path, sources = public_app(tmp_path)
+    actor = principal('researcher')
+    source = private_persona(app)
+    _, _, adapter = runtime(actor.user_id, 'H', 'quick', connectors=app.source_connectors)
+    grants = real.approvals.eligible_documents(adapter.context)
+    subject = public_persona_subject(actor.user_id, 'proj-H', source, ['report_format'])
+    real.approvals = registry(grants+[grant(subject, 'reviewed-report-format')])
+    with app.store.connect() as db:
+        before = db.execute('SELECT payload FROM tr_personas WHERE owner=? AND project=? AND revision=2',
+                            (actor.user_id, 'proj-H')).fetchone()[0]
+    output = app.ask(actor, actor.user_id, QUESTION, execution_mode='approved_public')
+    assert output['complete'] and sender.counts == {'research': 3, 'analysis': 1, 'verification': 2}
+    assert len(sources) == 3  # MockTransport only; no actual Connector/API network calls.
+    contexts = [json.JSONDecoder().raw_decode(body['messages'][0]['content'].split('TECH_CONTEXT=', 1)[1])[0]
+                for body in sender.requests]
+    for context in contexts:
+        assert context['approved_preferences']['research_persona']['preferences'] == {'report_format': 'table'}
+        assert context['persona_guidance']['preferences'] == {'report_format': 'table'}
+        assert context['persona_revision'] == 2
+    wire = json.dumps(sender.requests)
+    assert 'CONFIDENTIAL_FEEDBACK_ONLY' not in wire and 'financial_risk' not in wire
+    assert 'preferred_apps' not in wire
+    assert memory_record(app.personas.current(actor, 'proj-H')) == source
+    with app.store.connect() as db:
+        assert db.execute('SELECT payload FROM tr_personas WHERE owner=? AND project=? AND revision=2',
+                          (actor.user_id, 'proj-H')).fetchone()[0] == before
+    unchanged = path.read_bytes()
+    with pytest.raises(PermissionError):
+        app.ask(actor, actor.user_id, QUESTION, execution_mode='real')
+    app.personas.activate(actor, 'proj-H', rollback_revision=2)
+    with pytest.raises(RealBlocked):
+        app.ask(actor, actor.user_id, QUESTION, execution_mode='approved_public')
+    assert len(sender.requests) == 6 and path.read_bytes() == unchanged
 
 
 def test_full_network_blocked_public_search_read_analysis_verification(tmp_path):

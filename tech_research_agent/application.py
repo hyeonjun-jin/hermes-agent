@@ -18,7 +18,7 @@ from .progress import progress
 from .source_adapter import source_issues, source_limit_text, is_original_evidence
 from .persona_store import ResearchPersonaStore
 from .persona_alignment import ResearchPreferenceAligner
-from .persona_preferences import memory_record, combine, effective
+from .persona_preferences import memory_record, combine, resolve
 
 SCOPES=frozenset({'memory:read','memory:write','persona:read','persona:propose','persona:approve','persona:rollback'})
 
@@ -75,8 +75,8 @@ class ResearchApplication:
         approved=self.store.semantic(actor,user_id)
         approved=approved if approved.get('explicitly_approved') else {}
         history=[{'memory_id':r['id'],'question':r['query'],'summary':r['response'][:500],'data_policy':'PUBLIC_SYNTHETIC' if r['response'].startswith('[PUBLIC_SYNTHETIC_RESEARCH]') else 'PRIVATE'} for r in
-                 self.store.search(actor,user_id,question) if r['query'].startswith('[project='+environment['project_id']+']')
-                 and all(sid in adapter.corpus and adapter.context.permits(adapter.corpus[sid])
+                 self.store.search(actor,user_id,question,project_id=environment['project_id'])
+                 if all(sid in adapter.corpus and adapter.context.permits(adapter.corpus[sid])
                          for sid in re.findall(r'\[([HB]-[\w-]+)\]',r['response']))]
         if public_policy is not None:
             from .approved_memory import load_memory
@@ -84,6 +84,7 @@ class ResearchApplication:
                 persona_record=persona_memory,persona_reader=lambda:memory_record(self.personas.current(actor,environment['project_id'])))
         else:
             approved=combine(approved,persona_memory)
+        approved,guidance=resolve(approved,environment,question,profile)
         if public_policy is None and self.source_connectors and (approved.get('data_policy') == 'PRIVATE' or
                                        any(h['data_policy'] == 'PRIVATE' for h in history)):
             raise PermissionError('공개 Connector 실행에는 비공개 Memory를 함께 사용할 수 없습니다.')
@@ -102,7 +103,7 @@ class ResearchApplication:
                 for role in ('research','analysis','verification'):
                     context={'data_label':data_label,'role':role,'profile':profile,'environment':environment,'question':question,
                              'persona_revision':persona_version['revision'],
-                             'persona_guidance':effective(persona_version['preferences'],environment,question),
+                             'persona_guidance':guidance,
                              'approved_preferences':approved,'history':history,'evidence':evidence,
                              'previous_stages':stages,'retrieval_limits':source_issues(adapter.trace),
                              'entity_catalog':entity_catalog(adapter),
@@ -179,7 +180,7 @@ class ResearchApplication:
         output={'mode':execution_mode,'real_audit':real_adapter.summary() if is_real else None,'persona':{**profile,'version':persona_version['revision'],'approved_preferences':approved},'environment':environment,
                 'question':question,'persona_revision':persona_version['revision'],
                 'history_used':history,'input_snapshot':{'profile':profile,'environment':environment,'approved_preferences':approved,'history':history,
-                    'persona_revision':persona_version['revision'],'persona_guidance':effective(persona_version['preferences'],environment,question)},
+                    'persona_revision':persona_version['revision'],'persona_guidance':guidance},
                 'stages':stages,'trace':adapter.trace,'evidence':evidence,'answer':answer,
                 'progress':execution_progress,'complete':complete,'checks':checks,'model_calls':real_adapter.summary()['this_run_attempts'] if is_real else len(requests),'tool_cost':adapter.context.spent}
         output['alignment_turn_id']=self.personas.record_turn(actor,environment['project_id'],output)

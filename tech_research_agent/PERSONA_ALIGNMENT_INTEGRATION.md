@@ -102,8 +102,9 @@ Mock의 명시 요청 인식은 기존 '논문만', '재무 중심' 표현을 �
 - 프로젝트별 Persona와 피드백을 분리한다. 기존 전역 source_focus 간편 승인 API는
   호환성을 위해 유지하며 해당 값을 덮어쓰지 않는다. 그 값이 바뀌면 이전 후보가 stale이 된다.
 - 새 버전과 롤백은 기본 PRIVATE다. 자유 의견·후보·Replay 보고서를 외부 LLM으로 보내지 않는다.
-- 기존 Real은 PRIVATE 선호를 차단한다. approved_public은 기술조사 Persona 레코드도 별도의
-  preference Memory subject로 승인하고, 전송마다 현재 저장 버전을 다시 대조한다.
+- 기존 Real은 PRIVATE 선호를 차단한다. approved_public은 별도 preference Memory subject로
+  승인한다. PRIVATE Persona는 원본을 유지하고 관리자가 검수한 최소 공개 표현만 승인한다.
+  전송마다 현재 저장 버전을 다시 대조한다. [검색·우선순위·공개 표현 경계](PREFERENCE_BOUNDARIES.md) 참조.
 - 버전 숫자도 승인 해시에 포함된다. 같은 선호로 롤백해도 과거 승인 해시를 재사용하지 않는다.
   분류/외부 처리 승인은 별도 관리자 절차이며 사용자 후보 승인이 이를 대신하지 않는다.
 - public_synthetic 인자는 기존 PUBLIC 합성 테스트 계약을 확인하는 서버/테스트용 명시 옵션이다.

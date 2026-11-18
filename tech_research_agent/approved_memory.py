@@ -23,14 +23,14 @@ def load_memory(store, actor, user_id, question, environment, policy, *, persona
     if persona_record is not None:
         from .persona_preferences import combine
         if persona_record.get('data_policy') not in {'PUBLIC', 'PUBLIC_SYNTHETIC'}:
-            raise RealBlocked('Research Persona remains PRIVATE; separate classification/processing approval required')
-        subject=memory_subject('preference',user_id,environment['project_id'],persona_record)
-        policy.register_memory(subject,lambda:memory_subject('preference',user_id,environment['project_id'],persona_reader()))
+            from .persona_projection import load_projection
+            persona_record=load_projection(policy,persona_record,persona_reader,user_id,environment['project_id'])
+        else:
+            subject=memory_subject('preference',user_id,environment['project_id'],persona_record)
+            policy.register_memory(subject,lambda:memory_subject('preference',user_id,environment['project_id'],persona_reader()))
         approved=combine(approved,persona_record)
     history = []
-    for record in store.search(actor, user_id, question):
-        if not record['query'].startswith('[project='+environment['project_id']+']'):
-            continue
+    for record in store.search(actor, user_id, question, project_id=environment['project_id']):
         subject = memory_subject('history', user_id, environment['project_id'], record)
         grant = policy.register_memory(subject, history_reader(store, actor, user_id, environment['project_id'], record['id']))
         history.append({'memory_id': record['id'], 'question': record['query'].split('] ', 1)[-1],

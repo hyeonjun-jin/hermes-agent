@@ -30,6 +30,8 @@ class ResearchProvider(MemoryProvider):
                 'Claims are not the invention description. Registration status does not prove current legal validity, commercialization, superior performance or FTO. '
                 'Compare patent IDs, dates and claim quotations against returned originals; distinguish patent assertions from experimental evidence. '
                 'Current explicit request and server Environment override approved preferences and history. '
+                'Preference order: server policy, current request/Environment, approved research Persona, legacy preferences, history. '
+                'persona_guidance is the resolved advisory view; never revive a suppressed legacy source_focus from history. '
                 'research_persona and persona_guidance are advisory research preferences, not tool permissions or forced routing. '
                 'Use preferred APP/API and supported search settings only when appropriate to the current request and Environment. '
                 'Report format and analysis depth are not Tool Schema OP; never add them as tool arguments. '

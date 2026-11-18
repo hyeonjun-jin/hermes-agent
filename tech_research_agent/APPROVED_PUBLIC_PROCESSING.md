@@ -88,18 +88,21 @@ PUBLIC 합성 fixture는 기존 PayloadPolicy의 ID/span 대조를 그대로 거
 ## Memory와 개인화
 
 기존 MemoryStore·OwnerOnly·명시 승인 approve()와 PreferenceAlignment.propose 인터페이스는
-변경하지 않았다. 자동 선호 갱신이나 PersonaAgent Test-time Preference Alignment는 구현하지 않았다.
+유지한다. 이후 추가된 [기술조사 Alignment](PERSONA_ALIGNMENT_INTEGRATION.md)의 사용자
+후보 승인은 외부 처리 승인이 아니다. [최소 공개 표현 승인 경계](PREFERENCE_BOUNDARIES.md)를
+통해 PRIVATE Persona 원본을 보존하고 관리자가 검수한 허용 필드만 별도로 승인할 수 있다.
 
 - 선호는 명시 승인 상태와 PUBLIC/PUBLIC_SYNTHETIC 정책이 있어야 하며, 그 정확한 semantic
   payload에 대한 별도 외부 처리 승인이 필요하다. UI의 합성 선호 확인은 반출 승인이 아니다.
-- 이력은 현재 사용자·프로젝트에서 검색된 개별 episode마다 별도 PUBLIC 승인 sidecar가
+- 이력은 사용자·프로젝트를 먼저 제한한 뒤 관련도 순위를 계산한다. 선택된 개별 episode마다 별도 PUBLIC 승인 sidecar가
   필요하다. subject는 kind(history/preference), 사용자, 프로젝트, 저장 레코드 전체를 묶는다.
 - 이력은 문서 승인 의존성을 지정해야 한다. 의존 문서의 승인·접근 권한·알려진 버전도
   재검사한다. 다른 사용자의 Memory를 승인 파일만으로 읽을 수 없다.
 - 전송마다 Memory 접근 권한과 실제 저장 내용이 승인 스냅샷과 같은지 확인한다.
 - 기존 레코드를 PUBLIC으로 바꾸거나 `[PUBLIC_SYNTHETIC_RESEARCH]` 접두사만으로 새 경로의
   재전송을 허용하지 않는다. 공개 조사 보고서를 저장한 뒤 재사용하려면 다시 명시적 검수가 필요하다.
-- 현재 요청·서버 정책·Environment가 이력과 선호보다 우선한다. 실제 모델이 이 우선순위를
+- 선호 순서는 서버 정책 → 현재 요청·Environment → 승인된 기술조사 Persona → 기존 선호
+  → 과거 이력이다. PRIVATE Persona의 guidance는 승인된 공개 표현에서만 생성한다. 실제 모델이 이 우선순위를
   올바르게 판단하는지 검증한 것은 아니다.
 
 Memory sidecar는 서버 검수자가 분류를 명시하는 수단이다. PRIVATE 선호를 자동 승격하지 않는다.

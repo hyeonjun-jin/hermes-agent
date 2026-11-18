@@ -10,7 +10,7 @@ def search_plan(context):
     persona = baseline['approved_preferences'].pop('research_persona')
     original = legacy_plan(baseline)
     env = context['environment']
-    prefs = effective(persona['preferences'], env, context['question'])['preferences']
+    prefs = context.get('persona_guidance', effective(persona['preferences'], env, context['question']))['preferences']
     if env['depth'] == 'restricted':
         return original
     apps = prefs.get('preferred_apps')
