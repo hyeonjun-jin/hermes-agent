@@ -3,6 +3,7 @@ from pathlib import Path
 import streamlit as st
 from tech_research_agent.application import ResearchApplication, principal
 from tech_research_agent.config import PROFILES, runtime, source_label, entity_catalog
+from tech_research_agent.environment_resources import environment_source_overview
 from persona_prototype.ui_output import render_answer
 
 st.set_page_config(page_title='개인화 기술조사',layout='wide')
@@ -93,7 +94,15 @@ with st.sidebar.expander('현재 Persona와 승인 선호',expanded=True):
     st.json({**profile,'version':app.personas.current(principal(user),env['project_id'])['revision'],
              'approved_preferences':app.store.semantic(principal(user),user)})
 with st.sidebar.expander('현재 Environment'):
+    st.caption('현재 업무 조건 및 정책상 허용 정보원입니다. 실제 IR·공시·논문 원문은 포함하지 않습니다.')
     st.json(env)
+with st.expander('Environment · 정보 자원', expanded=True):
+    st.caption('Environment는 업무 맥락과 이용 가능한 정보원의 범위를 나타냅니다. 실제 자료는 Tool Calling 이후 Evidence로 구분합니다.')
+    st.table(environment_source_overview(env, app.source_connectors))
+    if not app.source_connectors:
+        st.caption('현재 실제 외부 Connector는 구성되지 않았습니다. 기본 조사 자료는 SYNTHETIC이며, 위 목록은 실제 IR·공시·논문을 조회했다는 뜻이 아닙니다.')
+    else:
+        st.caption('Connector가 설정되어 있어도 자료별 접근 권한·문서 승인·실제 검색/조회 결과는 별도로 확인해야 합니다.')
 if 'opendart' in app.source_connectors:
     with st.sidebar.expander('서버가 허용한 회사 Catalog'):
         st.json(entity_catalog(runtime(user,topic,mode,connectors=app.source_connectors)[2]))
