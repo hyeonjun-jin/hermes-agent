@@ -40,6 +40,25 @@ UI 대화 탭은 브라우저 세션 동안 유지되고, 서버의 조사 이�
 옵션은 없다. 모든 자료는 SYNTHETIC, 업무 Environment 기준일은 2026-10-01인 개발 시나리오다.
 실제 현재 포스코 프로젝트/마감/권한이 아니다. 개발 UI의 사용자 선택은 SSO가 아니다.
 
+## Environment의 정보 자원과 Evidence 구분
+
+- **Profile**: 사용자 역할·전문성
+- **Persona**: 명시 승인된 조사·분석 선호
+- **Environment**: 프로젝트, 업무 목적, 마감, 기준일, 분류 등 업무 맥락 및
+  `allowed_sources`로 표현한 정책상 이용 가능 정보원(OpenAlex, KIPRIS Plus,
+  OpenDART, POSCO IR)
+- **Connectors/Tools**: 서버에서 별도로 활성화한 외부 조회 수단. 정보원이 Environment에
+  기재되어 있더라도 Connector 설정이 없거나 ACL·서비스 조건이 충족되지 않으면 실제 조회 불가
+- **Evidence**: Agent가 검색·조회한 후 검증·인가된 논문 메타데이터, 공시, IR 문서,
+  특허 및 인용 근거. 원문을 Environment 딕셔너리에 넣지 않음
+
+Streamlit의 **Environment · 정보 자원** 표는 이 둘을 구분하여 *정책상 허용 여부*와
+*실제 외부 Connector 구성 여부*를 보여준다. 연결 상태는 자료 접근 성공이나
+Evidence 확보를 보장하지 않는다. 실제 조회 내역은 조사별 Trace/Evidence 패널에서
+확인한다. 기존 `runtime()`의 Environment 스키마·ACL·사용 원장·Persona·외부 반출 승인
+절차는 변경하지 않았다. 이 표시는 실제 OpenAlex·POSCO IR·OpenDART Connector를
+자동 활성화하지 않는다.
+
 ## Hermes 연결
 
 1. 서버 Profile·Environment를 선택하고 인증 주체의 Memory 소유자를 확인한다.
