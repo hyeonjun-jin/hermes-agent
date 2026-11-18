@@ -8,6 +8,9 @@ API 호출은 각각 **0회**다. 운영 원장·한도·Hermes 코어는 변경
 calls<=4/역할당 2회 설명은 기존 일반 Real 경로에 해당한다. 새 경로는 Research 3회와
 조건별 사전 검사를 제공하지만, 실제 API 실행·반출·비용 설정은 여전히 별도 승인 대상이다.
 
+후속 [서로 다른 Persona의 Wire 비교 실행기](PAIRED_COMPARISON_RUNNER.md)는 Stub 전송으로
+공개자료 승인 경로를 실행하고 초기·후속 payload 차이를 구분한다. 실제 유료 전송은 지원하지 않는다.
+
 ## 현재 Real 실행 조건과 한도
 
 ResearchApplication은 기존 세 Hermes Agent Loop를 순서대로 실행한다. 별도 Main/
