@@ -67,12 +67,16 @@ def normalize(raw, retrieved_at, request_url, include_abstract=True):
 
 
 class OpenAlexConnector:
-    def __init__(self, *, enabled=False, api_key=None, transport=None, clock=None):
+    def __init__(self, *, enabled=False, api_key=None, transport=None, clock=None, api_key_parameter=False):
         self.enabled = enabled
+        self._query_key = api_key if api_key_parameter else None
+        if api_key_parameter:
+            from .openalex_logging import protect_query_logging
+            protect_query_logging()
         self.clock = clock or (lambda: datetime.now(UTC).isoformat())
         # No ambient proxy credentials; no redirects to arbitrary publisher URLs.
         self.client = httpx.Client(transport=transport, timeout=15, follow_redirects=False,
-                                   trust_env=False, headers={'Authorization': 'Bearer '+api_key} if api_key else {})
+                                   trust_env=False, headers={'Authorization': 'Bearer '+api_key} if api_key and not api_key_parameter else {})
 
     def close(self):
         self.client.close()
@@ -85,6 +89,8 @@ class OpenAlexConnector:
         except (ValueError, KeyError, TypeError):
             return self._result('denied', reason='unsupported_connector_parameters', attempted=False)
         url = 'https://api.openalex.org'+path
+        if self._query_key:
+            query['api_key'] = self._query_key
         try:
             response = self.client.get(url, params=query)
             if response.status_code in (401, 403):
@@ -99,7 +105,7 @@ class OpenAlexConnector:
                 raise ValueError('invalid_results')
         except (httpx.HTTPError, ValueError, KeyError, TypeError):
             return self._result('unavailable', reason='source_transport_or_payload_error')
-        return self._convert(rows, api, params, cutoff, str(response.request.url))
+        return self._convert(rows, api, params, cutoff, str(response.request.url.copy_remove_param('api_key')))
 
     def _request(self, api, params, cutoff):
         if api == 'read_work':

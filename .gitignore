@@ -342,3 +342,4 @@ apps/desktop/.dist-build*
 
 # Local technical-research conversations and preferences
 /.technical-research-state/
+/.technical-paper-demo/

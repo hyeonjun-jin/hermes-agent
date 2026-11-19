@@ -8,8 +8,6 @@ from persona_prototype.ui_output import render_answer
 
 st.set_page_config(page_title='개인화 기술조사',layout='wide')
 st.title('개인화 기술조사 Agent')
-st.caption('합성 업무 환경 기준일: 2026-10-01. 실제 현재 업무 정보가 아닙니다.')
-st.warning('개발 전용 사용자 선택입니다. 실제 SSO 인증이 아닙니다. 기본 정보원은 SYNTHETIC이며 공개 Connector 설정은 서버에서만 변경합니다.')
 
 
 @st.cache_resource
@@ -62,12 +60,18 @@ def application():
     return app
 
 
+execution_mode=st.sidebar.radio('모델 실행 모드',['mock','real','approved_public','실제 API 시연'],index=0)
+if execution_mode=='실제 API 시연':
+    from tech_research_agent.paper_demo_ui import render
+    render()
+    st.stop()
+st.caption('합성 업무 환경 기준일: 2026-10-01. 실제 현재 업무 정보가 아닙니다.')
+st.warning('개발 전용 사용자 선택입니다. 실제 SSO 인증이 아닙니다. 기본 정보원은 SYNTHETIC이며 공개 Connector 설정은 서버에서만 변경합니다.')
 app=application()
 st.caption('정보원: '+source_label(app.source_connectors) if app.source_connectors else '정보원: Offline SYNTHETIC (외부 검색 없음)')
 user=st.sidebar.selectbox('사용자',list(PROFILES),format_func=lambda u:u+' / '+app.profile(principal(u),u)['business_unit']+' / '+app.profile(principal(u),u)['job'])
 topic=st.sidebar.selectbox('현재 프로젝트',['H','B'],format_func=lambda t:'수소환원제철' if t=='H' else '이차전지 양극재')
 mode=st.sidebar.selectbox('현재 환경',['quick','deep','restricted'])
-execution_mode=st.sidebar.radio('모델 실행 모드',['mock','real','approved_public'],index=0)
 real_ready=True
 if execution_mode=='real':
     st.warning('Real은 GPT-4o mini의 실제 비용이 발생할 수 있습니다. PUBLIC 합성 요청만 허용합니다.')

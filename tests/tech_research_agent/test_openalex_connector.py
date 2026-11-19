@@ -62,6 +62,25 @@ def test_search_filters_metadata_and_read_evidence(work):
     connector.close()
 
 
+def test_query_key_auth_never_reaches_receipts_or_httpx_logs(work, caplog):
+    import logging
+    observed = []
+    def send(request):
+        observed.append(request)
+        return httpx.Response(200, json={'results': [work]})
+    with caplog.at_level(logging.INFO, logger='httpx'):
+        connector = OpenAlexConnector(enabled=True, api_key='fabricated-query-credential', api_key_parameter=True,
+                                     transport=httpx.MockTransport(send))
+        result = connector.execute('search_works', {'query': 'hydrogen'}, '2026-09-30')
+        connector.close()
+    assert observed[0].url.params['api_key'] == 'fabricated-query-credential'
+    assert 'authorization' not in observed[0].headers
+    assert 'fabricated-query-credential' not in json.dumps(result)
+    assert 'api_key=' not in result['items'][0]['request_url']
+    assert 'fabricated-query-credential' not in caplog.text
+    assert all('fabricated-query-credential' not in repr(record.args) for record in caplog.records)
+
+
 @pytest.mark.parametrize('op', [{'limit': 11}, {'invented': True}, {'types': ['article,to_publication_date:2099-01-01']},
                               {'cursor': 'unissued'}, {'to_date': '2099-01-01'}, {'from_date': '2026-09-01', 'to_date': '2026-01-01'}])
 def test_invalid_parameters_never_send(work, op):

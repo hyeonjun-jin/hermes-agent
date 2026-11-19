@@ -82,7 +82,8 @@ usd=null, billing_verified=false다. 운영 OpenAI 원장과는 별개이며 새
   결과로 돌려주지 않는다. 모델이 이미 만든 요청 인자는 감사 Trace의 계획에 보존한다.
 - 외부 텍스트는 untrusted_external_data. 역할 프롬프트는 그 안의 명령을 따르지 않도록 안내한다.
   역할별 권한과 서버 정책은 외부 문서로 변경할 수 없다. 이 조치가 모든 인젝션 공격을 막는다는 주장은 하지 않는다.
-- API 키는 서버 설정에서 Bearer 헤더에만 넣는다. Trace/화면/에러에 헤더나 upstream 본문을 기록하지 않는다.
+- 기본 API 키 인증은 서버 설정의 Bearer 헤더다. Trace/화면/에러에 헤더나 upstream 본문을 기록하지 않는다.
+  별도 Streamlit 공개 시연은 `api_key_parameter=True`로 query 인증을 사용하며 반환 URL의 키를 제거하고 HTTPX 로그를 필터링한다. 기본 Bearer 모드는 그대로다.
 - 기존 PayloadPolicy는 synthetic=false 자료의 외부 LLM 전송을 계속 거부한다.
 
 ## 서버 설정과 활성화

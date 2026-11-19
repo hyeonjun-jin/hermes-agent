@@ -11,6 +11,7 @@
 > [실제 GPT-4o mini 비교 경로](LIVE_PAIRED_COMPARISON.md): 정확한 관리자 실행 승인·입력/옵션 해시·모델 응답 allowlist에 묶인 Live 분기. 기본 비활성이며 운영 설정은 변경하지 않는다.
 > [맞춤 논문 추천 TOP 3](PAPER_RECOMMENDATIONS.md): SourceAdapter 조회 근거를 Profile·승인 Persona·Environment로 로컬 heuristic 정렬. 기본 Mock에서 같은 후보의 직무별 순위 차이를 재현한다.
 > [사업부서·직무·개인 관심사 개인화](PROFILE_PERSONALIZATION.md): 소유자별 개발 Profile 편집, 관심사 점수·검색 힌트·분석 관점, 동일 직무 관심사 통제 비교 및 실제 실행 전 NO-GO 조건.
+> [Streamlit 실제 API 공개 논문 시연](STREAMLIT_REAL_DEMO.md): 검수된 가상 A/B Profile, 별도 관리자 실행 승인·원장·6/12회 상한을 갖춘 채팅 모드. 실제 호출은 별도 승인 전까지 비활성이다.
 > 아래 첫 버전 기록 이후 추가된 Real 실행·예산 정책은 기존 관련 문서를 함께 확인한다.
 
 # 개인화 기술조사 Agent — 첫 작동 버전

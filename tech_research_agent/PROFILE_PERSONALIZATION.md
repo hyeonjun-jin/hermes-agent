@@ -131,3 +131,7 @@ PRIVATE Profile·Memory 원문을 보고서에 내보내지 않는다. 이는 �
 그대로 넣으면 고정 입력 불일치로 차단한다. 이 경계를 완화하지 않았다. 실제 Profile 비교
 실행과 반출 승인 연결은 후속 작업이다. 이번에는 Mock 비교와 입력 준비까지만 확인했고,
 실제 LLM의 검색 판단·개인화 품질이 개선됐다고 결론 내리지 않는다.
+
+후속 [Streamlit 실제 API 공개 논문 시연](STREAMLIT_REAL_DEMO.md)은 편집된 PRIVATE Profile과
+분리된 고정 가상 A/B Profile에 대해 새로운 명시적 범위 승인·원장 경로를 제공한다.
+일반 PRIVATE Profile 반출이나 기존 Persona 비교 실행기의 고정 입력 조건을 완화하지 않는다.
